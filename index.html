@@ -462,6 +462,11 @@
     <section id="write">
       <p class="guide">한글 해석을 보고 <b>청크를 순서대로 터치</b>해 문장을 조립하세요. 다 놓으면 자동 채점됩니다.</p>
       <div id="writeArea"></div>
+      <div id="writeProgress" class="wstatus" style="text-align:center;margin-bottom:8px"></div>
+      <div id="writeSendBox" style="display:none;margin-bottom:12px">
+        <button class="wbtn" id="writeSendBtn" style="background:var(--navy);color:#fff;border-color:var(--navy);padding:12px" onclick="sendWrite()">📤 서술형 점수 선생님께 전송</button>
+        <div class="wstatus" id="writeSendMsg" style="text-align:center"></div>
+      </div>
     </section>
 
     <section id="flow">
@@ -739,6 +744,110 @@ const VOCAB = [
  {en:"sweating",ko:"땀 흘리기",pos:"n",syn:"perspiring",grp:"PHYS"}
 ]},
 
+{title:"DAY 11-A · 언어 없이도 사고 가능한 동물",sheetTitle:"DAY11-A 핵심단어",sub:"매삼영 · 2025.3 학평 36번",words:[
+ {en:"assume",ko:"가정하다",pos:"v",syn:"guess, suppose, presuppose",grp:"COG"},
+ {en:"capable",ko:"~할 수 있는, 유능한",pos:"a",syn:"able, skilled, competent",grp:"CONTROL"},
+ {en:"lacking",ko:"부족한, 없는",pos:"a",syn:"missing, without, devoid of",grp:"QUANT"},
+ {en:"imply",ko:"암시하다",pos:"v",syn:"suggest, hint",grp:"COMM"},
+ {en:"concept",ko:"개념",pos:"n",syn:"idea, notion, construct",grp:"COG"},
+ {en:"specific",ko:"특정한, 구체적인",pos:"a",syn:"particular, exact, definite",grp:"QUANT"},
+ {en:"branch",ko:"나뭇가지",pos:"n",grp:"PHYS"},
+ {en:"principle",ko:"원리, 원칙",pos:"n",syn:"rule, basis",grp:"COG"},
+ {en:"mental map",ko:"심적 지도",pos:"n",syn:"mind picture, inner map, cognitive map",grp:"COG"},
+ {en:"route",ko:"경로",pos:"n",grp:"PHYS"},
+ {en:"nonconceptual",ko:"비개념적인",pos:"a",syn:"without concepts, non-idea-based",grp:"COG"},
+ {en:"currently",ko:"현재",pos:"ad",grp:"PROC"},
+ {en:"planning",ko:"계획 세우기",pos:"n",syn:"preparing, scheming, strategizing",grp:"PROC"}
+]},
+{title:"DAY 11-B · 우울증의 원인",sheetTitle:"DAY11-B 핵심단어",sub:"매삼영 · 2024.10 학평 37번",words:[
+ {en:"conventional",ko:"전통적인, 재래식의",pos:"a",syn:"traditional, standard",grp:"SOC"},
+ {en:"imbalance",ko:"불균형",pos:"n",syn:"unevenness, disproportion",grp:"PHYS"},
+ {en:"explanation",ko:"설명",pos:"n",grp:"COMM"},
+ {en:"consequence",ko:"결과",pos:"n",syn:"result, effect",grp:"CHANGE"},
+ {en:"decrease",ko:"감소(하다)",pos:"v",syn:"decline, drop, diminish",grp:"CHANGE"},
+ {en:"substance",ko:"물질",pos:"n",grp:"PHYS"},
+ {en:"distortion",ko:"왜곡",pos:"n",syn:"twist, misrepresentation",grp:"COG"},
+ {en:"consciousness",ko:"의식",pos:"n",syn:"awareness, mind",grp:"COG"},
+ {en:"fundamental",ko:"근본적인",pos:"a",syn:"basic, core, intrinsic",grp:"COG"},
+ {en:"entity",ko:"실체, 독립체",pos:"n",syn:"being, existence",grp:"COG"},
+ {en:"organ",ko:"기관",pos:"n",grp:"PHYS"},
+ {en:"reframe",ko:"재구성하다",pos:"v",syn:"rethink, redefine",grp:"COG"},
+ {en:"root cause",ko:"근본 원인",pos:"n",syn:"main reason, source, underlying cause",grp:"PROC"}
+]},
+{title:"DAY 11-C · 마그마 냉각과 광물 결정",sheetTitle:"DAY11-C 핵심단어",sub:"매삼영 · 2023.3 학평 37번",words:[
+ {en:"mineral",ko:"광물",pos:"n",syn:"rock substance, ore",grp:"PHYS"},
+ {en:"process",ko:"과정",pos:"n",grp:"PROC"},
+ {en:"melted",ko:"녹은",pos:"a",syn:"liquefied, molten, fused",grp:"CHANGE"},
+ {en:"surface",ko:"표면",pos:"n",grp:"PHYS"},
+ {en:"trapped",ko:"갇힌",pos:"a",syn:"stuck, confined, enclosed",grp:"CONFLICT"},
+ {en:"atoms",ko:"원자들",pos:"n",syn:"particles, units",grp:"PHYS"},
+ {en:"compound",ko:"화합물",pos:"n",syn:"mixture, substance, composite",grp:"PHYS"},
+ {en:"arrange",ko:"배열하다",pos:"v",syn:"order, organize, configure",grp:"PROC"},
+ {en:"element",ko:"원소",pos:"n",grp:"PHYS"},
+ {en:"determine",ko:"결정하다",pos:"v",syn:"decide, control, dictate",grp:"CONTROL"},
+ {en:"crystal",ko:"결정체",pos:"n",syn:"gem, formation",grp:"PHYS"},
+ {en:"rapidly",ko:"빠르게",pos:"ad",syn:"quickly, fast, swiftly",grp:"CHANGE"},
+ {en:"unaided eye",ko:"육안",pos:"n",syn:"naked eye, without a tool",grp:"PHYS"}
+]},
+{title:"DAY 11-D · 좋은 음악과 나쁜 연주",sheetTitle:"DAY11-D 핵심단어",sub:"매삼영 · 2022.3 학평 37번",words:[
+ {en:"moral",ko:"도덕적인, 도덕",pos:"a",syn:"ethical, principled, virtuous",grp:"SOC"},
+ {en:"performance",ko:"연주, 공연",pos:"n",syn:"rendition, act, execution",grp:"WORK"},
+ {en:"incompetence",ko:"무능함",pos:"n",syn:"lack of skill, inability",grp:"CONTROL"},
+ {en:"accomplished",ko:"뛰어난, 숙달된",pos:"a",syn:"skilled, talented, proficient",grp:"CONTROL"},
+ {en:"uplift",ko:"고양시키다",pos:"v",syn:"raise, inspire, elevate",grp:"EMO"},
+ {en:"tragic",ko:"비극적인",pos:"a",syn:"sad, sorrowful",grp:"EMO"},
+ {en:"degrade",ko:"격하시키다",pos:"v",syn:"lower, worsen",grp:"CHANGE"},
+ {en:"doubtful",ko:"미심쩍은, 의심스러운",pos:"a",syn:"unsure, questionable, dubious",grp:"EMO"},
+ {en:"composer",ko:"작곡가",pos:"n",syn:"songwriter, musician",grp:"WORK"},
+ {en:"show off",ko:"과시하다",pos:"v",grp:"SOC"},
+ {en:"communicate",ko:"전달하다",pos:"v",syn:"convey, express, articulate",grp:"COMM"},
+ {en:"honestly",ko:"정직하게",pos:"ad",syn:"truthfully, sincerely, candidly",grp:"COMM"}
+]},
+{title:"DAY 11-E · 미디어 리터러시와 가짜 정보",sheetTitle:"DAY11-E 핵심단어",sub:"매삼영 · 2021.6 학평 37번",words:[
+ {en:"interact",ko:"상호작용하다",pos:"v",syn:"engage, socialize",grp:"SOC"},
+ {en:"critical",ko:"비판적인",pos:"a",syn:"analytical, questioning, discerning",grp:"COG"},
+ {en:"analyze",ko:"분석하다",pos:"v",syn:"examine, study, scrutinize",grp:"COG"},
+ {en:"research",ko:"연구",pos:"n",grp:"PROC"},
+ {en:"misinformation",ko:"잘못된 정보",pos:"n",syn:"false information, wrong facts, disinformation",grp:"COMM"},
+ {en:"demonstrate",ko:"보여주다, 입증하다",pos:"v",syn:"show, prove",grp:"COMM"},
+ {en:"fooled",ko:"속은",pos:"a",syn:"tricked, deceived, duped",grp:"TRUST"},
+ {en:"weakness",ko:"약점",pos:"n",syn:"flaw, shortcoming",grp:"CONTROL"},
+ {en:"counterpart",ko:"상대방, 대응 관계에 있는 대상",pos:"n",syn:"equivalent, peer",grp:"SOC"},
+ {en:"literate",ko:"잘 아는, 소양이 있는",pos:"a",syn:"knowledgeable, informed, savvy",grp:"COG"},
+ {en:"combat",ko:"싸우다, 대응하다",pos:"v",syn:"fight, tackle, counteract",grp:"CONFLICT"},
+ {en:"responsibility",ko:"책임",pos:"n",syn:"duty, obligation, accountability",grp:"WORK"}
+]},
+{title:"DAY 11-F · '평평한 지구' 통념",sheetTitle:"DAY11-F 핵심단어",sub:"매삼영 · 2020.9 학평 36번",words:[
+ {en:"decision",ko:"결정",pos:"n",grp:"CONTROL"},
+ {en:"majority",ko:"대다수",pos:"n",syn:"most, greater part",grp:"SOC"},
+ {en:"reveal",ko:"드러내다, 밝히다",pos:"v",syn:"expose, uncover, unveil",grp:"COMM"},
+ {en:"massive",ko:"거대한",pos:"a",syn:"huge, large-scale, extensive",grp:"QUANT"},
+ {en:"discovery",ko:"발견",pos:"n",syn:"finding, revelation",grp:"PROC"},
+ {en:"trade",ko:"무역, 거래",pos:"n",grp:"WORK"},
+ {en:"exploration",ko:"탐험",pos:"n",syn:"travel, investigation, expedition",grp:"PROC"},
+ {en:"fear",ko:"두려워하다",pos:"v",syn:"be afraid of, worry about",grp:"EMO"},
+ {en:"perceived",ko:"인식된",pos:"a",syn:"believed, seen as, presumed",grp:"COG"},
+ {en:"impact",ko:"영향을 미치다",pos:"v",syn:"affect, influence, shape",grp:"CHANGE"},
+ {en:"establish",ko:"확립하다, 수립하다",pos:"v",syn:"set up, create",grp:"PROC"},
+ {en:"innovation",ko:"혁신",pos:"n",syn:"new idea, invention, breakthrough",grp:"CHANGE"},
+ {en:"assumption",ko:"가정, 추정",pos:"n",syn:"belief, guess",grp:"COG"}
+]},
+{title:"DAY 11-G · 현실적 낙관주의자",sheetTitle:"DAY11-G 핵심단어",sub:"매삼영 · 2019.9 학평 37번",words:[
+ {en:"successful",ko:"성공적인",pos:"a",grp:"CONTROL"},
+ {en:"vital",ko:"필수적인, 매우 중요한",pos:"a",syn:"essential, important, indispensable",grp:"QUANT"},
+ {en:"unrealistic",ko:"비현실적인",pos:"a",syn:"unreasonable, impractical",grp:"COG"},
+ {en:"optimist",ko:"낙관주의자",pos:"n",syn:"hopeful person, positive thinker",grp:"EMO"},
+ {en:"overnight",ko:"하룻밤 사이에",pos:"ad",grp:"PROC"},
+ {en:"transform",ko:"변형시키다",pos:"v",syn:"change, turn into",grp:"CHANGE"},
+ {en:"obstacle",ko:"장애물",pos:"n",syn:"barrier, difficulty, impediment",grp:"CONFLICT"},
+ {en:"strategy",ko:"전략",pos:"n",syn:"plan, method, tactic",grp:"PROC"},
+ {en:"recognize",ko:"인식하다",pos:"v",syn:"realize, acknowledge, discern",grp:"COG"},
+ {en:"confidence",ko:"자신감",pos:"n",syn:"self-belief, assurance",grp:"EMO"},
+ {en:"deal with",ko:"다루다, 대처하다",pos:"v",grp:"CONTROL"},
+ {en:"preparation",ko:"준비",pos:"n",syn:"planning, readiness, groundwork",grp:"PROC"},
+ {en:"reward",ko:"보상하다",pos:"v",syn:"pay back, give credit, compensate",grp:"WORK"}
+]},
+
 /* ═══ 교과서 ═══ */
 {title:"교과서 1과 · 가짜뉴스",sheetTitle:"교과서1과 핵심단어",sub:"Fake News and Critical Thinking",words:[
  {en:"astonished",ko:"깜짝 놀란",pos:"a",syn:"surprised, shocked",grp:"EMO"},
@@ -1006,7 +1115,21 @@ sentences:[
  {ko:"기대할 수 있는 것이 무엇인지 알고 있을 때, 동물은 자신감과 차분함을 더 많이 느낄 수 있다.",
   parts:["When animals know what ",{c:["to expect","expecting",0,"'무엇을 기대할지' 관용표현 → what to expect"]},", they can feel more ",{c:["confidently","confident",1,"감각동사 feel의 보어 자리 → 형용사 confident"]}," and ",{c:["calm","calmly",0,"confident와 병렬된 형용사 보어 → calm"]},"."]}
 ],
-writings:[]
+writings:[],
+verbForms:[
+ {ko:"좋은 보살핌을 제공하는 것의 가장 중요한 측면 중에 한 가지는 반드시 동물의 욕구가 일관되게 그리고 예측 가능하게 충족되도록 하는 것이다. 사람과 마찬가지로, 동물은 통제감이 있다는 느낌이 필요하다.",
+  parts:["One of the most important aspects of providing good care ",{b:"be",a:"is"}," ",{b:"make",a:"making"}," sure that an animal's needs ",{b:"meet",a:"are being met"}," consistently and predictably. Like humans, animals need a sense of control."]},
+ {ko:"그러므로 충분한 음식을 제공받고 있을지라도 음식이 언제 (눈에) 보일지 모르고 일관된 일정을 알 수 없는 동물은 괴로움을 겪을지도 모른다.",
+  parts:["So an animal who may ",{b:"get",a:"get"}," enough food but doesn't know when the food will appear and can see no consistent schedule may ",{b:"experience",a:"experience"}," distress."]},
+ {ko:"우리 동물의 환경이 예측 가능하도록 보장함으로써 우리는 통제가 있다는 느낌을 줄 수 있다. 즉, 마실 수 있는 물이 늘 있고, 물이 늘 같은 곳에 있다.",
+  parts:["We can ",{b:"provide",a:"provide"}," a sense of control by ",{b:"ensure",a:"ensuring"}," that our animal's environment ",{b:"be",a:"is"}," predictable: there is always water available and always in the same place."]},
+ {ko:"아침에 일어날 때 그리고 저녁 산책을 한 후에 늘 음식이 있다. 불편할 정도로 참을 필요 없이 변을 배설할 수 있는 시간과 장소가 늘 있을 것이다.",
+  parts:["There is always food when we get up in the morning and after our evening walk. There will always be a time and place ",{b:"eliminate",a:"to eliminate"},", without having to ",{b:"hold",a:"hold"}," things in to the point of discomfort."]},
+ {ko:"사람 친구는 한순간에는 애정을 주다가 그다음에는 애정을 주지 않기보다는 일관된 정서적 지지를 보이는 것이 좋다.",
+  parts:["Human companions can ",{b:"display",a:"display"}," consistent emotional support, rather than providing love one moment and ",{b:"withhold",a:"withholding"}," love the next."]},
+ {ko:"기대할 수 있는 것이 무엇인지 알고 있을 때, 동물은 자신감과 차분함을 더 많이 느낄 수 있다.",
+  parts:["When animals know what ",{b:"expect",a:"to expect"},", they can feel more confident and calm."]}
+]
 },
 
 /* ───────── 지문 6 ───────── */
@@ -1035,7 +1158,25 @@ sentences:[
  {ko:"결과들을 평가할 때, 있을 수 있는 어떤 치우침에 대해 생각하라!",
   parts:["When ",{c:["assessing","assessed",0,"주어(you)가 '평가하는' 능동 분사구문 → assessing"]}," results, ",{c:["thinking","think",1,"명령문 → 동사원형 think"]}," about any biases ",{c:["what","that",1,"선행사 biases가 있음 → 관계대명사 that"]}," may be present!"]}
 ],
-writings:[]
+writings:[],
+verbForms:[
+ {ko:"다른 과학자의 실험 결과물을 읽을 때, 그 실험에 대해 비판적으로 생각하라.",
+  parts:["When ",{b:"read",a:"reading"}," another scientist's findings, ",{b:"think",a:"think"}," critically about the experiment."]},
+ {ko:"당신 자신에게 물어라: 관찰들이 실험 도중에 혹은 후에 기록되었나?",
+  parts:[{b:"ask",a:"Ask"}," yourself: Were observations ",{b:"record",a:"recorded"}," during or after the experiment?"]},
+ {ko:"결론이 합리적인가? 그 결과들은 반복될 수 있는가?",
+  parts:["Do the conclusions ",{b:"make",a:"make"}," sense? Can the results ",{b:"be, repeat",a:"be repeated"},"?"]},
+ {ko:"당신은 실험을 수행한 그 과학자나 그룹이 한쪽으로 치우치지 않았는지 역시 물어야 한다.",
+  parts:["You should also ",{b:"ask",a:"ask"}," if the scientist or group ",{b:"conduct",a:"conducting"}," the experiment was unbiased."]},
+ {ko:"한쪽으로 치우치지 않음은 당신이 실험의 결과로 특별한 이익을 얻지 않는다는 것을 의미한다.",
+  parts:[{b:"be",a:"Being"}," unbiased means that you ",{b:"have",a:"have"}," no special interest in the outcome of the experiment."]},
+ {ko:"예를 들면, 만약 한 제약회사가 그 회사의 새로운 제품 중 하나가 얼마나 잘 작용하는지 시험해보기 위한 실험 비용을 지불한다면, 특별한 이익이 관련된 것이다: 만약 실험이 그 제품이 효과 있음을 보여준다면, 그 제약회사는 이익을 본다.",
+  parts:["For example, if a drug company ",{b:"pay",a:"pays"}," for an experiment ",{b:"test",a:"to test"}," how well one of its products ",{b:"work",a:"works"},", there is a special interest involved: The drug company ",{b:"profit",a:"profits"}," if the experiment ",{b:"show",a:"shows"}," that its product is effective."]},
+ {ko:"그들은 결론이 제약 회사에 우호적이고 이익을 주도록 보장할지도 모른다.",
+  parts:["They might ",{b:"ensure",a:"ensure"}," the conclusion is positive and ",{b:"benefit",a:"benefits"}," the drug company."]},
+ {ko:"결과들을 평가할 때, 있을 수 있는 어떤 치우침에 대해 생각하라!",
+  parts:["When ",{b:"assess",a:"assessing"}," results, ",{b:"think",a:"think"}," about any biases that may ",{b:"be",a:"be"}," present!"]}
+]
 },
 
 /* ───────── 교과서 서술형 1 ───────── */
@@ -1120,7 +1261,33 @@ sentences:[
  {ko:"도망가고, 자신을 맹목적으로 벽에 부딪히고, 거의 30피트까지 뛰어오를 수 있고, 시속 50마일 속도로 달릴 수 있는 동물을 무리 지으려고 노력하는 것을 상상해봐라!",
   parts:["Just imagine ",{c:["trying","to try",0,"imagine + 동명사(목적어) → trying"]}," to herd an animal that ",{c:["runs","run",0,"선행사 animal(단수) → runs"]}," away, blindly ",{c:["hit","hits",1,"animal(단수) 주어, that절 동사 병렬 → hits"]}," ",{c:["it","itself",1,"동물이 자기 자신을 부딪힘 → 재귀대명사 itself"]}," against walls, can leap up to ",{c:["nearly","near",0,"해석: '거의' 30피트(near는 형용사/전치사)"]}," 30 feet, and can run at a speed of 50 miles per hour!"]}
 ],
-writings:[],
+writings:[
+ {tag:"조건의 부사절 (if)",
+  ko:"우리에 넣어지면 그들은 공황에 빠지기 쉽고, 충격으로 죽거나 탈출하려다 울타리에 반복적으로 몸을 부딪혀 죽는다.",
+  chunks:["If putting into an enclosure,","they are likely to panic,","and either die of shock","or hit themselves repeatedly to death","against the fence","in their attempts to escape"],
+  answer:"If putting into an enclosure, they are likely to panic, and either die of shock or hit themselves repeatedly to death against the fence in their attempts to escape.",
+  point:"<b>If + 분사구문</b>: 조건 부사절에서 '주어+be동사'가 생략되고 분사만 남는 축약 구조. '~에 넣어지면' → If (they are) put/putting."},
+ {tag:"관계대명사 (계속적 용법 which)",
+  ko:"예를 들어 가젤이 그러한데, 이들은 수천 년 동안 비옥한 초승달 지대 일부에서 가장 자주 사냥되는 사냥감이었다.",
+  chunks:["which for thousands of years","were the most frequently hunted","game species","in some parts","of the Fertile Crescent"],
+  answer:"which for thousands of years were the most frequently hunted game species in some parts of the Fertile Crescent.",
+  point:"<b>계속적 용법의 which</b>: 콤마 뒤에서 앞 내용(gazelles)을 받아 부연 설명하는 주격 관계대명사."},
+ {tag:"관계대명사 (목적격 that)",
+  ko:"그 지역에 처음 정착한 사람들이 가젤보다 더 길들일 기회가 많았던 포유류 종은 없다.",
+  chunks:["that the first settled peoples","of that area","had more opportunity","to domesticate","than gazelles"],
+  answer:"that the first settled peoples of that area had more opportunity to domesticate than gazelles.",
+  point:"<b>선행사 no mammal species를 수식하는 목적격 관계대명사 that</b>. 'had opportunity to V' 구조에 유의."},
+ {tag:"수동태 (현재완료 수동)",
+  ko:"그러나 어떤 가젤 종도 지금까지 길들여진 적이 없다.",
+  chunks:["But no gazelle species","has ever been domesticated"],
+  answer:"But no gazelle species has ever been domesticated.",
+  point:"<b>현재완료 수동태 have/has been p.p.</b>: '지금까지 길들여진 적이 없다' → has ever been domesticated."},
+ {tag:"관계대명사 (주격 that, 4개 동사 병렬)",
+  ko:"도망치고, 맹목적으로 벽에 몸을 부딪치고, 거의 30피트까지 뛰어오르고, 시속 50마일로 달리는 동물을 몰려고 애쓴다고 상상해 보라!",
+  chunks:["that runs away,","blindly hits itself against walls,","can leap up to nearly 30 feet,","and can run"],
+  answer:"that runs away, blindly hits itself against walls, can leap up to nearly 30 feet, and can run",
+  point:"<b>선행사 an animal을 수식하는 주격 관계대명사 that</b> + runs, hits, can leap, can run 네 동사가 병렬 연결."}
+],
 verbForms:[
  {ko:"큰 포유류의 초식동물 종은 포식자나 인간으로부터의 위험에 대해 다른 방식으로 반응한다.",
   parts:["Big mammalian herbivore species ",{b:"react",a:"react"}," to danger from predators or humans in different ways."]},
@@ -1155,7 +1322,23 @@ sentences:[
  {ko:"자신의 저서 'Happiness at Work'를 위해 연구자 Jessica Pryce-Jones는 79개 국가의 3,000명의 근로자에 대한 연구를 수행했고, 자신의 일로부터 더 큰 만족감을 갖는 사람이 전반적으로 더 행복한 삶을 살 가능성이 150퍼센트 더 크다는 것을 알아냈다.",
   parts:["For her book Happiness at Work, researcher Jessica Pryce-Jones conducted a study of 3,000 workers in seventy-nine countries, ",{c:["finding","found",0,"주절 주어(Jessica)가 '알아내는' 능동 분사구문 → finding"]}," ",{c:["that","what",0,"finding 뒤 완전한 절 → that"]}," those ",{c:["what","who",1,"선행사 those(사람) → who"]}," took greater satisfaction from their work ",{c:["was","were",1,"주어 those(복수) → were"]}," 150 percent more ",{c:["likely","unlikely",0,"해석: '가능성이 더 큰' likely"]}," ",{c:["having","to have",1,"more likely to + 동사원형 → to have"]}," a happier life overall."]}
 ],
-writings:[],
+writings:[
+ {tag:"가주어-진주어 (It ~ to V)",
+  ko:"의미 있는 일이 인간에게 얼마나 중요한지는 아무리 강조해도 지나치지 않다 — 성취감과 자율감을 주는 일 말이다.",
+  chunks:["It would be hard","to overstate","how important meaningful work is","to human beings"],
+  answer:"It would be hard to overstate how important meaningful work is to human beings",
+  point:"<b>가주어 It ~ to V(진주어)</b>: It would be hard to overstate(과장해도 지나치지 않다). how로 시작하는 간접의문문이 overstate의 목적어."},
+ {tag:"관계대명사 (주격 who)",
+  ko:"자기 경력에서 더 깊은 의미를 찾은 사람들은 하루하루를 훨씬 더 활기차고 만족스럽게 여기며, 자신의 일을 가장 큰 기쁨과 자부심의 원천 중 하나로 여긴다.",
+  chunks:["Those who have found","deeper meaning","in their careers","find their days","much more energizing and satisfying"],
+  answer:"Those who have found deeper meaning in their careers find their days much more energizing and satisfying",
+  point:"<b>선행사 Those를 수식하는 주격 관계대명사 who</b>: Those who have found ~(~을 찾은 사람들은). 문장의 본동사는 find."},
+ {tag:"분사구문 (finding that ~)",
+  ko:"저서 『Happiness at Work』를 위해 연구자 제시카 프라이스존스는 79개국 3,000명의 근로자를 연구했고, 일에서 더 큰 만족을 얻은 사람들이 삶 전반에서 더 행복할 가능성이 150% 더 높다는 것을 발견했다.",
+  chunks:["finding that","those who took greater satisfaction","from their work","were 150 percent more likely","to have a happier life overall"],
+  answer:"finding that those who took greater satisfaction from their work were 150 percent more likely to have a happier life overall.",
+  point:"<b>결과를 나타내는 분사구문 finding that ~</b>: '그리고 ~라는 것을 발견했다'(= and found that). 앞 절의 결과를 이어서 서술."}
+],
 verbForms:[
  {ko:"인간에게 의미 있는 일, 즉 성취감과 권한을 제공하는 일이 얼마나 중요한지를 과장해서 말한다는 것은 어려울 것이다.",
   parts:["It would ",{b:"be",a:"be"}," hard ",{b:"overstate",a:"to overstate"}," how important meaningful work ",{b:"be",a:"is"}," to human beings — work that ",{b:"provide",a:"provides"}," a sense of fulfillment and empowerment."]},
@@ -1190,7 +1373,18 @@ sentences:[
  {ko:"자신의 의사에게 수술하는 방법을 알려주거나 자신의 회계사에게 자신의 세금을 준비하는 방법을 알려주는 사람은 거의 없지만, 많은 사람들이 스포츠 조직이 어떻게 관리되어야 하는지에 대한 피드백은 제공한다.",
   parts:["Very few people tell their doctor how ",{c:["performing","to perform",1,"의문사 how + to부정사 → to perform"]}," surgery or their accountant how ",{c:["preparing","to prepare",1,"동일 구조 → to prepare"]}," their taxes, but many people ",{c:["provide","require",0,"해석: 피드백을 '제공하다'"]}," feedback on how ",{c:["should sport organizations","sport organizations should",1,"간접의문문 어순(의문사+주어+동사) → sport organizations should"]}," ",{c:["manage","be managed",1,"조직이 '관리되는' 수동 → be managed"]},"."]}
 ],
-writings:[],
+writings:[
+ {tag:"5형식 구조 (find + O + p.p.)",
+  ko:"여러 해의 훈련과 스포츠 경영 전문 학위를 가진 학생·전문가조차, 전문성이 전혀 없는 친구·가족·심지어 완전한 낯선 사람에게서 일하는 법에 대한 조언을 받는 자신을 발견할 수 있다.",
+  chunks:["may also find themselves","being given advice","on how to do their jobs"],
+  answer:"may also find themselves being given advice on how to do their jobs",
+  point:"<b>find + 목적어 + 목적격보어(현재분사/수동)</b>: find themselves being given advice(자신이 조언을 받고 있는 것을 발견하다)."},
+ {tag:"수동태 (should be p.p.)",
+  ko:"의사에게 수술법을, 회계사에게 세금 처리법을 알려주는 사람은 거의 없지만, 스포츠 조직이 어떻게 운영되어야 하는지에 대해서는 많은 이가 의견을 낸다.",
+  chunks:["but many people provide feedback","on how","sport organizations","should be managed"],
+  answer:"but many people provide feedback on how sport organizations should be managed.",
+  point:"<b>조동사+be+p.p. 수동태</b>: how sport organizations should be managed(어떻게 관리되어야 하는지). 간접의문문 어순(의문사+주어+동사)에 유의."}
+],
 verbForms:[
  {ko:"'Monday Morning Quarterback'이라는 이름이 존재하는 이유가 있다.",
   parts:["There ",{b:"be",a:"is"}," a reason the title “Monday Morning Quarterback” ",{b:"exist",a:"exists"},"."]},
@@ -1225,7 +1419,28 @@ sentences:[
  {ko:"이것의 어떤 것도 우리가 더 어리석다는 것을 의미하지는 않지만 — 뇌 크기가 반드시 인간의 지능의 지표는 아니다 — 그것은 오늘날 우리의 뇌가 다르게, 그리고 우리 조상들의 그것들보다 아마도 더 효율적으로 타고났다는 것을 의미할지도 모른다.",
   parts:["None ",{c:["this","of this",1,"None of this 관용표현 → of this"]}," may mean we are dumber — brain size is not necessarily an indicator of human intelligence — but it may mean ",{c:["what","that",1,"mean 뒤 완전한 절(목적어절) → that"]}," our brains today are wired up differently, and perhaps more efficiently, than ",{c:["that","those",1,"brains(복수)를 받는 대명사 → those"]}," of our ancestors."]}
 ],
-writings:[],
+writings:[
+ {tag:"관계부사 (where)",
+  ko:"한 가지 가능한 이유는, 수천 년 전 인간이 위험한 포식자들의 세계에 살면서 죽임을 당하지 않으려 늘 정신을 바짝 차려야 했다는 것이다.",
+  chunks:["a world of dangerous predators","where they had to have","their wits about them","at all times","to avoid being killed"],
+  answer:"a world of dangerous predators where they had to have their wits about them at all times to avoid being killed.",
+  point:"<b>관계부사 where</b>: 선행사 a world of dangerous predators를 수식(= in which). to avoid -ing는 '~하지 않기 위해'."},
+ {tag:"수동태 (현재완료 수동)",
+  ko:"오늘날 우리는 사실상 스스로를 길들였고, 즉각적 죽음을 피하는 일부터 은신처를 짓고 음식을 얻는 일까지 많은 생존 과제가 더 넓은 사회로 위임되었다.",
+  chunks:["has been outsourced","to the wider society"],
+  answer:"has been outsourced to the wider society.",
+  point:"<b>현재완료 수동태 have/has been p.p.</b>: 많은 과업이 '위탁되어 왔다' → has been outsourced."},
+ {tag:"동격의 that",
+  ko:"우리도 조상보다 몸집이 작으며, 가축이 야생 친척보다 대체로 작다는 것은 가축의 한 특징이다.",
+  chunks:["it is a characteristic","of domestic animals","that they are generally smaller","than their wild cousins"],
+  answer:"it is a characteristic of domestic animals that they are generally smaller than their wild cousins.",
+  point:"<b>동격의 that</b>: a characteristic (that they are generally smaller...) — that절이 characteristic의 구체적 내용을 설명. 관계대명사가 아닌 명사절 접속사임에 유의."},
+ {tag:"수동태 (be wired up)",
+  ko:"다만 오늘날 우리 뇌가 조상의 뇌와 다르게, 아마 더 효율적으로 배선되어 있다는 뜻일 수는 있다.",
+  chunks:["our brains today","are wired up","differently"],
+  answer:"our brains today are wired up differently",
+  point:"<b>수동태 be wired up</b>: '배선되다, 형성되다'라는 비유적 표현의 수동태. 주어 our brains(복수) → are wired."}
+],
 verbForms:[
  {ko:"인간의 뇌는 15,000년에서 30,000년 전 크기가 정점에 도달한 이래 부피가 약 10퍼센트만큼 줄어들었다는 것이 밝혀졌다.",
   parts:["The human brain, it ",{b:"turn",a:"turns"}," out, ",{b:"have, shrink",a:"has shrunk"}," in mass by about 10 percent since it ",{b:"peak",a:"peaked"}," in size 15,000-30,000 years ago."]},
@@ -1266,7 +1481,28 @@ sentences:[
  {ko:"그것은 회사들이 더 적게 생산하고 일부 직원들을 해고하는 것을 의미할 것이다.",
   parts:["That would mean firms ",{c:["producing","to produce",0,"mean + 목적어 + 현재분사(목적격보어) → producing"]}," less and ",{c:["dismissing","to dismiss",0,"병렬 현재분사 → dismissing"]}," some of their workers."]}
 ],
-writings:[],
+writings:[
+ {tag:"수동태 (관계대명사 축약 + 수동)",
+  ko:"생산된 어떤 것에서 나온 돈은 다른 무언가를 사는 데 쓰인다.",
+  chunks:["that's produced","is used","to buy something else"],
+  answer:"that's produced is used to buy something else.",
+  point:"<b>주격 관계대명사+be동사 축약(that's = that is) + 수동태 is used</b>: anything (that is) produced is used ~."},
+ {tag:"전치사+관계대명사 (in which)",
+  ko:"기업이 제품을 팔지 못해 노동자를 해고하고 공장을 닫아야 하는 상황은 결코 있을 수 없다.",
+  chunks:["in which a firm finds","that it can't sell its goods","and so has to dismiss workers","and close its factories"],
+  answer:"in which a firm finds that it can't sell its goods and so has to dismiss workers and close its factories.",
+  point:"<b>a situation in which ~</b>: 뒤에 완전한 절이 이어지므로 '전치사+관계대명사(in which)'가 필요."},
+ {tag:"5형식 구조 (현재분사 목적격보어)",
+  ko:"당신은 이제 물 높이가 내려가는 것을 상상하고 있을 것이고, 그래서 경제의 지출이 줄어든다.",
+  chunks:["You're probably imagining","the water level","now falling"],
+  answer:"You're probably imagining the water level now falling",
+  point:"<b>imagine + 목적어 + 목적격보어(현재분사)</b>: imagine the water level falling(물 높이가 내려가는 것을 상상하다). 목적어·보어가 능동 관계 → 현재분사."},
+ {tag:"5형식 구조 (mean + O + 현재분사)",
+  ko:"그것은 기업이 덜 생산하고 노동자 일부를 해고한다는 뜻이 될 것이다.",
+  chunks:["That would mean","firms producing less","and dismissing","some of their workers"],
+  answer:"That would mean firms producing less and dismissing some of their workers.",
+  point:"<b>mean + 목적어 + 목적격보어(현재분사)</b>: mean firms producing ~ and dismissing ~('기업이 ~하는 것을 의미하다'). 두 현재분사가 병렬."}
+],
 verbForms:[
  {ko:"경제이론인 Say의 법칙은 만들어진 모든 물품이 팔리기 마련이라고 주장한다.",
   parts:["An economic theory of Say's Law ",{b:"hold",a:"holds"}," that everything that ",{b:"be, make",a:"is made"}," will ",{b:"get, sell",a:"get sold"},"."]},
@@ -1307,7 +1543,28 @@ sentences:[
  {ko:"식품 라벨의 주된 목적은 여러분이 구입하고 있는 식품 안에 무엇이 들어 있는지 여러분에게 알려주는 것이다.",
   parts:["The ",{c:["mainly","main",1,"명사 purpose 수식 형용사 → main"]}," purpose of food labels is to inform you ",{c:["what","that",0,"inform you 뒤 목적어절, 선행사 없음 → what"]}," is inside the food you are ",{c:["purchased","purchasing",1,"당신이 '구입하는' 능동 → purchasing"]},"."]}
 ],
-writings:[],
+writings:[
+ {tag:"수동태 (be used to V)",
+  ko:"이 말은 흔히 먹는 음식과 신체 건강의 관계를 보여주는 데 쓰인다.",
+  chunks:["That phrase","is often used","to show the relationship"],
+  answer:"That phrase is often used to show the relationship",
+  point:"<b>be used to V(수동태+to부정사)</b>: '~하는 데 사용되다' → is used to show. to show는 목적(부사적 용법)."},
+ {tag:"so ~ that 구문",
+  ko:"오늘날 제조되는 많은 제품은 화학물질과 인공 성분이 너무 많아서 그 안에 정확히 무엇이 들었는지 알기 어려울 때가 있다.",
+  chunks:["Many of the manufactured products","made today","contain so many chemicals","and artificial ingredients","that it is sometimes difficult","to know exactly","what is inside them"],
+  answer:"Many of the manufactured products made today contain so many chemicals and artificial ingredients that it is sometimes difficult to know exactly what is inside them.",
+  point:"<b>so + 형용사/명사구 + that ~</b>: '너무 ~해서 ~하다' 구문. so many chemicals ... that it is difficult ~."},
+ {tag:"가주어-진주어 (it ~ to V)",
+  ko:"화학물질과 인공 성분이 너무 많아서 그 안에 정확히 무엇이 들었는지 알기 어려울 때가 있다.",
+  chunks:["it is sometimes difficult","to know exactly","what is inside them"],
+  answer:"it is sometimes difficult to know exactly what is inside them.",
+  point:"<b>가주어 it ~ to V(진주어)</b>: it is difficult to know ~(~을 아는 것이 어렵다). know의 목적어는 what이 이끄는 명사절."},
+ {tag:"관계대명사 (선행사 없는 what)",
+  ko:"식품 라벨의 주된 목적은 당신이 구입하는 식품 안에 무엇이 들었는지 알려 주는 것이다.",
+  chunks:["The main purpose","of food labels","is to inform you","what is inside the food","you are purchasing"],
+  answer:"The main purpose of food labels is to inform you what is inside the food you are purchasing.",
+  point:"<b>선행사 없는 관계대명사 what</b>: inform you what is inside ~(무엇이 들어있는지). what절이 inform의 직접목적어(명사절)."}
+],
 verbForms:[
  {ko:"'먹는 것이 여러분을 만든다.' 그 구절은 흔히 여러분이 먹는 음식과 여러분의 신체 건강 사이의 관계를 보여주기 위해 사용된다.",
   parts:["“You ",{b:"be",a:"are"}," what you ",{b:"eat",a:"eat"},".” That phrase ",{b:"be",a:"is"}," often ",{b:"use",a:"used"}," ",{b:"show",a:"to show"}," the relationship between the foods you ",{b:"eat",a:"eat"}," and your physical health."]},
@@ -1340,7 +1597,23 @@ sentences:[
  {ko:"반면, 땀을 흘리는 것을 피하고 쾌적한 상태를 유지하기 위해 체온을 조절하려면 겹겹이 입어서 추운 환경에 대처하는 것이 최선이다.",
   parts:["In contrast, it is best ",{c:["facing","to face",1,"it is best + to부정사(진주어) → to face"]}," cold environments with layers so you can adjust your body temperature ",{c:["avoid","to avoid",1,"to부정사(목적, '피하기 위해') → to avoid"]}," sweating and ",{c:["remain","remaining",0,"can 뒤 동사원형, adjust와 병렬 → remain"]}," ",{c:["comfortable","comfortably",0,"remain의 보어(형용사) → comfortable"]},"."]}
 ],
-writings:[],
+writings:[
+ {tag:"전치사+관계대명사 (in which)",
+  ko:"운동을 하게 될 온도와 환경 조건에 적합한 옷을 골라라.",
+  chunks:["in which","you will be doing","exercise"],
+  answer:"in which you will be doing exercise.",
+  point:"<b>전치사+관계대명사 in which</b>: conditions in which you will be doing exercise(뒤에 완전한 절) → 전치사+관계대명사 필요."},
+ {tag:"관계대명사 (주격 that)",
+  ko:"운동과 계절에 맞는 옷은 운동 경험을 향상시킬 수 있다.",
+  chunks:["Clothing that","is appropriate","for exercise and the season"],
+  answer:"Clothing that is appropriate for exercise and the season",
+  point:"<b>선행사 Clothing을 수식하는 주격 관계대명사 that</b>: Clothing that is appropriate ~(적절한 의류). 문장의 본동사는 can improve."},
+ {tag:"가주어-진주어 (it is best to V)",
+  ko:"반대로 추운 환경은 겹겹이 껴입고 맞서 체온을 조절해 땀을 피하고 편안함을 유지하는 것이 가장 좋다.",
+  chunks:["it is best","to face cold environments","with layers","so you can adjust your body temperature","to avoid sweating","and remain comfortable"],
+  answer:"it is best to face cold environments with layers so you can adjust your body temperature to avoid sweating and remain comfortable.",
+  point:"<b>가주어 it ~ to V(진주어)</b>: it is best to face ~(~하는 것이 가장 좋다). so (that) ~는 목적의 부사절."}
+],
 verbForms:[
  {ko:"운동하는 동안 편안함을 제공하기 위해 의류가 비쌀 필요는 없다.",
   parts:["Clothing ",{b:"not, have to, be",a:"doesn't have to be"}," expensive ",{b:"provide",a:"to provide"}," comfort during exercise."]},
@@ -1364,10 +1637,47 @@ verbForms:[
 /* ═══════════ 아래 코드는 수정 불필요 ═══════════ */
 let total=0, solved=0, correct=0, cur=null;
 
+function buildCombinedPassage(regex, title){
+  const parts=PASSAGES.filter(p=>regex.test(p.title));
+  const letters=parts.map(p=>p.title.trim().slice(-1)).join('·');
+  const sentences=[].concat(...parts.map(p=>p.sentences));
+  const writings=[].concat(...parts.map(p=>p.writings));
+  const verbForms=[].concat(...parts.map(p=>p.verbForms||[]));
+  return {
+    title,
+    sub:`DAY ${letters} 지문 ${parts.length}개 통합 · 문제 다 풀고 전송은 한 번만`,
+    sentences, writings, verbForms,
+    noFlow:true // 여러 지문을 이어붙인 통합 자료라 ③ 순서·삽입 훈련은 지원하지 않음
+  };
+}
+const COMBINED=[
+  {key:'m5', label:'🔥 매삼영 5 DAY 전체 한번에 풀기', match:/^매삼영 5 DAY - /},
+  {key:'m10', label:'🔥 매삼영 10 DAY 전체 한번에 풀기', match:/^매삼영 10 DAY - /}
+];
+function openCombined(key){
+  const c=COMBINED.find(x=>x.key===key);
+  if(!c)return;
+  cur=buildCombinedPassage(c.match, c.label.replace('🔥 ',''));
+  document.getElementById('home').style.display='none';
+  document.getElementById('study').style.display='block';
+  document.getElementById('pTitle').innerHTML=`<em>${cur.title}</em>`;
+  switchTab(cur.sentences.length?'quiz':'write');
+  buildQuiz(); buildWrite(); buildFlow(); buildVF();
+  window.scrollTo({top:0});
+}
+
 function buildHome(){
   renderWrongCard();
   const list=document.getElementById('plist');
-  list.innerHTML=PASSAGES.map((p,i)=>{
+  const combinedHtml=COMBINED.filter(c=>PASSAGES.some(p=>c.match.test(p.title))).map(c=>{
+    const n=PASSAGES.filter(p=>c.match.test(p.title)).length;
+    return `<div class="pcard" style="border:2px solid var(--navy);background:#eef1fa" onclick="openCombined('${c.key}')">
+      <div class="pnum" style="background:var(--navy)">전체</div>
+      <div class="pinfo"><div class="t">${c.label}</div>
+      <div class="m">지문 ${n}개 통합 · 어법·서술형·동사형고치기를 이어서 풀고 전송은 한 번만</div></div>
+      <div class="go">›</div></div>`;
+  }).join('');
+  list.innerHTML=combinedHtml+PASSAGES.map((p,i)=>{
     const n=p.sentences.reduce((a,s)=>a+s.parts.filter(x=>typeof x!=='string').length,0);
     const qTxt=n?`어법 ${n}문항`:'서술형 전용';
     const wTxt=p.writings.length?`영작 ${p.writings.length}문장`:'영작 준비중';
@@ -1456,16 +1766,37 @@ function pick(btn,idx){
   updateLevel();
 }
 
+/* ── 전송 여부 저장/확인 (혼동 방지: 버튼을 실제로 눌러 성공했을 때만 "전송됨"으로 기록) ── */
+function sentKey(kind, title){
+  const who=(STUDENT||'').trim() || '(이름없음)';
+  return `gwsky_sent__${kind}__${title}__${who}`;
+}
+function isSent(kind, title){
+  try{ return localStorage.getItem(sentKey(kind,title)) || ''; }catch(e){ return ''; }
+}
+function markSent(kind, title, when){
+  try{ localStorage.setItem(sentKey(kind,title), when); }catch(e){}
+}
+
 function updateLevel(){
   document.getElementById('score').textContent=`${correct} / ${total}`;
   document.getElementById('fill').style.width=total?(correct/total*100)+'%':'0%';
-  // 다 풀면 결과 전송 버튼 표시
+  // 다 풀면 결과 전송 버튼 표시 — 버튼을 실제로 눌러야만 전송됨 (자동 전송 아님)
   const box=document.getElementById('sendBox');
+  const btn=document.getElementById('sendBtn');
+  const msg=document.getElementById('sendMsg');
   if(RESULT_URL && total>0 && solved===total){
     box.style.display='';
-    document.getElementById('sendBtn').disabled=false;
-    document.getElementById('sendBtn').textContent='📤 내 점수 선생님께 전송';
-    document.getElementById('sendMsg').textContent='';
+    btn.disabled=false;
+    btn.textContent='📤 내 점수 선생님께 전송';
+    const sentAt=isSent('어법', cur.title);
+    if(sentAt){
+      msg.className='wstatus ok';
+      msg.textContent='이전에 '+sentAt+'에 전송했어요. 다시 풀었다면 또 눌러서 새 점수를 보내주세요.';
+    }else{
+      msg.className='wstatus';
+      msg.textContent='⚠️ 이 버튼을 눌러야 전송돼요. 아직 전송되지 않았어요.';
+    }
   }else{
     box.style.display='none';
   }
@@ -1479,9 +1810,13 @@ function sendResult(){
     STUDENT=n;
     try{ localStorage.setItem('gwsky_name', n); }catch(e){}
   }
+  // 안전장치: 실수로 누르는 것을 막기 위해 한 번 더 확인
+  if(!window.confirm(`${STUDENT}님, 점수(${correct}/${total})를 선생님께 전송할까요?\n이 버튼을 눌러야만 전송되며, 누르지 않으면 전송되지 않아요.`)) return;
   const btn=document.getElementById('sendBtn');
   const msg=document.getElementById('sendMsg');
   btn.disabled=true; btn.textContent='전송 중…';
+  msg.className='wstatus';
+  msg.textContent='';
   const data=new URLSearchParams({
     name: STUDENT,
     title: cur.title+' (어법)',
@@ -1491,7 +1826,9 @@ function sendResult(){
   });
   fetch(RESULT_URL,{method:'POST',mode:'no-cors',body:data})
     .then(()=>{
-      btn.textContent='✅ 전송 완료!';
+      const now=new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'});
+      markSent('어법', cur.title, now);
+      btn.textContent='✅ 전송 완료 ('+now+')';
       msg.className='wstatus ok';
       msg.textContent='선생님 성적표에 기록되었어요';
     })
@@ -1507,6 +1844,7 @@ function resetQuiz(){buildQuiz();window.scrollTo({top:0,behavior:'smooth'});}
 
 /* ── 서술형 순서배열 ── */
 let WSTATE=[];
+let WR={total:0,checked:{},correct:{}}; // 서술형(순서배열) 전체 진행 상태
 
 function shuffle(arr){
   const a=[...arr];
@@ -1520,12 +1858,16 @@ function shuffle(arr){
 }
 
 function buildWrite(){
+  document.getElementById('writeSendBox').style.display='none';
+  document.getElementById('writeProgress').textContent='';
   if(!cur.writings.length){
     document.getElementById('writeArea').innerHTML=
       `<div class="coming">✍️ 이 지문의 서술형 암기 문장은 곧 업데이트됩니다.<br>먼저 ① 어법 양자택일로 연습해 두세요!</div>`;
+    WR={total:0,checked:{},correct:{}};
     return;
   }
   WSTATE=cur.writings.map(w=>({pool:shuffle(w.chunks),placed:[]}));
+  WR={total:cur.writings.length,checked:{},correct:{}};
   document.getElementById('writeArea').innerHTML=cur.writings.map((w,i)=>`
     <details class="w" ${i===0?'open':''}>
       <summary>문장 ${i+1} <span class="tag">${w.tag}</span> <span class="arrow">▶</span></summary>
@@ -1558,11 +1900,83 @@ function renderW(i){
     const good=st.placed.every((c,k)=>c===w.chunks[k]);
     if(good){built.classList.add('ok');msg.classList.add('ok');msg.textContent='🎉 정답! 완벽한 순서예요';}
     else{built.classList.add('bad');msg.classList.add('bad');msg.textContent='순서가 달라요 — 청크를 터치해 빼거나 다시 섞기!';}
+    WR.checked[i]=true;
+    WR.correct[i]=good?1:0; // 재배열하면 최근 결과로 갱신
   }else if(st.placed.length){
     msg.textContent=`${st.placed.length} / ${w.chunks.length} 조각 배치 중… (잘못 놓았으면 그 조각을 터치)`;
+    delete WR.checked[i];
   }else{
     msg.textContent='';
+    delete WR.checked[i];
   }
+  updateWriteProgress();
+}
+
+function updateWriteProgress(){
+  const n=WR.total;
+  const done=Object.keys(WR.checked).length;
+  const prog=document.getElementById('writeProgress');
+  const box=document.getElementById('writeSendBox');
+  const btn=document.getElementById('writeSendBtn');
+  const msg=document.getElementById('writeSendMsg');
+  if(!n || done<n){
+    prog.textContent=n?`${done} / ${n} 문장 완료`:'';
+    box.style.display='none';
+    return;
+  }
+  const sum=Object.values(WR.correct).reduce((a,b)=>a+b,0);
+  const pct=Math.round(sum/n*100);
+  prog.textContent=`전체 ${sum} / ${n} 문장 정답 (${pct}%)`;
+  if(!RESULT_URL){ box.style.display='none'; return; }
+  box.style.display='';
+  btn.disabled=false;
+  btn.textContent='📤 서술형 점수 선생님께 전송';
+  const sentAt=isSent('서술형', cur.title);
+  if(sentAt){
+    msg.className='wstatus ok';
+    msg.textContent='이전에 '+sentAt+'에 전송했어요. 다시 풀었다면 또 눌러서 새 점수를 보내주세요.';
+  }else{
+    msg.className='wstatus';
+    msg.textContent='⚠️ 이 버튼을 눌러야 전송돼요. 아직 전송되지 않았어요.';
+  }
+}
+
+function sendWrite(){
+  if(!STUDENT || STUDENT.trim().length<2){
+    const n=(window.prompt('이름을 입력해 주세요 (성적표에 기록됩니다)')||'').trim();
+    if(n.length<2){ alert('이름이 있어야 점수를 전송할 수 있어요!'); return; }
+    STUDENT=n;
+    try{ localStorage.setItem('gwsky_name', n); }catch(e){}
+  }
+  const sum0=Object.values(WR.correct).reduce((a,b)=>a+b,0);
+  if(!window.confirm(`${STUDENT}님, 점수(${sum0}/${WR.total})를 선생님께 전송할까요?\n이 버튼을 눌러야만 전송되며, 누르지 않으면 전송되지 않아요.`)) return;
+  const btn=document.getElementById('writeSendBtn');
+  const msg=document.getElementById('writeSendMsg');
+  btn.disabled=true; btn.textContent='전송 중…';
+  msg.className='wstatus';
+  msg.textContent='';
+  const sum=Object.values(WR.correct).reduce((a,b)=>a+b,0);
+  const data=new URLSearchParams({
+    name: STUDENT,
+    title: cur.title+' (서술형)',
+    score: sum,
+    total: WR.total,
+    pct: WR.total?Math.round(sum/WR.total*100)+'%':'0%'
+  });
+  fetch(RESULT_URL,{method:'POST',mode:'no-cors',body:data})
+    .then(()=>{
+      const now=new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'});
+      markSent('서술형', cur.title, now);
+      btn.textContent='✅ 전송 완료 ('+now+')';
+      msg.className='wstatus ok';
+      msg.textContent='선생님 성적표에 기록되었어요';
+    })
+    .catch(()=>{
+      btn.disabled=false;
+      btn.textContent='📤 다시 전송하기';
+      msg.className='wstatus bad';
+      msg.textContent='전송 실패 — 인터넷 연결 확인 후 다시 눌러주세요';
+    });
 }
 
 function tapPool(i,k){
@@ -1598,9 +2012,12 @@ function plainS(i){
 function circled(g){return String.fromCharCode(0x2460+g-1);}
 
 function buildFlow(){
-  const has=cur.sentences.length>=3;
+  const has=!cur.noFlow && cur.sentences.length>=3;
   document.getElementById('flowContent').style.display=has?'':'none';
   document.getElementById('flowNotice').style.display=has?'none':'';
+  document.getElementById('flowNotice').textContent=cur.noFlow
+    ? '📖 여러 지문을 통합한 자료라 ③ 순서·삽입 훈련은 지원하지 않아요. 개별 지문에서 연습해 주세요.'
+    : '📖 이 자료는 서술형 전용이라 순서·삽입 훈련이 없습니다.';
   if(!has)return;
   OST={pool:shuffle(cur.sentences.map((_,i)=>i).slice(1)),placed:[],ko:false};
   document.getElementById('okoBtn').textContent='🔎 해석 힌트 켜기';
@@ -1683,6 +2100,7 @@ function pickGap(g){
 
 /* ── 동사형고치기 (한 문장에 빈칸 여러 개, 인라인 입력형) ── */
 let VF={total:0,checked:{},correct:{}}; // 동사형고치기 전체 진행 상태 (문장별 최근 채점 결과 누적)
+let VFINPUTS=[]; // 동사형고치기 전체 입력칸 id 순서 (Enter로 다음 칸 이동 / 전체 채점용)
 
 function buildVF(){
   const has=cur.verbForms && cur.verbForms.length;
@@ -1691,6 +2109,7 @@ function buildVF(){
   const area=document.getElementById('vfArea');
   document.getElementById('vfSendBox').style.display='none';
   document.getElementById('vfProgress').textContent='';
+  VFINPUTS=[];
   if(!has){ area.innerHTML=''; VF={total:0,checked:{},correct:{}}; return; }
   VF={total:cur.verbForms.reduce((a,q)=>a+q.parts.filter(x=>typeof x!=='string').length,0),checked:{},correct:{}};
   area.innerHTML=cur.verbForms.map((q,qi)=>{
@@ -1698,7 +2117,9 @@ function buildVF(){
     q.parts.forEach(p=>{
       if(typeof p==='string'){ sent+=p; }
       else{
-        sent+=`<input class="vfinput" id="vfin-${qi}-${bi}" placeholder="(${p.b})" onkeydown="if(event.key==='Enter'){event.preventDefault();checkVF(${qi});}">`;
+        const id=`vfin-${qi}-${bi}`;
+        VFINPUTS.push(id);
+        sent+=`<input class="vfinput" id="${id}" placeholder="(${p.b})" onkeydown="if(event.key==='Enter'){event.preventDefault();vfEnter('${id}');}">`;
         bi++;
       }
     });
@@ -1707,52 +2128,82 @@ function buildVF(){
       <div class="ko">${q.ko}</div>
       <div class="sent">${sent}</div>
       <div class="vfrow">
-        <button class="vfcheck" onclick="checkVF(${qi})">채점</button>
-        <button class="wbtn" style="width:auto;padding:9px 12px;margin:0" onclick="toggleVFAns(${qi})">정답 보기</button>
+        <button class="wbtn" style="width:auto;padding:9px 12px;margin:0" onclick="toggleVFAns(${qi})">정답 보기 (채점 후 확인 가능)</button>
       </div>
       <div class="vffb" id="vffb-${qi}"></div>
       <div class="vfans" id="vfans-${qi}">${ansText}</div>
     </div>`;
-  }).join('');
+  }).join('')+`
+    <div class="vfq" style="text-align:center">
+      <div style="font-size:12.5px;color:var(--ink-dim);margin-bottom:10px">모든 빈칸을 다 채운 뒤, 아래 버튼 <b>한 번</b>으로 전체를 채점하세요.<br>채점 전에는 정답을 볼 수 없어요.</div>
+      <button class="vfcheck" style="width:100%" onclick="checkAllVF()">✅ 다 풀었어요 — 전체 채점하기</button>
+    </div>`;
 }
-function checkVF(qi){
-  const q=cur.verbForms[qi];
-  let bi=0, correct=0, total=0;
-  q.parts.forEach(p=>{
-    if(typeof p!=='string'){
-      total++;
-      const el=document.getElementById(`vfin-${qi}-${bi}`);
-      const val=el.value.trim().toLowerCase().replace(/\s+/g,' ');
-      const ans=p.a.trim().toLowerCase().replace(/\s+/g,' ');
-      el.classList.remove('ok','bad');
-      if(val===ans){ el.classList.add('ok'); correct++; }
-      else{ el.classList.add('bad'); }
-      bi++;
-    }
+function vfEnter(id){
+  const idx=VFINPUTS.indexOf(id);
+  if(idx>-1 && idx<VFINPUTS.length-1){
+    document.getElementById(VFINPUTS[idx+1]).focus();
+  }else{
+    checkAllVF();
+  }
+}
+function checkAllVF(){
+  cur.verbForms.forEach((q,qi)=>{
+    let bi=0, correct=0, total=0;
+    q.parts.forEach(p=>{
+      if(typeof p!=='string'){
+        total++;
+        const el=document.getElementById(`vfin-${qi}-${bi}`);
+        const val=el.value.trim().toLowerCase().replace(/\s+/g,' ');
+        const ans=p.a.trim().toLowerCase().replace(/\s+/g,' ');
+        el.classList.remove('ok','bad');
+        if(val===ans){ el.classList.add('ok'); correct++; }
+        else{ el.classList.add('bad'); }
+        bi++;
+      }
+    });
+    const fb=document.getElementById(`vffb-${qi}`);
+    fb.className='vffb '+(correct===total?'ok':'bad');
+    fb.textContent=correct===total?`🎉 ${correct}/${total} 정답!`:`${correct}/${total} 정답 — 빨간 칸을 다시 확인해보세요`;
+    VF.checked[qi]=true;
+    VF.correct[qi]=correct; // 재채점하면 최근 결과로 갱신
   });
-  const fb=document.getElementById(`vffb-${qi}`);
-  fb.className='vffb '+(correct===total?'ok':'bad');
-  fb.textContent=correct===total?`🎉 ${correct}/${total} 정답!`:`${correct}/${total} 정답 — 빨간 칸을 다시 확인해보세요`;
-  VF.checked[qi]=true;
-  VF.correct[qi]=correct; // 재채점하면 최근 결과로 갱신
   updateVFProgress();
+  const first=document.querySelector('#vfArea .vffb');
+  if(first) first.scrollIntoView({behavior:'smooth',block:'center'});
 }
 function updateVFProgress(){
   const n=cur.verbForms.length;
   const done=Object.keys(VF.checked).length;
   const prog=document.getElementById('vfProgress');
   const box=document.getElementById('vfSendBox');
+  const btn=document.getElementById('vfSendBtn');
+  const msg=document.getElementById('vfSendMsg');
   if(done<n){
-    prog.textContent=`${done} / ${n} 문장 채점 완료`;
+    prog.textContent=n?'모든 빈칸을 채운 뒤 전체 채점하기를 눌러주세요':'';
     box.style.display='none';
   }else{
     const sum=Object.values(VF.correct).reduce((a,b)=>a+b,0);
     const pct=VF.total?Math.round(sum/VF.total*100):0;
     prog.textContent=`전체 ${sum} / ${VF.total} 빈칸 정답 (${pct}%)`;
     box.style.display='';
+    btn.disabled=false;
+    btn.textContent='📤 동사형고치기 점수 선생님께 전송';
+    const sentAt=isSent('동사형고치기', cur.title);
+    if(sentAt){
+      msg.className='wstatus ok';
+      msg.textContent='이전에 '+sentAt+'에 전송했어요. 다시 풀었다면 또 눌러서 새 점수를 보내주세요.';
+    }else{
+      msg.className='wstatus';
+      msg.textContent='⚠️ 이 버튼을 눌러야 전송돼요. 아직 전송되지 않았어요.';
+    }
   }
 }
 function toggleVFAns(qi){
+  if(!VF.checked[qi]){
+    alert('먼저 아래 "전체 채점하기" 버튼을 눌러 채점해야 정답을 볼 수 있어요.');
+    return;
+  }
   const el=document.getElementById(`vfans-${qi}`);
   el.style.display=el.style.display==='block'?'none':'block';
 }
@@ -1763,9 +2214,13 @@ function sendVF(){
     STUDENT=n;
     try{ localStorage.setItem('gwsky_name', n); }catch(e){}
   }
+  const sum0=Object.values(VF.correct).reduce((a,b)=>a+b,0);
+  if(!window.confirm(`${STUDENT}님, 점수(${sum0}/${VF.total})를 선생님께 전송할까요?\n이 버튼을 눌러야만 전송되며, 누르지 않으면 전송되지 않아요.`)) return;
   const btn=document.getElementById('vfSendBtn');
   const msg=document.getElementById('vfSendMsg');
   btn.disabled=true; btn.textContent='전송 중…';
+  msg.className='wstatus';
+  msg.textContent='';
   const sum=Object.values(VF.correct).reduce((a,b)=>a+b,0);
   const data=new URLSearchParams({
     name: STUDENT,
@@ -1775,7 +2230,13 @@ function sendVF(){
     pct: VF.total?Math.round(sum/VF.total*100)+'%':'0%'
   });
   fetch(RESULT_URL,{method:'POST',mode:'no-cors',body:data})
-    .then(()=>{btn.textContent='✅ 전송 완료!';msg.className='wstatus ok';msg.textContent='선생님 성적표에 기록되었어요';})
+    .then(()=>{
+      const now=new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'});
+      markSent('동사형고치기', cur.title, now);
+      btn.textContent='✅ 전송 완료 ('+now+')';
+      msg.className='wstatus ok';
+      msg.textContent='선생님 성적표에 기록되었어요';
+    })
     .catch(()=>{btn.disabled=false;btn.textContent='📤 다시 전송하기';msg.className='wstatus bad';msg.textContent='전송 실패 — 인터넷 연결 확인 후 다시 눌러주세요';});
 }
 let VMODE='ko'; // 'ko' 뜻 모드 | 'syn' 유의어 모드
@@ -1974,8 +2435,13 @@ function renderVQ(){
     footer+=`<div class="big">${VQ.score} / ${n}</div>
       <div style="font-size:13px;color:var(--ink-dim);margin-bottom:14px">정답률 ${pct}% ${pct===100?'— 완벽해요! 🎉':pct>=80?'— 거의 다 왔어요!':'— 플래시카드로 복습 후 재도전!'}</div>`;
     if(RESULT_URL && !WRONGNOTE){
+      const vTitle=(curV && (curV.sheetTitle||curV.title))||'';
+      const sentAt=isSent('단어', vTitle);
+      const statusLine=sentAt
+        ? `<div class="wstatus ok" id="vSendMsg" style="text-align:center">이전에 ${sentAt}에 전송했어요. 다시 풀었다면 또 눌러서 새 점수를 보내주세요.</div>`
+        : `<div class="wstatus" id="vSendMsg" style="text-align:center">⚠️ 이 버튼을 눌러야 전송돼요. 아직 전송되지 않았어요.</div>`;
       footer+=`<button class="wbtn" id="vSendBtn" style="background:var(--navy);color:#fff;border-color:var(--navy);padding:12px" onclick="sendVocab()">📤 단어 점수 선생님께 전송</button>
-      <div class="wstatus" id="vSendMsg" style="text-align:center"></div>`;
+      ${statusLine}`;
     }
     if(WRONGNOTE){
       footer+=`<div style="font-size:12px;color:var(--ink-dim);margin-bottom:8px">맞힌 단어는 오답노트에서 자동으로 빠졌어요. 남은 단어를 계속 복습하세요!</div>`;
@@ -2004,19 +2470,29 @@ function sendVocab(){
     STUDENT=nm;
     try{ localStorage.setItem('gwsky_name', nm); }catch(e){}
   }
+  const n=VQ.list.length;
+  const vTitle=curV.sheetTitle || curV.title;
+  if(!window.confirm(`${STUDENT}님, 점수(${VQ.score}/${n})를 선생님께 전송할까요?\n이 버튼을 눌러야만 전송되며, 누르지 않으면 전송되지 않아요.`)) return;
   const btn=document.getElementById('vSendBtn');
   const msg=document.getElementById('vSendMsg');
   btn.disabled=true; btn.textContent='전송 중…';
-  const n=VQ.list.length;
+  msg.className='wstatus';
+  msg.textContent='';
   const data=new URLSearchParams({
     name: STUDENT,
-    title: curV.sheetTitle || curV.title,
+    title: vTitle,
     score: VQ.score,
     total: n,
     pct: Math.round(VQ.score/n*100)+'%'
   });
   fetch(RESULT_URL,{method:'POST',mode:'no-cors',body:data})
-    .then(()=>{btn.textContent='✅ 전송 완료!';msg.className='wstatus ok';msg.textContent='선생님 성적표에 기록되었어요';})
+    .then(()=>{
+      const now=new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'});
+      markSent('단어', vTitle, now);
+      btn.textContent='✅ 전송 완료 ('+now+')';
+      msg.className='wstatus ok';
+      msg.textContent='선생님 성적표에 기록되었어요';
+    })
     .catch(()=>{btn.disabled=false;btn.textContent='📤 다시 전송하기';msg.className='wstatus bad';msg.textContent='전송 실패 — 인터넷 연결 확인 후 다시 눌러주세요';});
 }
 

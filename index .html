@@ -213,6 +213,24 @@
   .abc-opt.bad{border-color:var(--no);border-style:solid;background:var(--no-bg);color:var(--no);text-decoration:line-through}
   .abc-q{border-left:3px solid var(--navy)}
 
+  /* ── OX퀴즈 ── */
+  .ox-q{border-left:3px solid var(--navy)}
+  .ox-stmt{font-size:14px;line-height:1.7;margin-bottom:10px}
+  .ox-btns{display:flex;gap:10px}
+  .ox-btn{
+    flex:1;padding:12px;border-radius:10px;border:1.5px solid var(--line);
+    background:var(--card);font-size:18px;font-weight:800;cursor:pointer;text-align:center;
+  }
+  .ox-btn.o{color:var(--navy)}
+  .ox-btn.x{color:var(--no)}
+  .ox-btn.picked{border-color:var(--navy);background:var(--card-2)}
+  .ox-btn.picked.o{background:rgba(27,47,94,.10)}
+  .ox-btn.picked.x{background:var(--no-bg)}
+  .ox-btn.ok{border-color:var(--ok);background:var(--ok-bg);color:var(--ok)}
+  .ox-btn.bad{border-color:var(--no);background:var(--no-bg);color:var(--no);text-decoration:line-through}
+  .ox-explain{font-size:12.5px;color:var(--ink-dim);margin-top:8px;padding-top:8px;border-top:1px dashed var(--line);display:none}
+  .ox-explain.show{display:block}
+
   .given{
     background:rgba(27,47,94,.06);border-left:3px solid var(--navy);border-radius:8px;
     padding:9px 11px;font-size:13.5px;line-height:1.6;margin-bottom:8px;
@@ -465,6 +483,7 @@
         <div class="tab" data-tab="flow" onclick="switchTab('flow')" style="font-size:12.5px;flex:1 1 45%">③ 순서·삽입</div>
         <div class="tab" data-tab="vf" onclick="switchTab('vf')" style="font-size:12.5px;flex:1 1 45%">④ 동사형고치기</div>
         <div class="tab" data-tab="abc" onclick="switchTab('abc')" style="font-size:12.5px;flex:1 1 45%">⑤ 순서배열(A·B·C)</div>
+        <div class="tab" data-tab="ox" onclick="switchTab('ox')" style="font-size:12.5px;flex:1 1 45%">⑥ OX퀴즈</div>
       </div>
     </header>
 
@@ -543,6 +562,21 @@
       <div id="abcSendBox" style="display:none;margin-bottom:12px">
         <button class="wbtn" id="abcSendBtn" style="background:var(--navy);color:#fff;border-color:var(--navy);padding:12px" onclick="sendABC()">📤 순서배열 점수 선생님께 전송</button>
         <div class="wstatus" id="abcSendMsg" style="text-align:center"></div>
+      </div>
+    </section>
+
+    <section id="ox">
+      <div id="oxNotice" class="coming" style="display:none">📖 이 지문은 OX퀴즈 문제가 아직 준비되지 않았습니다.</div>
+      <p class="guide" id="oxGuide" style="display:none">문장을 읽고 내용이 지문과 <b>일치하면 O, 일치하지 않으면 X</b>를 고르세요.</p>
+      <div id="oxArea"></div>
+      <div id="oxCheckBox" style="display:none;margin:10px 0">
+        <div style="font-size:12.5px;color:var(--ink-dim);margin-bottom:8px;text-align:center">모든 문제를 다 고른 뒤, 아래 버튼 <b>한 번</b>으로 전체를 채점하세요.</div>
+        <button class="vfcheck" style="width:100%" onclick="checkAllOX()">✅ 다 골랐어요 — 전체 채점하기</button>
+      </div>
+      <div id="oxProgress" class="wstatus" style="text-align:center;margin-bottom:8px"></div>
+      <div id="oxSendBox" style="display:none;margin-bottom:12px">
+        <button class="wbtn" id="oxSendBtn" style="background:var(--navy);color:#fff;border-color:var(--navy);padding:12px" onclick="sendOX()">📤 OX퀴즈 점수 선생님께 전송</button>
+        <div class="wstatus" id="oxSendMsg" style="text-align:center"></div>
       </div>
     </section>
 
@@ -968,6 +1002,115 @@ const VOCAB = [
  {en:"abandon",ko:"버리다",pos:"v",syn:"give up, discard, desert",grp:"CONTROL"},
  {en:"defend",ko:"옹호하다, 방어하다",pos:"v",syn:"justify, protect, advocate for",grp:"CONFLICT"},
  {en:"conform to",ko:"~에 따르다, 맞추다",pos:"v",syn:"adapt to, comply with",grp:"CONTROL"}
+]},
+
+{title:"DAY 07-A · 당신 몸의 원자는 빌린 것이다",sheetTitle:"DAY07-A 핵심단어",sub:"매삼영 · 2025.9 학평 21번",words:[
+ {en:"atom",ko:"원자",pos:"n",grp:"PHYS"},
+ {en:"universe",ko:"우주",pos:"n",grp:"PHYS"},
+ {en:"inhale",ko:"들이마시다",pos:"v",syn:"breathe in",grp:"PHYS"},
+ {en:"exhale",ko:"내쉬다",pos:"v",syn:"breathe out",grp:"PHYS"},
+ {en:"remaining",ko:"남은",pos:"a",syn:"left, leftover",grp:"QUANT"},
+ {en:"own",ko:"소유하다",pos:"v",syn:"possess, have",grp:"CONTROL"},
+ {en:"borrow",ko:"빌리다",pos:"v",grp:"TRUST"},
+ {en:"share",ko:"공유하다",pos:"v",grp:"SOC"},
+ {en:"cycle",ko:"순환하다",pos:"v",syn:"circulate, rotate",grp:"PROC"},
+ {en:"evaporate",ko:"증발시키다",pos:"v",grp:"CHANGE"},
+ {en:"recycle",ko:"재활용하다",pos:"v",syn:"reuse",grp:"PROC"},
+ {en:"origin",ko:"기원",pos:"n",syn:"source, beginning",grp:"PROC"},
+ {en:"exist",ko:"존재하다",pos:"v",grp:"PROC"},
+ {en:"limitless",ko:"무한한",pos:"a",syn:"endless, boundless",grp:"QUANT"},
+ {en:"caretaker",ko:"관리자",pos:"n",syn:"keeper, custodian",grp:"WORK"}
+]},
+{title:"DAY 07-B · 집단 음악 치료의 긍정적 효과",sheetTitle:"DAY07-B 핵심단어",sub:"매삼영 · 2024.3 학평 35번",words:[
+ {en:"psychologist",ko:"심리학자",pos:"n",grp:"WORK"},
+ {en:"severe",ko:"심각한",pos:"a",syn:"serious, extreme",grp:"QUANT"},
+ {en:"mental illness",ko:"정신질환",pos:"n",grp:"PHYS"},
+ {en:"compose",ko:"작곡하다",pos:"v",syn:"write, create",grp:"WORK"},
+ {en:"participant",ko:"참가자",pos:"n",syn:"member",grp:"SOC"},
+ {en:"session",ko:"회기, 세션",pos:"n",syn:"meeting",grp:"PROC"},
+ {en:"efficacy",ko:"효능",pos:"n",syn:"effectiveness",grp:"CONTROL"},
+ {en:"treatment",ko:"치료",pos:"n",syn:"therapy",grp:"PHYS"},
+ {en:"findings",ko:"(연구) 결과",pos:"n",syn:"results",grp:"PROC"},
+ {en:"choir",ko:"합창단",pos:"n",grp:"SOC"},
+ {en:"wellbeing",ko:"행복, 웰빙",pos:"n",syn:"welfare",grp:"EMO"},
+ {en:"significantly",ko:"상당히",pos:"ad",syn:"greatly, considerably",grp:"QUANT"},
+ {en:"enhance",ko:"향상시키다",pos:"v",syn:"improve, boost, augment",grp:"CHANGE"},
+ {en:"sense of belonging",ko:"소속감",pos:"n",grp:"EMO"}
+]},
+{title:"DAY 07-C · 만족한 고객은 무급 홍보대사가 된다",sheetTitle:"DAY07-C 핵심단어",sub:"매삼영 · 2023.6 학평 21번",words:[
+ {en:"purchase",ko:"구매",pos:"n",syn:"buy",grp:"WORK"},
+ {en:"behavior",ko:"행동",pos:"n",syn:"conduct",grp:"PROC"},
+ {en:"influence",ko:"영향",pos:"n",syn:"effect, impact",grp:"CONTROL"},
+ {en:"likelihood",ko:"가능성",pos:"n",syn:"probability, chance",grp:"QUANT"},
+ {en:"repurchase",ko:"재구매하다",pos:"v",syn:"buy again",grp:"WORK"},
+ {en:"satisfied",ko:"만족한",pos:"a",syn:"pleased, content",grp:"EMO"},
+ {en:"ambassador",ko:"홍보대사",pos:"n",syn:"representative",grp:"WORK"},
+ {en:"encourage",ko:"권장하다",pos:"v",syn:"promote, urge",grp:"CONTROL"},
+ {en:"tend to",ko:"~하는 경향이 있다",pos:"v",syn:"be inclined to",grp:"PROC"},
+ {en:"trust",ko:"신뢰하다",pos:"v",syn:"believe in",grp:"TRUST"},
+ {en:"persuade",ko:"설득하다",pos:"v",syn:"convince",grp:"CONTROL"},
+ {en:"continually",ko:"지속적으로",pos:"ad",syn:"constantly",grp:"PROC"},
+ {en:"monitor",ko:"관찰하다",pos:"v",syn:"track, observe",grp:"COG"},
+ {en:"avoid",ko:"피하다",pos:"v",syn:"prevent",grp:"CONTROL"}
+]},
+{title:"DAY 07-D · 스트레스는 오래 들고 있을수록 무거워진다",sheetTitle:"DAY07-D 핵심단어",sub:"매삼영 · 2022.6 학평 21번",words:[
+ {en:"raise",ko:"들어올리다",pos:"v",syn:"lift",grp:"PHYS"},
+ {en:"stress management",ko:"스트레스 관리",pos:"n",grp:"EMO"},
+ {en:"principle",ko:"원칙",pos:"n",syn:"rule",grp:"COG"},
+ {en:"absolute",ko:"절대적인",pos:"a",syn:"complete, total",grp:"QUANT"},
+ {en:"weight",ko:"무게",pos:"n",grp:"PHYS"},
+ {en:"depend on",ko:"~에 달려 있다",pos:"v",syn:"rely on",grp:"CONTROL"},
+ {en:"straight",ko:"연속으로, 내리",pos:"ad",syn:"continuously",grp:"PROC"},
+ {en:"cause",ko:"야기하다, 초래하다",pos:"v",syn:"bring about, lead to",grp:"PROC"},
+ {en:"force",ko:"강요하다",pos:"v",syn:"compel",grp:"CONTROL"},
+ {en:"nod",ko:"끄덕이다",pos:"v",grp:"COMM"},
+ {en:"agreement",ko:"동의",pos:"n",syn:"consent",grp:"TRUST"},
+ {en:"sign",ko:"신호",pos:"n",syn:"signal, indication",grp:"COMM"}
+]},
+{title:"DAY 07-E · 망치를 든 사람에게는 모든 것이 못으로 보인다",sheetTitle:"DAY07-E 핵심단어",sub:"매삼영 · 2021.6 학평 21번",words:[
+ {en:"tendency",ko:"경향",pos:"n",syn:"trend, inclination",grp:"COG"},
+ {en:"interpret",ko:"해석하다",pos:"v",syn:"understand, read",grp:"COG"},
+ {en:"selectively",ko:"선택적으로",pos:"ad",syn:"choosily",grp:"COG"},
+ {en:"arrange",ko:"배열하다",pos:"v",syn:"organize, order",grp:"PROC"},
+ {en:"evidence",ko:"증거",pos:"n",syn:"proof",grp:"TRUST"},
+ {en:"viewpoint",ko:"관점",pos:"n",syn:"perspective",grp:"COG"},
+ {en:"perception",ko:"지각, 인식",pos:"n",syn:"awareness",grp:"COG"},
+ {en:"stand out",ko:"두드러지다",pos:"v",syn:"be prominent",grp:"QUANT"},
+ {en:"related to",ko:"~와 관련된",pos:"a",syn:"connected to",grp:"PROC"},
+ {en:"expectation",ko:"기대",pos:"n",syn:"anticipation",grp:"EMO"},
+ {en:"demand",ko:"요구",pos:"n",syn:"requirement",grp:"CONTROL"},
+ {en:"phenomenon",ko:"현상",pos:"n",syn:"occurrence",grp:"PROC"},
+ {en:"highlight",ko:"강조하다",pos:"v",syn:"emphasize, underscore",grp:"COMM"}
+]},
+{title:"DAY 07-F · 인간관계에는 자연스러운 한계가 있다(던바의 수)",sheetTitle:"DAY07-F 핵심단어",sub:"매삼영 · 2020.3 학평 39번",words:[
+ {en:"pay attention to",ko:"주의를 기울이다",pos:"v",syn:"focus on",grp:"COG"},
+ {en:"dismissive",ko:"무시하는",pos:"a",syn:"disregarding",grp:"SOC"},
+ {en:"arrogant",ko:"거만한",pos:"a",syn:"conceited, haughty",grp:"SOC"},
+ {en:"reflect",ko:"반영하다",pos:"v",syn:"show, mirror",grp:"PROC"},
+ {en:"limit",ko:"제한",pos:"n",syn:"restriction",grp:"QUANT"},
+ {en:"stable",ko:"안정적인",pos:"a",syn:"steady",grp:"PROC"},
+ {en:"naturally",ko:"자연스럽게",pos:"ad",syn:"inherently",grp:"PROC"},
+ {en:"background",ko:"배경",pos:"n",grp:"SOC"},
+ {en:"colorful",ko:"다채로운",pos:"a",syn:"vivid, varied",grp:"QUANT"},
+ {en:"capable of",ko:"~할 수 있는",pos:"a",syn:"able to",grp:"CONTROL"},
+ {en:"meaningful",ko:"의미 있는",pos:"a",syn:"significant",grp:"EMO"},
+ {en:"maximum",ko:"최대",pos:"n",syn:"upper limit",grp:"QUANT"},
+ {en:"assume",ko:"가정하다",pos:"v",syn:"suppose, presume",grp:"COG"}
+]},
+{title:"DAY 07-G · 정보의 홍수 속 정보 실명",sheetTitle:"DAY07-G 핵심단어",sub:"매삼영 · 2019.3 학평 30번",words:[
+ {en:"doubtful",ko:"의문의 여지가 있는",pos:"a",syn:"questionable, uncertain",grp:"TRUST"},
+ {en:"advantage",ko:"이점",pos:"n",syn:"benefit",grp:"QUANT"},
+ {en:"balance",ko:"균형을 잡다",pos:"v",grp:"CONTROL"},
+ {en:"decision-making",ko:"의사 결정",pos:"n",grp:"CONTROL"},
+ {en:"available",ko:"이용 가능한",pos:"a",syn:"accessible",grp:"QUANT"},
+ {en:"issue",ko:"문제",pos:"n",syn:"matter",grp:"CONFLICT"},
+ {en:"consider",ko:"고려하다",pos:"v",syn:"think about",grp:"COG"},
+ {en:"search for",ko:"찾다",pos:"v",syn:"look for",grp:"PROC"},
+ {en:"blinded",ko:"눈이 먼",pos:"a",syn:"unable to see clearly",grp:"COG"},
+ {en:"seemingly",ko:"겉보기에",pos:"ad",syn:"apparently",grp:"COG"},
+ {en:"impossible",ko:"불가능한",pos:"a",grp:"QUANT"},
+ {en:"analysis",ko:"분석",pos:"n",syn:"examination",grp:"COG"},
+ {en:"intuition",ko:"직관",pos:"n",syn:"instinct",grp:"COG"}
 ]},
 
 /* ═══ 교과서 ═══ */
@@ -1710,71 +1853,352 @@ verbForms:[
 ]
 },
 
+/* ───────── 매삼영 7 DAY - A ───────── */
+{
+title:"매삼영 7 DAY - A",
+sub:"제일고1 시험범위 · 당신 몸의 원자는 빌린 것이다 (2025년 9월 학평 21번 | 밑줄 의미 추론)",
+sentences:[
+ {ko:"당신의 몸에 있는 많은 원자는 거의 우주 자체만큼이나 오래되었다.",
+  parts:[{c:["Much","Many",1,"뒤 명사 atoms(복수)를 수식하는 many"]}," atoms in your body ",{c:["are","is",0,"주어 many atoms(복수) → are"]}," nearly as ",{c:["young","old",1,"보어 자리 형용사, 문맥상 '오래된' old"]}," as the universe ",{c:["themselves","itself",1,"the universe를 가리키는 재귀대명사(단수) itself"]},". "]},
+ {ko:"당신이 숨을 쉴 때, 예를 들어, 당신이 들이마신 원자 중 일부만이 당신의 다음 숨에서 내뱉어진다.",
+  parts:["When you ",{c:["breath","breathe",1,"조동사 do 뒤 동사원형 breathe"]},", for example, only some of the atoms ",{c:["what","that",1,"선행사 the atoms(사물)를 수식하는 목적격 관계대명사 that"]}," you inhale ",{c:["is","are",1,"주어 atoms(복수) → are"]}," exhaled in your ",{c:["next","last",0,"문맥상 '다음' 숨 next"]}," breath. "]},
+ {ko:"남아있는 원자는 당신의 몸으로 들어가 당신의 일부가 되고, 이후 그것들은 다양한 방법으로 당신의 몸을 떠난다.",
+  parts:["The remaining atoms are ",{c:["taking","taken",1,"주어 The remaining atoms가 '들여보내지는' 수동 → are taken"]}," into your body to become part of you, and they later leave your body by ",{c:["uniform","various",1,"전치사 by의 목적어, 문맥상 '다양한' various"]}," means. "]},
+ {ko:"당신은 당신의 몸을 구성하는 원자를 ‘소유’하지 않는다. 당신은 그것들을 빌린다.",
+  parts:["You don’t “own” the atoms ",{c:["that","what",0,"동사 own의 목적어(atoms)를 수식하는 목적격 관계대명사 that"]}," ",{c:["make","are made",0,"atoms가 몸을 '구성하는' 능동 주체 → make"]}," up your body; you borrow ",{c:["it","them",1,""]},"."]},
+ {ko:"원자는 영원히 우리 주변과 내부, 그리고 우리 사이를 이동하기 때문에 우리 모두는 같은 원자풀로부터 공유한다.",
+  parts:["We all share from the ",{c:["different","same",1,"문맥상 '같은' 원자풀 same"]}," atom pool because atoms forever ",{c:["travel","travels",0,"주어 atoms(복수) → travel"]}," around, within, and among us. "]},
+ {ko:"원자는 우리가 숨을 쉬고 땀이 증발하면서 사람에서 사람으로 순환한다.",
+  parts:["Atoms ",{c:["cycling","cycle",1,"주어 Atoms(복수) → cycle"]}," from person to person as we breathe and as our sweat is ",{c:["evaporated","condensed",0,"sweat가 '증발되는' 수동 → is evaporated"]},". "]},
+ {ko:"우리는 거대한 규모로 원자를 재순환시킨다.",
+  parts:["We recycle atoms on a ",{c:["grand","small",0,"문맥상 '거대한' 규모 grand"]}," scale. "]},
+ {ko:"가장 가벼운 원자의 기원은 우주의 기원으로 거슬러 올라가며, 대부분의 더 무거운 원자는 태양과 지구보다 오래되었다.",
+  parts:["The origin of the lightest atoms ",{c:["go","goes",1,"주어 The origin(단수) → goes"]}," back to the origin of the universe, and ",{c:["most","the most",0,"비교 대상이 없는 최상급이 아닌 일반 비교이므로 most(관사 없이)"]}," heavier atoms are ",{c:["older","younger",0,"문맥상 '더 오래된' older"]}," than the Sun and Earth. "]},
+ {ko:"태초부터 존재해 온 원자가 당신의 몸에 있으며 제한 없는 형태, 즉 비생물체와 생물체 가운데 우주 전체에 걸쳐 재순환한다.",
+  parts:["There ",{c:["are","is",0,"there is/are 구문, 주어 atoms(복수) → are"]}," atoms in your body ",{c:["what","that",1,"선행사 atoms를 수식하는 주격 관계대명사 that"]}," have ",{c:["existed","been existed",0,"주어 atoms가 '존재해 온' 능동 현재완료 → have existed"]}," since the first moments of time, ",{c:["recycling","recycle",0,"주절에 대한 부대상황 분사구문(능동) recycling"]}," throughout the universe among ",{c:["limited","limitless",1,"문맥상 '무한한' limitless 형태"]}," forms, both nonliving ",{c:["and","or",0,"nonliving and living 병렬(둘 다 해당)"]}," living. "]},
+ {ko:"당신은 몸속 원자의 현재 관리인이다.",
+  parts:["You’re the ",{c:["present","future",0,"문맥상 '현재의' present 관리인"]}," caretaker of the atoms in your body. "]},
+ {ko:"당신의 뒤를 이을 많은 것[사람]들이 있을 것이다.",
+  parts:["There will be ",{c:["many","much",0,"주어 자리에 오는 부정대명사 many(많은 사람들)"]}," who will follow you."]}
+],
+writings:[],
+verbForms:[
+ {ko:"당신의 몸에 있는 많은 원자는 거의 우주 자체만큼이나 오래되었다.",
+  parts:["Many atoms in your body ",{b:"be",a:"are"}," nearly as old as the universe itself. "]},
+ {ko:"당신이 숨을 쉴 때, 예를 들어, 당신이 들이마신 원자 중 일부만이 당신의 다음 숨에서 내뱉어진다.",
+  parts:["When you ",{b:"breathe",a:"breathe"},", for example, only some of the atoms that you ",{b:"inhale",a:"inhale"}," ",{b:"exhale",a:"are exhaled"}," in your next breath. "]},
+ {ko:"남아있는 원자는 당신의 몸으로 들어가 당신의 일부가 되고, 이후 그것들은 다양한 방법으로 당신의 몸을 떠난다.",
+  parts:["The remaining atoms ",{b:"take",a:"are taken"}," into your body ",{b:"become",a:"to become"}," part of you, and they later ",{b:"leave",a:"leave"}," your body by various means. "]},
+ {ko:"당신은 당신의 몸을 구성하는 원자를 ‘소유’하지 않는다. 당신은 그것들을 빌린다.",
+  parts:["You don’t “",{b:"own",a:"own"},"” the atoms that ",{b:"make",a:"make"}," up your body; you ",{b:"borrow",a:"borrow"}," them. "]},
+ {ko:"원자는 영원히 우리 주변과 내부, 그리고 우리 사이를 이동하기 때문에 우리 모두는 같은 원자풀로부터 공유한다.",
+  parts:["We all ",{b:"share",a:"share"}," from the same atom pool because atoms forever ",{b:"travel",a:"travel"}," around, within, and among us. "]},
+ {ko:"원자는 우리가 숨을 쉬고 땀이 증발하면서 사람에서 사람으로 순환한다.",
+  parts:["Atoms ",{b:"cycle",a:"cycle"}," from person to person as we ",{b:"breathe",a:"breathe"}," and as our sweat ",{b:"evaporate",a:"is evaporated"},". "]},
+ {ko:"우리는 거대한 규모로 원자를 재순환시킨다.",
+  parts:["We ",{b:"recycle",a:"recycle"}," atoms on a grand scale. "]},
+ {ko:"가장 가벼운 원자의 기원은 우주의 기원으로 거슬러 올라가며, 대부분의 더 무거운 원자는 태양과 지구보다 오래되었다.",
+  parts:["The origin of the lightest atoms ",{b:"go",a:"goes"}," back to the origin of the universe, and most heavier atoms ",{b:"be",a:"are"}," older than the Sun and Earth. "]},
+ {ko:"태초부터 존재해 온 원자가 당신의 몸에 있으며 제한 없는 형태, 즉 비생물체와 생물체 가운데 우주 전체에 걸쳐 재순환한다.",
+  parts:["There ",{b:"be",a:"are"}," atoms in your body that ",{b:"have, exist",a:"have existed"}," since the first moments of time, ",{b:"recycle",a:"recycling"}," throughout the universe among limitless forms, both nonliving and living. "]},
+ {ko:"당신은 몸속 원자의 현재 관리인이다.",
+  parts:["You ",{b:"be",a:"are"}," the present caretaker of the atoms in your body. "]},
+ {ko:"당신의 뒤를 이을 많은 것[사람]들이 있을 것이다.",
+  parts:["There ",{b:"will, be",a:"will be"}," many who ",{b:"will, follow",a:"will follow"}," you."]}
+]
+},
+
+/* ───────── 매삼영 7 DAY - B ───────── */
+{
+title:"매삼영 7 DAY - B",
+sub:"제일고1 시험범위 · 집단 음악 치료의 긍정적 효과 (2024년 3월 학평 35번 | 무관한 문장)",
+sentences:[
+ {ko:"한 심리학자 그룹이 친숙한 노래 부르기와 독창적인 작곡하기를 포함한 집단 음악 치료를 매주 경험한 심각한 정신 질환이 있는 사람들을 연구했다.",
+  parts:["A group of psychologists studied individuals with severe mental illness ",{c:["who","what",0,"선행사 individuals(사람)를 수식하는 주격 관계대명사 who"]}," experienced weekly group music therapy, including singing familiar songs and ",{c:["compose","composing",1,"등위접속사 and로 singing과 병렬된 동명사 composing"]}," original songs. "]},
+ {ko:"그 연구 결과는 참여자가 (치료) 활동에 참여한 횟수가 많을수록 가장 큰 효과를 경험했기에, 집단 음악 치료가 참여자의 삶의 질을 개선하였음을 보여 주었다.",
+  parts:["The results showed ",{c:["that","what",0,"showed의 목적어절 접속사 that"]}," the group music therapy ",{c:["improved","lowered",0,"문맥상 '개선했다' improved"]}," the quality of participants’ life, with those ",{c:["participating","participated",0,"전치사 with의 목적격보어, those가 '참여하는' 능동 분사 participating"]}," in a greater number of sessions ",{c:["experiencing","experienced",0,"목적격보어 자리, 능동 분사 experiencing"]}," the greatest benefits. "]},
+ {ko:"노래 부르기에 초점을 두고, 또 다른 그룹의 심리학자는 집단생활의 환경에서 정신적인 건강 문제를 가지고 살고 있는 이들에게 미치는 집단 가창의 효능에 대한 논문을 검토했다.",
+  parts:[{c:["Focus","Focusing",1,"문두 분사구문(능동) Focusing"]}," on singing, another group of psychologists reviewed articles on the efficacy of group singing as a mental health treatment for individuals ",{c:["living","lived",0,"individuals가 '살고 있는' 능동 분사 living"]}," with a mental health condition in a community setting. "]},
+ {ko:"발견된 결과는, 정신적인 건강 문제를 가진 사람이 합창단에 참여했을 때, 정신 건강과 행복이 상당히 개선되었음을 보여주었다.",
+  parts:["The findings showed ",{c:["what","that",1,"showed의 목적어절 접속사 that"]},", when people with mental health conditions participated in a choir, their mental health and wellbeing significantly ",{c:["improved","fell",0,"주어 wellbeing → 문맥상 '개선되었다' improved"]},". "]},
+ {ko:"집단 가창은 즐거움을 제공했고 감정 상태를 개선하였으며 소속감을 키웠고 자신감을 강화하였다.",
+  parts:["Group singing provided enjoyment, ",{c:["improving","improved",1,"provided와 병렬된 분사구문(능동) improving"]}," emotional states, developed a sense of belonging and ",{c:["enhancing","enhanced",1,"developed와 병렬된 분사구문(능동) enhancing"]}," self­confidence."]}
+],
+writings:[],
+verbForms:[
+ {ko:"한 심리학자 그룹이 친숙한 노래 부르기와 독창적인 작곡하기를 포함한 집단 음악 치료를 매주 경험한 심각한 정신 질환이 있는 사람들을 연구했다.",
+  parts:["A group of psychologists ",{b:"study",a:"studied"}," individuals with severe mental illness who ",{b:"experience",a:"experienced"}," weekly group music therapy, including ",{b:"sing",a:"singing"}," familiar songs and ",{b:"compose",a:"composing"}," original songs. "]},
+ {ko:"그 연구 결과는 참여자가 (치료) 활동에 참여한 횟수가 많을수록 가장 큰 효과를 경험했기에, 집단 음악 치료가 참여자의 삶의 질을 개선하였음을 보여 주었다.",
+  parts:["The results ",{b:"show",a:"showed"}," that the group music therapy ",{b:"improve",a:"improved"}," the quality of participants’ life, with those ",{b:"participate",a:"participating"}," in a greater number of sessions ",{b:"experience",a:"experiencing"}," the greatest benefits. "]},
+ {ko:"노래 부르기에 초점을 두고, 또 다른 그룹의 심리학자는 집단생활의 환경에서 정신적인 건강 문제를 가지고 살고 있는 이들에게 미치는 집단 가창의 효능에 대한 논문을 검토했다.",
+  parts:[{b:"Focus",a:"Focusing"}," on singing, another group of psychologists ",{b:"review",a:"reviewed"}," articles on the efficacy of group singing as a mental health treatment for individuals ",{b:"live",a:"living"}," with a mental health condition in a community setting. "]},
+ {ko:"발견된 결과는, 정신적인 건강 문제를 가진 사람이 합창단에 참여했을 때, 정신 건강과 행복이 상당히 개선되었음을 보여주었다.",
+  parts:["The findings ",{b:"show",a:"showed"}," that, when people with mental health conditions ",{b:"participate",a:"participated"}," in a choir, their mental health and wellbeing significantly ",{b:"improve",a:"improved"},". "]},
+ {ko:"집단 가창은 즐거움을 제공했고 감정 상태를 개선하였으며 소속감을 키웠고 자신감을 강화하였다.",
+  parts:["Group singing ",{b:"provide",a:"provided"}," enjoyment, ",{b:"improve",a:"improved"}," emotional states, ",{b:"develop",a:"developed"}," a sense of belonging and ",{b:"enhance",a:"enhanced"}," self­confidence. 23"]}
+]
+},
+
+/* ───────── 매삼영 7 DAY - C ───────── */
+{
+title:"매삼영 7 DAY - C",
+sub:"제일고1 시험범위 · 만족한 고객은 무급 홍보대사가 된다 (2023년 6월 학평 21번 | 밑줄 의미 추론)",
+sentences:[
+ {ko:"왜 당신은 고객이 구매품에 어떻게 반응하는지에 대해 신경 쓰는가? 좋은 질문이다.",
+  parts:["Why do you care how ",{c:["does a customer react","a customer reacts",1,"간접의문문 어순(의문사+주어+동사) a customer reacts"]}," to a purchase? Good question."]},
+ {ko:"구매 후 행동을 이해함으로써, 당신은 그 영향력과 구매자가 제품을 재구매할지(그리고 그녀가 제품을 가질지 또는 반품할지)의 가능성을 이해할 수 있다.",
+  parts:["By ",{c:["understand","understanding",1,"전치사 By의 목적어 자리 → 동명사 understanding"]}," post‑purchase behavior, you can understand the influence and the likelihood of whether a buyer will repurchase the product (and whether she will keep it or ",{c:["return","returns",0,"등위접속사 or 뒤 병렬 동사원형 return"]}," it). "]},
+ {ko:"당신은 구매자가 다른 사람들에게 당신으로부터 제품을 구매하도록 권장할지 여부도 또한 알아낼 것이다.",
+  parts:["You’ll also determine whether the buyer will encourage others ",{c:["purchase","to purchase",1,"encourage + 목적어 + to부정사(목적격보어)"]}," the product from you. "]},
+ {ko:"만족한 고객은 당신의 사업을 위한 무급 대사가 될 수 있으므로, 고객 만족이 할 일 목록의 최상단에 있어야 한다.",
+  parts:[{c:["Satisfied","Dissatisfied",0,"문맥상 '만족한' 고객 Satisfied"]}," customers can ",{c:["become","be become",0,"can 뒤 동사원형 become"]}," unpaid ambassadors for your business, so customer satisfaction should be on the top of your to‑do list. "]},
+ {ko:"사람들은 그들이 아는 사람들의 의견을 믿는 경향이 있다.",
+  parts:["People tend ",{c:["believing","to believe",1,"tend + to부정사"]}," the opinions of people they know. "]},
+ {ko:"사람들은 언제든 광고보다 친구를 더 신뢰한다.",
+  parts:["People ",{c:["trust","distrust",0,"문맥상 '신뢰한다' trust"]}," friends over advertisements any day. "]},
+ {ko:"그들은 광고에는 “좋은 면”을 말하기 위해 돈이 쓰이고 그리고 그것들이 제품과 서비스를 구매하도록 그들을 설득하는 데 사용된다는 것을 알고 있다.",
+  parts:["They know ",{c:["that","what",0,"know의 목적어절 접속사 that"]}," advertisements are paid to ",{c:["tell","telling",0,"be paid to + 동사원형 tell"]}," the “good side” and ",{c:["what","that",1,"and로 병렬된 명사절 접속사 that"]}," they’re ",{c:["using","used",1,"advertisements가 '사용되는' 수동 → are used"]}," to ",{c:["forbid","persuade",1,"문맥상 '설득하다' persuade"]}," them ",{c:["purchase","to purchase",1,"encourage 유사 구문으로 목적격보어 to purchase"]}," products and services. "]},
+ {ko:"판매 후 고객의 만족을 지속적으로 모니터함으로써, 당신은 부정적인 입소문 광고를 피할 수 있는 능력을 가진다.",
+  parts:["By continually ",{c:["monitor","monitoring",1,"전치사 by의 목적어 자리 → 동명사 monitoring"]}," your customer’s satisfaction after the sale, you have the ability ",{c:["avoiding","to avoid",1,"명사 the ability를 수식하는 형용사적 용법의 to부정사"]}," negative word‑of‑mouth advertising."]}
+],
+writings:[],
+verbForms:[
+ {ko:"왜 당신은 고객이 구매품에 어떻게 반응하는지에 대해 신경 쓰는가? 좋은 질문이다.",
+  parts:["Why ",{b:"do",a:"do"}," you ",{b:"care",a:"care"}," how a customer ",{b:"react",a:"reacts"}," to a purchase? Good question. "]},
+ {ko:"구매 후 행동을 이해함으로써, 당신은 그 영향력과 구매자가 제품을 재구매할지(그리고 그녀가 제품을 가질지 또는 반품할지)의 가능성을 이해할 수 있다.",
+  parts:["By ",{b:"understand",a:"understanding"}," post‑purchase behavior, you can ",{b:"understand",a:"understand"}," the influence and the likelihood of whether a buyer will ",{b:"repurchase",a:"repurchase"}," the product (and whether she will ",{b:"keep",a:"keep"}," it or ",{b:"return",a:"return"}," it). "]},
+ {ko:"당신은 구매자가 다른 사람들에게 당신으로부터 제품을 구매하도록 권장할지 여부도 또한 알아낼 것이다.",
+  parts:["You’ll also ",{b:"determine",a:"determine"}," whether the buyer will ",{b:"encourage",a:"encourage"}," others ",{b:"purchase",a:"to purchase"}," the product from you. "]},
+ {ko:"만족한 고객은 당신의 사업을 위한 무급 대사가 될 수 있으므로, 고객 만족이 할 일 목록의 최상단에 있어야 한다.",
+  parts:["Satisfied customers can ",{b:"become",a:"become"}," unpaid ambassadors for your business, so customer satisfaction should ",{b:"be",a:"be"}," on the top of your to‑do list. "]},
+ {ko:"사람들은 그들이 아는 사람들의 의견을 믿는 경향이 있다.",
+  parts:["People ",{b:"tend",a:"tend"}," ",{b:"believe",a:"to believe"}," the opinions of people they ",{b:"know",a:"know"},". "]},
+ {ko:"사람들은 언제든 광고보다 친구를 더 신뢰한다.",
+  parts:["People ",{b:"trust",a:"trust"}," friends over advertisements any day. "]},
+ {ko:"그들은 광고에는 “좋은 면”을 말하기 위해 돈이 쓰이고 그리고 그것들이 제품과 서비스를 구매하도록 그들을 설득하는 데 사용된다는 것을 알고 있다.",
+  parts:["They ",{b:"know",a:"know"}," that advertisements ",{b:"pay",a:"are paid"}," ",{b:"tell",a:"to tell"}," the “good side” and that they ",{b:"be",a:"are"}," ",{b:"use",a:"used"}," ",{b:"persuade",a:"to persuade"}," them ",{b:"purchase",a:"to purchase"}," products and services. "]},
+ {ko:"판매 후 고객의 만족을 지속적으로 모니터함으로써, 당신은 부정적인 입소문 광고를 피할 수 있는 능력을 가진다.",
+  parts:["By continually ",{b:"monitor",a:"monitoring"}," your customer’s satisfaction after the sale, you ",{b:"have",a:"have"}," the ability ",{b:"avoid",a:"to avoid"}," negative word‑of‑mouth advertising. 22"]}
+]
+},
+
+/* ───────── 매삼영 7 DAY - D ───────── */
+{
+title:"매삼영 7 DAY - D",
+sub:"제일고1 시험범위 · 스트레스는 오래 들고 있을수록 무거워진다 (2022년 6월 학평 21번 | 밑줄 의미 추론)",
+sentences:[
+ {ko:"한 심리학 교수가 학생들에게 스트레스 관리 원칙을 가르치던 중 물이 든 유리잔(물 잔)을 들어 올리고 “제가 들고 있는 이 물 잔은 얼마나 무거울까요?”라고 물었다.",
+  parts:["A psychology professor ",{c:["raising","raised",1,"문장의 본동사(과거시제) → raised"]}," a glass of water while ",{c:["teaching","taught",0,"while(부사절 접속사) 뒤 분사구문의 능동형 teaching"]}," stress management principles to her students, and ",{c:["asking","asked",1,"raised와 병렬된 과거동사 asked"]}," them, “How heavy is this glass of water I’m holding?” "]},
+ {ko:"학생들은 다양한 대답을 외쳤다.",
+  parts:["Students ",{c:["shouting","shouted",1,"문장의 본동사(과거시제) → shouted"]}," out various answers. "]},
+ {ko:"그 교수가 답했다. “이 잔의 절대 무게는 중요하지 않습니다.",
+  parts:["The professor replied, “The absolute weight of this glass ",{c:["don't","doesn’t",1,"주어 The absolute weight(단수) → doesn't"]}," matter. "]},
+ {ko:"이는 제가 이 잔을 얼마나 오래 들고 있느냐에 달려 있죠.",
+  parts:["It depends on how long ",{c:["do I hold","I hold",1,"depends on 뒤 간접의문문 어순(의문사+주어+동사) how long I hold"]}," it. "]},
+ {ko:"만약 제가 이것을 1분 동안 들고 있다면, 꽤 가볍죠.",
+  parts:["If I ",{c:["hold","am held",0,"주어 I가 잔을 '들고 있는' 능동 → hold"]}," it for a minute, it’s quite ",{c:["heavy","light",1,"보어 자리, 문맥상 '가벼운' light"]},". "]},
+ {ko:"하지만, 만약 제가 이것을 하루 종일 들고 있다면 이것은 제 팔에 심각한 고통을 야기하고 잔을 바닥에 떨어뜨리게 할 것입니다.",
+  parts:["But, if I hold it for a day straight, it will cause severe pain in my arm, ",{c:["forcing","forced",0,"주절(cause)에 대한 결과 분사구문(능동) forcing"]}," me ",{c:["drop","to drop",1,"force + 목적어 + to부정사(목적격보어)"]}," the glass to the floor. "]},
+ {ko:"각 사례에서 잔의 무게는 같지만, 제가 오래 들고 있을수록 그것은 저에게 더 무겁게 느껴지죠.”",
+  parts:["In each case, the weight of the glass ",{c:["is","are",0,"주어 the weight(단수) → is"]}," the same, but the longer I hold it, the ",{c:["heavier","more heavily",0,"비교급 강조 표현이 아니라 형용사 보어이므로 heavier"]}," it feels to me.” "]},
+ {ko:"학생들은 동의하며 고개를 끄덕였고, 교수는 이어 말했다. “여러분이 인생에서 느끼는 스트레스들도 이 물 잔과 같습니다.",
+  parts:["As the class nodded their heads in ",{c:["agreement","disagreement",0,"전치사 in의 목적어, 문맥상 '동의' agreement"]},", she continued, “Your stresses in life ",{c:["is","are",1,"주어 stresses(복수) → are"]}," ",{c:["alike","like",1,"전치사 like(~와 같은) 앞에 be동사 보어"]}," this glass of water. "]},
+ {ko:"만약 아직도 어제 받은 스트레스의 무게를 느낀다면, 그것은 잔을 내려놓아야 할 때라는 강한 신호입니다.”",
+  parts:["If you still feel the weight of yesterday’s stress, it’s a strong sign ",{c:["that","what",0,"sign을 보충 설명하는 동격의 that"]}," it’s time ",{c:["put","to put",1,"it's time + to부정사 관용표현"]}," the glass down.”"]}
+],
+writings:[],
+verbForms:[
+ {ko:"한 심리학 교수가 학생들에게 스트레스 관리 원칙을 가르치던 중 물이 든 유리잔(물 잔)을 들어 올리고 “제가 들고 있는 이 물 잔은 얼마나 무거울까요?”라고 물었다.",
+  parts:["A psychology professor ",{b:"raise",a:"raised"}," a glass of water while ",{b:"teach",a:"teaching"}," stress management principles to her students, and ",{b:"ask",a:"asked"}," them, “How heavy ",{b:"be",a:"is"}," this glass of water I ",{b:"hold",a:"am holding"},"?” "]},
+ {ko:"학생들은 다양한 대답을 외쳤다.",
+  parts:["Students ",{b:"shout",a:"shouted"}," out various answers. "]},
+ {ko:"그 교수가 답했다. “이 잔의 절대 무게는 중요하지 않습니다.",
+  parts:["The professor ",{b:"reply",a:"replied"},", “The absolute weight of this glass ",{b:"not, matter",a:"doesn’t matter"},". "]},
+ {ko:"이는 제가 이 잔을 얼마나 오래 들고 있느냐에 달려 있죠.",
+  parts:["It ",{b:"depend",a:"depends"}," on how long I ",{b:"hold",a:"hold"}," it. "]},
+ {ko:"만약 제가 이것을 1분 동안 들고 있다면, 꽤 가볍죠.",
+  parts:["If I ",{b:"hold",a:"hold"}," it for a minute, it ",{b:"be",a:"is"}," quite light. "]},
+ {ko:"하지만, 만약 제가 이것을 하루 종일 들고 있다면 이것은 제 팔에 심각한 고통을 야기하고 잔을 바닥에 떨어뜨리게 할 것입니다.",
+  parts:["But, if I ",{b:"hold",a:"hold"}," it for a day straight, it will ",{b:"cause",a:"cause"}," severe pain in my arm, ",{b:"force",a:"forcing"}," me ",{b:"drop",a:"to drop"}," the glass to the floor. "]},
+ {ko:"각 사례에서 잔의 무게는 같지만, 제가 오래 들고 있을수록 그것은 저에게 더 무겁게 느껴지죠.”",
+  parts:["In each case, the weight of the glass ",{b:"be",a:"is"}," the same, but the longer I ",{b:"hold",a:"hold"}," it, the heavier it ",{b:"feel",a:"feels"}," to me.” "]},
+ {ko:"학생들은 동의하며 고개를 끄덕였고, 교수는 이어 말했다. “여러분이 인생에서 느끼는 스트레스들도 이 물 잔과 같습니다.",
+  parts:["As the class ",{b:"nod",a:"nodded"}," their heads in agreement, she ",{b:"continue",a:"continued"},", “Your stresses in life ",{b:"be",a:"are"}," like this glass of water. "]},
+ {ko:"만약 아직도 어제 받은 스트레스의 무게를 느낀다면, 그것은 잔을 내려놓아야 할 때라는 강한 신호입니다.”",
+  parts:["If you still ",{b:"feel",a:"feel"}," the weight of yesterday’s stress, it ",{b:"be",a:"is"}," a strong sign that it ",{b:"be",a:"is"}," time ",{b:"put",a:"to put"}," the glass down.”"]}
+]
+},
+
+/* ───────── 매삼영 7 DAY - E ───────── */
+{
+title:"매삼영 7 DAY - E",
+sub:"제일고1 시험범위 · 망치를 든 사람에게는 모든 것이 못으로 보인다 (2021년 6월 학평 21번 | 밑줄 의미 추론)",
+sentences:[
+ {ko:"우리는 사건을 선택적으로 해석하는 경향이 있다.",
+  parts:["We have a tendency ",{c:["to interpret","interpreting",0,"명사 a tendency를 수식하는 형용사적 용법의 to부정사"]}," events selectively. "]},
+ {ko:"만약 우리가 일이 “이렇게” 또는 “그렇게” 되기를 원한다면, 우리는 틀림없이 그러한 관점을 뒷받침하는 방식으로 증거를 선택하거나 쌓거나 배열할 수 있다.",
+  parts:["If we want things ",{c:["to be","being",0,"want + 목적어 + to부정사(목적격보어)"]}," “this way” or “that way” we can most certainly select, stack, or arrange evidence in a way ",{c:["how","that",1,"선행사 a way(단수)를 수식하는 주격 관계대명사 that"]}," supports such a viewpoint. "]},
+ {ko:"선택적인 지각은 우리에게 두드러져 보이는 것에 기반을 둔다.",
+  parts:["Selective perception is based on ",{c:["what","that",0,"전치사 on의 목적어, 선행사 없는 관계대명사 what"]}," seems to us ",{c:["to stand","standing",0,"seem to + 동사원형 stand"]}," out. "]},
+ {ko:"그러나 우리에게 두드러져 보이고 있는 것은 우리의 목표, 관심사, 기대, 과거의 경험 또는 상황에 대한 현재의 요구와 매우 관련 있을지도 모른다<hp:fwSpace/>—<hp:fwSpace/>“망치를 손에 들고 있으면, 모든 것은 못처럼 보인다.”",
+  parts:["However, ",{c:["that","what",1,"문장의 주어 역할, 선행사 없는 관계대명사 what"]}," seems to us ",{c:["to be","being",0,"seem to + 동사원형이나 여기선 be동사 보어로 진행되는 to be(수동 아님, standing out과 연결되는 진행형 to be)"]}," standing out may very well be related to our goals, interests, expectations, past experiences, or current demands of the situation—“with a hammer in hand, everything ",{c:["looks","looks like",1,"문맥과 관용구에 맞는 looks like(~처럼 보이다)"]}," a nail.” "]},
+ {ko:"이 인용문은 선택적 지각의 현상을 강조한다.",
+  parts:["This quote ",{c:["is highlighted","highlights",1,"주어 This quote가 '강조하는' 능동 주체 → highlights"]}," the phenomenon of selective perception. "]},
+ {ko:"만약 우리가 망치를 사용하기를 원하면, 우리 주변의 세상은 못으로 가득 찬 것처럼 보이기 시작할지도 모른다!",
+  parts:["If we ",{c:["want","have wanted",0,"조건절의 현재시제(미래 의미 대신) want"]}," to use a hammer, then the world around us may begin to look as though it is full of nails!"]}
+],
+writings:[],
+verbForms:[
+ {ko:"우리는 사건을 선택적으로 해석하는 경향이 있다.",
+  parts:["We ",{b:"have",a:"have"}," a tendency ",{b:"interpret",a:"to interpret"}," events selectively."]},
+ {ko:"만약 우리가 일이 “이렇게” 또는 “그렇게” 되기를 원한다면, 우리는 틀림없이 그러한 관점을 뒷받침하는 방식으로 증거를 선택하거나 쌓거나 배열할 수 있다.",
+  parts:["If we ",{b:"want",a:"want"}," things ",{b:"be",a:"to be"}," “this way” or “that way” we can most certainly ",{b:"select",a:"select"},", ",{b:"stack",a:"stack"},", or ",{b:"arrange",a:"arrange"}," evidence in a way that ",{b:"support",a:"supports"}," such a viewpoint."]},
+ {ko:"선택적인 지각은 우리에게 두드러져 보이는 것에 기반을 둔다.",
+  parts:["Selective perception ",{b:"be, base",a:"is based"}," on what ",{b:"seem",a:"seems"}," to us ",{b:"stand",a:"to stand"}," out."]},
+ {ko:"그러나 우리에게 두드러져 보이고 있는 것은 우리의 목표, 관심사, 기대, 과거의 경험 또는 상황에 대한 현재의 요구와 매우 관련 있을지도 모른다 — “망치를 손에 들고 있으면, 모든 것은 못처럼 보인다.”",
+  parts:["However, what ",{b:"seem",a:"seems"}," to us ",{b:"be",a:"to be"}," standing out may very well ",{b:"be, relate",a:"be related"}," to our goals, interests, expectations, past experiences, or current demands of the situation — “with a hammer in hand, everything ",{b:"look",a:"looks"}," like a nail.”"]},
+ {ko:"이 인용문은 선택적 지각의 현상을 강조한다.",
+  parts:["This quote ",{b:"highlight",a:"highlights"}," the phenomenon of selective perception."]},
+ {ko:"만약 우리가 망치를 사용하기를 원하면, 우리 주변의 세상은 못으로 가득 찬 것처럼 보이기 시작할지도 모른다!",
+  parts:["If we ",{b:"want",a:"want"}," ",{b:"use",a:"to use"}," a hammer, then the world around us may ",{b:"begin",a:"begin"}," to look as though it ",{b:"be",a:"is"}," full of nails!"]}
+]
+},
+
+/* ───────── 매삼영 7 DAY - F ───────── */
+{
+title:"매삼영 7 DAY - F",
+sub:"제일고1 시험범위 · 인간관계에는 자연스러운 한계가 있다(던바의 수) (2020년 3월 학평 39번 | 무관한 문장)",
+sentences:[
+ {ko:"일부 사람들에게 주의를 기울이고 다른 사람들에게 그렇게 하지 않는 것이 여러분이 남을 무시하고 있다거나 거만하게 굴고 있다는 것을 의미하지는 않는다.",
+  parts:[{c:["Paying","Pay",0,"문장의 주어 역할(동명사) Paying"]}," attention to some people and not others ",{c:["doesn’t","don't",0,"주어 Paying attention(단수 취급) → doesn't"]}," mean you’re being ",{c:["dismissive","dismissively",0,"mean의 목적격보어, being 뒤 형용사 dismissive"]}," or ",{c:["arrogant","arrogantly",0,"or로 병렬된 형용사 arrogant"]},". "]},
+ {ko:"그것은 단지 명백한 사실을 나타낼 뿐인데, 우리가 아마 주의를 기울이거나 관계를 발전시킬 수 있는 사람의 수에 한계가 있다는 것이다.",
+  parts:["It just reflects a hard fact: there ",{c:["are","is",0,"there is/are 구문, 주어 limits(복수) → are"]}," limits on the number of people we can possibly pay attention to or develop a relationship with. "]},
+ {ko:"일부 과학자는 우리가 안정된 사회적 관계를 지속할 수 있는 사람의 수가 우리의 뇌에 의해 자연스럽게 제한되는 것일지도 모른다고까지 믿는다.",
+  parts:["Some scientists even believe ",{c:["that","what",0,"believe의 목적어절 접속사 that"]}," the number of people with ",{c:["which","whom",1,"전치사 with의 목적격 관계대명사 whom(사람)"]}," we can continue ",{c:["stably","stable",1,"계속(지속)의 의미의 형용사 보어 stable"]}," social relationships might ",{c:["be limited","limit",0,"조동사 might 뒤 동사원형, 주어(the number)가 '제한되는' 수동 → be limited"]}," naturally by our brains. "]},
+ {ko:"Robin Dunbar 교수는 우리의 마음은 정말로 최대 약 150명의 사람과 의미 있는 관계를 형성할 수 있을 뿐이라고 설명했다.",
+  parts:["Professor Robin Dunbar has ",{c:["been explained","explained",1,"주어 Professor Robin Dunbar가 '설명한' 능동 → has explained"]}," ",{c:["that","what",0,"explained의 목적어절 접속사 that"]}," our minds are only really ",{c:["capably","capable",1,"be동사의 보어(형용사) capable of"]}," of forming ",{c:["meaningful","meaningfully",0,"명사 relationships를 수식하는 형용사 meaningful"]}," relationships with a maximum of about a hundred and fifty people. "]},
+ {ko:"그것이 사실이든 아니든, 우리가 모든 사람과 진정한 친구가 될 수 있는 것은 아니라고 가정하는 것이 안전하다.",
+  parts:["Whether that’s true or not, it’s ",{c:["safely","safe",1,"be동사의 보어(형용사) safe"]}," to ",{c:["assuming","assume",1,"형용사 safe 뒤 to부정사 assume"]}," ",{c:["that","what",0,"assume의 목적어절 접속사 that"]}," we can’t be real friends with everyone."]}
+],
+writings:[],
+verbForms:[
+ {ko:"일부 사람들에게 주의를 기울이고 다른 사람들에게 그렇게 하지 않는 것이 여러분이 남을 무시하고 있다거나 거만하게 굴고 있다는 것을 의미하지는 않는다.",
+  parts:[{b:"Pay",a:"Paying"}," attention to some people and not others ",{b:"not, mean",a:"doesn't mean"}," you're being dismissive or arrogant."]},
+ {ko:"그것은 단지 명백한 사실을 나타낼 뿐인데, 우리가 아마 주의를 기울이거나 관계를 발전시킬 수 있는 사람의 수에 한계가 있다는 것이다.",
+  parts:["It just ",{b:"reflect",a:"reflects"}," a hard fact: there ",{b:"be",a:"are"}," limits on the number of people we can possibly ",{b:"pay",a:"pay"}," attention to or ",{b:"develop",a:"develop"}," a relationship with."]},
+ {ko:"일부 과학자는 우리가 안정된 사회적 관계를 지속할 수 있는 사람의 수가 우리의 뇌에 의해 자연스럽게 제한되는 것일지도 모른다고까지 믿는다.",
+  parts:["Some scientists even ",{b:"believe",a:"believe"}," that the number of people with whom we ",{b:"can, continue",a:"can continue"}," stable social relationships ",{b:"might, be, limit",a:"might be limited"}," naturally by our brains."]},
+ {ko:"Robin Dunbar 교수는 우리의 마음은 정말로 최대 약 150명의 사람과 의미 있는 관계를 형성할 수 있을 뿐이라고 설명했다.",
+  parts:["Professor Robin Dunbar ",{b:"have, explain",a:"has explained"}," that our minds ",{b:"be",a:"are"}," only really capable of ",{b:"form",a:"forming"}," meaningful relationships with a maximum of about a hundred and fifty people."]},
+ {ko:"그것이 사실이든 아니든, 우리가 모든 사람과 진정한 친구가 될 수 있는 것은 아니라고 가정하는 것이 안전하다.",
+  parts:["Whether that ",{b:"be",a:"is"}," true or not, it ",{b:"be",a:"is"}," safe ",{b:"assume",a:"to assume"}," that we ",{b:"can, not, be",a:"can't be"}," real friends with everyone."]}
+]
+},
+
+/* ───────── 매삼영 7 DAY - G ───────── */
+{
+title:"매삼영 7 DAY - G",
+sub:"제일고1 시험범위 · 정보의 홍수 속 정보 실명 (2019년 3월 학평 30번 | 밑줄 의미 추론)",
+sentences:[
+ {ko:"기술은 의문의 여지가 있는 이점을 지니고 있다.",
+  parts:["Technology has ",{c:["doubtful","doubtfully",0,"명사 advantages를 수식하는 형용사 doubtful"]}," advantages. "]},
+ {ko:"우리는 정확한 정보만 사용해서 의사 결정 과정을 간소하게 하는 것에 맞추어 너무 많은 정보는 조절해야 한다.",
+  parts:["We must balance too ",{c:["many","much",1,"information은 불가산명사이므로 much"]}," information versus ",{c:["used","using",1,"전치사 versus의 목적어 자리 → 동명사 using"]}," only the right information and ",{c:["to keep","keeping",1,"등위접속사 and로 balance의 목적어(동명사구) 병렬 → keeping"]}," the decision­making process ",{c:["simple","simply",0,"목적격보어 자리 형용사 simple"]},". "]},
+ {ko:"인터넷은 어떤 문제에 대해서도 너무 많은 무료 정보를 이용 가능하게 만들어서 우리는 어떤 결정을 하기 위해서 그 모든 정보를 고려해야 한다고 생각한다.",
+  parts:["The Internet ",{c:["has made","has been made",0,"주어 The Internet이 정보를 '이용 가능하게 만든' 능동 → has made"]}," ",{c:["so","very",0,"동사 has made를 수식하는 부사 so(so ~ that 구문)"]}," much free information ",{c:["available","availably",0,"목적격보어 자리 형용사 available"]}," on any issue ",{c:["that","what",0,"so ~ that 구문의 접속사 that"]}," we think we have to consider all of ",{c:["it","them",0,"information을 가리키는 대명사 it(단수)"]}," in order ",{c:["making","to make",1,"in order + to부정사(목적) to make"]}," a decision. "]},
+ {ko:"그래서 우리는 계속 인터넷에서 답을 검색한다.",
+  parts:["So we ",{c:["keep","keeping",0,"주어 we(복수) → keep"]}," ",{c:["searching","to search",0,"keep + 동명사(목적어) searching"]}," for answers on the Internet.  "]},
+ {ko:"이것이 우리가 개인적, 사업적, 혹은 다른 결정을 하려고 애쓸 때, 전조등 불빛에 노출된 사슴처럼, 우리를 정보에 눈멀게 만든다.",
+  parts:["This makes us information ",{c:["blinded","to blind",0,"주어 us가 '눈멀게 되는' 수동 의미의 과거분사 blinded"]},", ",{c:["like","alike",0,"전치사처럼 쓰이는 like(~처럼)"]}," deer in headlights, when ",{c:["tried","trying",1,"when 부사절의 분사구문(능동) trying"]}," to ",{c:["make","making",0,"try to + 동사원형 make"]}," personal, business, or ",{c:["other","another",0,"등위접속사 or로 병렬된 형용사 other"]}," decisions. "]},
+ {ko:"오늘날 어떤 일에 있어서 성공하기 위해서는, 우리는 눈먼 사람들의 세계에서는 한 눈으로 보는 사람이 불가능해 보이는 일을 이룰 수 있다는 것을 명심해야 한다.",
+  parts:[{c:["Be","To be",1,"문두 목적/조건의 to부정사구 To be"]}," ",{c:["successful","successfully",0,"be동사의 보어(형용사) successful"]}," in anything today, we have to ",{c:["keep","keeping",0,"keep 동사원형(have to 뒤)"]}," in mind ",{c:["that","what",0,"mind의 목적어절을 이끄는 명사절 접속사 that(세 선택지 중 문맥상 가장 적절) (원문은 3지선다: that/what/who 중 that)"]}," in the land of the blind, a one­eyed ",{c:["person","people",0,"부정관사 a 뒤 단수명사 person"]}," can ",{c:["accomplish","be accomplished",0,"조동사 can 뒤 동사원형, 주어(a person)가 '성취하는' 능동 → accomplish"]}," the seemingly ",{c:["impossible","impossibly",0,"형용사 the impossible(명사화된 형용사)"]},". "]},
+ {ko:"한 눈으로 보는 사람은 어떤 분석이든 단순하게 하는 것의 힘을 이해하고, 직관이라는 한 눈을 사용할 때 의사 결정자가 될 것이다.",
+  parts:["The one­eyed person ",{c:["understands","understanding",0,"주어 The one-eyed person(단수) → understands"]}," the power of ",{c:["keeping","to keep",0,"전치사 of의 목적어 자리 → 동명사 keeping"]}," any analysis ",{c:["simple","simply",0,"목적격보어 자리 형용사 simple"]}," and will be the decision maker when he uses his one eye of intuition. "]}
+],
+writings:[],
+verbForms:[
+ {ko:"기술은 의문의 여지가 있는 이점을 지니고 있다.",
+  parts:["Technology ",{b:"have",a:"has"}," doubtful advantages."]},
+ {ko:"우리는 정확한 정보만 사용해서 의사 결정 과정을 간소하게 하는 것에 맞추어 너무 많은 정보는 조절해야 한다.",
+  parts:["We must ",{b:"balance",a:"balance"}," too much information versus ",{b:"use",a:"using"}," only the right information and ",{b:"keep",a:"keeping"}," the decision-making process simple."]},
+ {ko:"인터넷은 어떤 문제에 대해서도 너무 많은 무료 정보를 이용 가능하게 만들어서 우리는 어떤 결정을 하기 위해서 그 모든 정보를 고려해야 한다고 생각한다.",
+  parts:["The Internet ",{b:"have, make",a:"has made"}," so much free information available on any issue that we ",{b:"think",a:"think"}," we ",{b:"have to, consider",a:"have to consider"}," all of it in order ",{b:"make",a:"to make"}," a decision."]},
+ {ko:"그래서 우리는 계속 인터넷에서 답을 검색한다.",
+  parts:["So we ",{b:"keep",a:"keep"}," ",{b:"search",a:"searching"}," for answers on the Internet."]},
+ {ko:"이것이 우리가 개인적, 사업적, 혹은 다른 결정을 하려고 애쓸 때, 전조등 불빛에 노출된 사슴처럼, 우리를 정보에 눈멀게 만든다.",
+  parts:["This ",{b:"make",a:"makes"}," us information blinded, like deer in headlights, when ",{b:"try",a:"trying"}," ",{b:"make",a:"to make"}," personal, business, or other decisions."]},
+ {ko:"오늘날 어떤 일에 있어서 성공하기 위해서는, 우리는 눈먼 사람들의 세계에서는 한 눈으로 보는 사람이 불가능해 보이는 일을 이룰 수 있다는 것을 명심해야 한다.",
+  parts:[{b:"be",a:"To be"}," successful in anything today, we ",{b:"have to, keep",a:"have to keep"}," in mind that in the land of the blind, a one-eyed person ",{b:"can, accomplish",a:"can accomplish"}," the seemingly impossible."]},
+ {ko:"한 눈으로 보는 사람은 어떤 분석이든 단순하게 하는 것의 힘을 이해하고, 직관이라는 한 눈을 사용할 때 의사 결정자가 될 것이다.",
+  parts:["The one-eyed person ",{b:"understand",a:"understands"}," the power of ",{b:"keep",a:"keeping"}," any analysis simple and ",{b:"will, be",a:"will be"}," the decision maker when he ",{b:"use",a:"uses"}," his one eye of intuition."]}
+]
+},
+
 /* ───────── 교과서 서술형 1 ───────── */
 {
 title:"교과서 1과 서술형 암기",
 sub:"제일고1 · 동격의 that / so ~ that 구문",
 sentences:[
  {ko:"어느 날 지나는 소셜 미디어를 스크롤하다가 '설악산 국립공원 흔들바위가 떨어졌다'는 뉴스 헤드라인을 보고 깜짝 놀랐다.",
-  parts:["While ",{c:["scrolling","scroll",0,"주절 주어 Gina와 일치하는 분사구문 → scrolling"]}," through her social media one day, Gina was ",{c:["astonished","astonishing",0,"Gina가 '놀라게 되는' 수동 의미 → astonished"]}," when she ",{c:["saw","was seen",0,"주어 she가 '본' 능동 주체 → saw"]}," the news headline, “The Heundeulbawi in Seoraksan National Park Has ",{c:["Fallen","Been Fallen",0,"자동사 fall의 현재완료 능동태 has fallen"]},".”"]},
+  parts:["While ",{c:["scrolling","scroll",0,"주절 주어 Gina와 일치하는 분사구문 → scrolling"]}," through her social media one day, Gina was ",{c:["astonished","astonishing",0,"Gina가 '놀라게 되는' 수동 의미 → astonished"]}," when she ",{c:["was seen","saw",1,"주어 she가 '본' 능동 주체 → saw"]}," the news headline, “The Heundeulbawi in Seoraksan National Park Has ",{c:["Fallen","Been Fallen",0,"자동사 fall의 현재완료 능동태 has fallen"]},".”"]},
  {ko:"지나는 즉시 친한 친구들에게 이 충격적인 소식을 공유했다.",
-  parts:["Gina ",{c:["immediately","immediate",1,"동사 shared를 수식하는 부사 immediately"]}," shared the ",{c:["shocking","shocked",0,"story가 '충격을 주는' 능동 의미 → shocking"]}," story with her ",{c:["close","closely",0,"명사 friends를 수식하는 형용사 close"]}," friends."]},
+  parts:["Gina ",{c:["immediate","immediately",1,"동사 shared를 수식하는 부사 immediately"]}," shared the ",{c:["shocking","shocked",0,"story가 '충격을 주는' 능동 의미 → shocking"]}," story with her ",{c:["close","closely",0,"명사 friends를 수식하는 형용사 close"]}," friends."]},
  {ko:"이후에, TV의 아침 뉴스에서 피해 없는 흔들바위 옆에 서 있던 기자가 “오늘 인터넷에 올라온 흔들바위가 무너졌다는 기사는 가짜였습니다”라고 말했다.",
-  parts:["Later, ",{c:["during","while",0,"뒤에 명사구(the morning news)가 이어지므로 전치사 during"]}," the morning news on TV, a reporter ",{c:["standing","stands",0,"reporter가 '서 있는' 능동 의미 → 현재분사 standing"]}," next to the undamaged Heundeulbawi ",{c:["said","was said",1,"reporter가 '말한' 능동 주체 → said"]},", “Today’s Internet stories of the Heundeulbawi ",{c:["being","having",0,"stories가 '손상되는' 수동 의미의 동명사 → being damaged"]}," damaged ",{c:["were","was",1,"주어 stories(복수) → were"]}," fake.”"]},
+  parts:["Later, ",{c:["during","while",0,"뒤에 명사구(the morning news)가 이어지므로 전치사 during"]}," the morning news on TV, a reporter ",{c:["standing","stands",0,"reporter가 '서 있는' 능동 의미 → 현재분사 standing"]}," next to the undamaged Heundeulbawi ",{c:["was said","said",1,"reporter가 '말한' 능동 주체 → said"]},", “Today’s Internet stories of the Heundeulbawi ",{c:["being","having",0,"stories가 '손상되는' 수동 의미의 동명사 → being damaged"]}," damaged ",{c:["was","were",1,"주어 stories(복수) → were"]}," fake.”"]},
  {ko:"지나는 자신이 가짜 뉴스를 퍼뜨렸다는 사실에 당황했다.",
-  parts:["Gina was ",{c:["embarrassed","embarrassing",0,"Gina가 '당황하게 되는' 수동 의미 → embarrassed"]}," by the fact ",{c:["that","which",0,"동격의 that — the fact의 구체적 내용을 설명"]}," she ",{c:["had","have",0,"과거시제 spread와 일치하는 조동사 had"]}," spread the fake news."]},
+  parts:["Gina was ",{c:["embarrassing","embarrassed",1,"Gina가 '당황하게 되는' 수동 의미 → embarrassed"]}," by the fact ",{c:["which","that",1,"동격의 that — the fact의 구체적 내용을 설명"]}," she ",{c:["had","have",0,"과거시제 spread와 일치하는 조동사 had"]}," spread the fake news."]},
  {ko:"이것은 지나에게 얼마 전 있었던 또다른 가짜 뉴스 사건을 떠올리게 했다.",
-  parts:["It ",{c:["reminded","was reminded",1,"It(=this)가 '떠올리게 한' 능동 주체 → reminded"]}," her of another ",{c:["incident","incidents",0,"부정관사 another 뒤 단수명사 incident"]}," of fake news ",{c:["that","what",1,"선행사 another incident를 수식하는 주격 관계대명사 that"]}," had ",{c:["happened","been happened",0,"자동사 happen의 과거완료 능동태 had happened"]}," a while ago."]},
+  parts:["It ",{c:["was reminded","reminded",1,"It(=this)가 '떠올리게 한' 능동 주체 → reminded"]}," her of another ",{c:["incidents","incident",1,"부정관사 another 뒤 단수명사 incident"]}," of fake news ",{c:["what","that",1,"선행사 another incident를 수식하는 주격 관계대명사 that"]}," had ",{c:["happened","been happened",0,"자동사 happen의 과거완료 능동태 had happened"]}," a while ago."]},
  {ko:"유명한 운동선수가 사망했다는 뉴스가 온라인에서 가장 큰 이슈가 되었지만, 가짜로 밝혀졌다.",
-  parts:["The news that a famous athlete had ",{c:["died","been died",0,"자동사 die는 수동태 불가 → had died"]}," became the number one issue online, but ",{c:["it","they",1,"The news(단수)를 가리키는 대명사 it"]}," turned out ",{c:["to be","being",0,"turn out + to부정사 관용표현"]}," fake."]},
+  parts:["The news that a famous athlete had ",{c:["died","been died",0,"자동사 die는 수동태 불가 → had died"]}," became the number one issue online, but ",{c:["they","it",1,"The news(단수)를 가리키는 대명사 it"]}," turned out ",{c:["to be","being",0,"turn out + to부정사 관용표현"]}," fake."]},
  {ko:"이것은 사람들의 주목을 끌기 위해 콘텐츠 제작자들이 만든 것이었다.",
-  parts:["It had ",{c:["been made","made",1,"It(=the news)이 '만들어진' 수동 → had been made"]}," by content creators ",{c:["who","whom",0,"선행사 content creators(사람, 주격)를 수식하는 관계대명사 who"]}," sought people’s attention."]},
+  parts:["It had ",{c:["made","been made",1,"It(=the news)이 '만들어진' 수동 → had been made"]}," by content creators ",{c:["who","whom",0,"선행사 content creators(사람, 주격)를 수식하는 관계대명사 who"]}," sought people’s attention."]},
  {ko:"그들은 자신들의 게시물의 조회수를 높여 돈을 벌기 위해 자극적인 가짜 뉴스를 생산했다.",
-  parts:["They ",{c:["produced","were produced",0,"They가 '생산한' 능동 주체 → produced"]}," provocative false stories to make money by ",{c:["raising","rising",0,"목적어 the number를 취하는 타동사 raising(rise는 자동사)"]}," the number of views of their posts."]},
+  parts:["They ",{c:["were produced","produced",1,"They가 '생산한' 능동 주체 → produced"]}," provocative false stories to make money by ",{c:["raising","rising",0,"목적어 the number를 취하는 타동사 raising(rise는 자동사)"]}," the number of views of their posts."]},
  {ko:"그 당시, 지나는 그런 가짜 뉴스를 만들고 퍼뜨린 사람들을 비판했었는데, 그것은 운동선수에게 상처를 주고 사람들을 혼란스럽게 했기 때문이었다.",
-  parts:["At that time, Gina criticized ",{c:["those","them",0,"뒤에 관계대명사절의 수식을 받는 지시대명사 those"]}," who ",{c:["had","have",1,"주절의 과거시제(criticized)보다 앞선 일 → had made"]}," made and ",{c:["spread","spreads",0,"had와 결합하는 과거분사 spread(불규칙 동사, 원형과 동일)"]}," fake news ",{c:["because","because of",0,"뒤에 절(it had hurt...)이 이어지므로 접속사 because"]}," it ",{c:["had","has",1,"주절보다 앞선 시점의 일 → had hurt"]}," hurt the athlete and ",{c:["confused","been confused",1,"had와 병렬된 과거분사 confused(능동)"]}," people."]},
+  parts:["At that time, Gina criticized ",{c:["them","those",1,"뒤에 관계대명사절의 수식을 받는 지시대명사 those"]}," who ",{c:["have","had",1,"주절의 과거시제(criticized)보다 앞선 일 → had made"]}," made and ",{c:["spread","spreads",0,"had와 결합하는 과거분사 spread(불규칙 동사, 원형과 동일)"]}," fake news ",{c:["because","because of",0,"뒤에 절(it had hurt...)이 이어지므로 접속사 because"]}," it ",{c:["has","had",1,"주절보다 앞선 시점의 일 → had hurt"]}," hurt the athlete and ",{c:["been confused","confused",1,"had와 병렬된 과거분사 confused(능동)"]}," people."]},
  {ko:"하지만, 이번에는 지나 자신이 실수로 가짜 뉴스의 확산에 기여한 셈이 되었다.",
-  parts:["This time, however, Gina ",{c:["herself","her",1,"주어를 강조하는 재귀대명사 herself"]}," had ",{c:["accidentally","accidental",0,"동사 contributed를 수식하는 부사 accidentally"]}," ",{c:["contributed","been contributed",1,"contribute는 자동사(contribute to)로 수동태 불가 → had contributed"]}," to the spread of fake news."]},
+  parts:["This time, however, Gina ",{c:["her","herself",1,"주어를 강조하는 재귀대명사 herself"]}," had ",{c:["accidentally","accidental",0,"동사 contributed를 수식하는 부사 accidentally"]}," ",{c:["been contributed","contributed",1,"contribute는 자동사(contribute to)로 수동태 불가 → had contributed"]}," to the spread of fake news."]},
  {ko:"가짜 뉴스가 사회에 미치는 영향 — 안타깝게도 지나처럼 우발적으로 가짜 뉴스를 유포하는 것은 드문 일이 아니다.",
-  parts:["The Impact of Fake News on Society. Unfortunately, ",{c:["becoming","become",1,"문장의 주어 역할(동명사) → becoming"]}," an accidental distributor of fake news like Gina ",{c:["is","are",0,"동명사구 주어(단수 취급) → is"]}," not ",{c:["unusual","unusually",1,"be동사 is의 보어(형용사) → unusual"]},"."]},
+  parts:["The Impact of Fake News on Society. Unfortunately, ",{c:["become","becoming",1,"문장의 주어 역할(동명사) → becoming"]}," an accidental distributor of fake news like Gina ",{c:["is","are",0,"동명사구 주어(단수 취급) → is"]}," not ",{c:["unusually","unusual",1,"be동사 is의 보어(형용사) → unusual"]},"."]},
  {ko:"가짜 뉴스는 부정확한 정보를 퍼뜨림으로써 사람들을 조종하려는 의도적인 시도이다.",
-  parts:["Fake news ",{c:["is","are",1,"주어 Fake news(단수 취급) → is"]}," a ",{c:["deliberate","deliberately",1,"명사 attempt를 수식하는 형용사 deliberate"]}," attempt to ",{c:["manipulate","be manipulated",0,"attempt이 '조종하려는' 능동 의미 → to manipulate"]}," people by spreading inaccurate information."]},
+  parts:["Fake news ",{c:["are","is",1,"주어 Fake news(단수 취급) → is"]}," a ",{c:["deliberately","deliberate",1,"명사 attempt를 수식하는 형용사 deliberate"]}," attempt to ",{c:["manipulate","be manipulated",0,"attempt이 '조종하려는' 능동 의미 → to manipulate"]}," people by spreading inaccurate information."]},
  {ko:"가짜 뉴스는 사람들의 관심을 끌거나, 이익을 얻거나, 혹은 정치적 이득을 얻으려는 의도를 가진 특정 집단에 의해 만들어진다.",
-  parts:["It is ",{c:["made","making",0,"It(=fake news)이 '만들어지는' 수동 → made"]}," by certain groups with the intention of ",{c:["attracting","being attracted",0,"전치사 of의 목적어(능동 의미) → attracting"]}," people’s attention, making profits, or ",{c:["gaining","to gain",1,"attracting·making과 병렬된 동명사 gaining"]}," political benefits."]},
+  parts:["It is ",{c:["made","making",0,"It(=fake news)이 '만들어지는' 수동 → made"]}," by certain groups with the intention of ",{c:["attracting","being attracted",0,"전치사 of의 목적어(능동 의미) → attracting"]}," people’s attention, making profits, or ",{c:["to gain","gaining",1,"attracting·making과 병렬된 동명사 gaining"]}," political benefits."]},
  {ko:"이것은 사람들을 혼란스럽게 하고, 사회를 어지럽히고, 심지어 관련된 모든 개인뿐만 아니라 대중에게 심각하게 해를 끼칠 수 있다.",
   parts:["It can ",{c:["confuse","be confused",0,"It(=fake news)이 '혼란스럽게 하는' 능동 주체 → confuse"]}," people, disturb society, and even seriously ",{c:["harm","harms",0,"조동사 can 뒤 동사원형 harm"]}," the public as well as all individuals ",{c:["involved","involving",0,"individuals가 '관련된' 수동 의미 → involved"]},"."]},
  {ko:"비상사태 동안 가짜 뉴스가 퍼지는 것은 매우 흔한 일이다.",
-  parts:[{c:["It","That",0,"가주어 It ~ for fake news to spread(진주어) 구문"]}," is very ",{c:["common","commonly",0,"be동사 is의 보어(형용사) → common"]}," for fake news ",{c:["to spread","spreading",1,"가주어 It ~ to spread(진주어) 구문"]}," ",{c:["during","while",0,"뒤에 명사구(states of emergency)가 이어지므로 전치사 during"]}," states of emergency."]},
+  parts:[{c:["That","It",1,"가주어 It ~ for fake news to spread(진주어) 구문"]}," is very ",{c:["commonly","common",1,"be동사 is의 보어(형용사) → common"]}," for fake news ",{c:["spreading","to spread",1,"가주어 It ~ to spread(진주어) 구문"]}," ",{c:["during","while",0,"뒤에 명사구(states of emergency)가 이어지므로 전치사 during"]}," states of emergency."]},
  {ko:"예를 들어, 2019년 9월 인도네시아 암본에서 규모 6.5의 지진이 발생한 후, 수천 명의 주민들이 집으로 돌아가지 않고 2주 동안 대피소에 머물렀다.",
-  parts:["For example, after an earthquake ",{c:["measuring","measures",0,"earthquake가 '측정되는' 능동적 의미(규모가 ~인) → 현재분사 measuring"]}," 6.5 struck Ambon, Indonesia, in September 2019, ",{c:["thousands","thousand",1,"thousands of + 복수명사 관용표현"]}," of residents did not return to their homes and ",{c:["were","was",0,"주어 residents(복수) → were"]}," still in shelters for two weeks."]},
+  parts:["For example, after an earthquake ",{c:["measuring","measures",0,"earthquake가 '측정되는' 능동적 의미(규모가 ~인) → 현재분사 measuring"]}," 6.5 struck Ambon, Indonesia, in September 2019, ",{c:["thousand","thousands",1,"thousands of + 복수명사 관용표현"]}," of residents did not return to their homes and ",{c:["were","was",0,"주어 residents(복수) → were"]}," still in shelters for two weeks."]},
  {ko:"이것은 소셜 미디어에 또 다른 지진이 발생한 후 쓰나미가 곧 이어질 것이라는 가짜 뉴스 이야기 때문이었다.",
-  parts:["This was ",{c:["because of","because",1,"뒤에 명사구(fake news stories)가 이어지므로 전치사 because of"]}," fake news stories on social media ",{c:["that","which",0,"동격의 that — stories의 구체적 내용을 설명"]}," another earthquake ",{c:["followed","following",1,"earthquake가 쓰나미에 '뒤이어지는' 수동 의미 → followed"]}," by a tsunami ",{c:["was","were",0,"주어 another earthquake(단수) → was"]}," about to strike."]},
+  parts:["This was ",{c:["because","because of",1,"뒤에 명사구(fake news stories)가 이어지므로 전치사 because of"]}," fake news stories on social media ",{c:["that","which",0,"동격의 that — stories의 구체적 내용을 설명"]}," another earthquake ",{c:["following","followed",1,"earthquake가 쓰나미에 '뒤이어지는' 수동 의미 → followed"]}," by a tsunami ",{c:["was","were",0,"주어 another earthquake(단수) → was"]}," about to strike."]},
  {ko:"그 메시지 중 하나는 '내 말을 믿든 믿지 않든 당신 마음이지만, 분명히 앞으로 며칠 안에 암본이 가라앉을 것이다'라는 내용이었다.",
-  parts:["One of those ",{c:["messages","message",0,"one of + 복수명사 관용표현"]}," ",{c:["said","saying",1,"문장의 본동사(과거시제) → said"]},", “It’s up to you if you want ",{c:["to believe","believing",0,"want + to부정사(목적어)"]}," me or not, but apparently Ambon is going to sink in the next few ",{c:["days","day",1,"few + 복수명사 days"]},".”"]},
+  parts:["One of those ",{c:["messages","message",0,"one of + 복수명사 관용표현"]}," ",{c:["saying","said",1,"문장의 본동사(과거시제) → said"]},", “It’s up to you if you want ",{c:["to believe","believing",0,"want + to부정사(목적어)"]}," me or not, but apparently Ambon is going to sink in the next few ",{c:["day","days",1,"few + 복수명사 days"]},".”"]},
  {ko:"많은 이재민들이 여진에 대한 불안감에 휩싸여 있었기 때문에 정부는 이 정보가 가짜라고 발표해야 했다.",
-  parts:[{c:["Many","Much",0,"셀 수 있는 복수명사 people을 수식하는 many"]}," displaced people ",{c:["were","was",0,"주어 people(복수) → were"]}," ",{c:["so","such",0,"so + 형용사(anxious) + that 구문"]}," anxious about aftershocks ",{c:["that","which",1,"so ~ that 구문을 완성하는 접속사 that"]}," the government had to announce ",{c:["that","what",0,"announce의 목적어절을 이끄는 명사절 접속사 that"]}," the information was fake."]},
+  parts:[{c:["Much","Many",1,"셀 수 있는 복수명사 people을 수식하는 many"]}," displaced people ",{c:["was","were",1,"주어 people(복수) → were"]}," ",{c:["such","so",1,"so + 형용사(anxious) + that 구문"]}," anxious about aftershocks ",{c:["which","that",1,"so ~ that 구문을 완성하는 접속사 that"]}," the government had to announce ",{c:["that","what",0,"announce의 목적어절을 이끄는 명사절 접속사 that"]}," the information was fake."]},
  {ko:"가짜 뉴스가 빠르게 퍼지는 이유 — 소셜 미디어에서 가짜 뉴스는 진짜 이야기보다 훨씬 더 멀리, 빠르게 퍼진다.",
-  parts:["The Reasons for the Viral Spread of Fake News. Fake news on social media ",{c:["spreads","spread",0,"주어 Fake news(단수 취급) → spreads"]}," significantly farther and ",{c:["faster","fast",1,"than과 함께 쓰이는 비교급 faster"]}," than true stories."]},
+  parts:["The Reasons for the Viral Spread of Fake News. Fake news on social media ",{c:["spreads","spread",0,"주어 Fake news(단수 취급) → spreads"]}," significantly farther and ",{c:["fast","faster",1,"than과 함께 쓰이는 비교급 faster"]}," than true stories."]},
  {ko:"미국 매사추세츠 공과대학의 한 연구에 따르면 가짜 뉴스는 평균적으로 진짜 뉴스보다 6배 빠르게 온라인에서 퍼지는 것으로 나타났다.",
-  parts:["A study by the Massachusetts Institute of Technology in the US ",{c:["has","have",0,"주어 A study(단수) → has shown"]}," shown ",{c:["that","what",0,"shown의 목적어절을 이끄는 명사절 접속사 that"]}," fake news ",{c:["spreads","spread",1,"주어 fake news(단수 취급) → spreads"]}," online 6 ",{c:["times","time",0,"배수 표현 6 times"]}," ",{c:["faster","fast",1,"than과 함께 쓰이는 비교급 faster"]}," than real news on average."]},
+  parts:["A study by the Massachusetts Institute of Technology in the US ",{c:["has","have",0,"주어 A study(단수) → has shown"]}," shown ",{c:["that","what",0,"shown의 목적어절을 이끄는 명사절 접속사 that"]}," fake news ",{c:["spread","spreads",1,"주어 fake news(단수 취급) → spreads"]}," online 6 ",{c:["times","time",0,"배수 표현 6 times"]}," ",{c:["fast","faster",1,"than과 함께 쓰이는 비교급 faster"]}," than real news on average."]},
  {ko:"이러한 현상에 대한 한 가지 설명은 사람들이 새롭고 자극적인 것을 좋아한다는 것이다.",
-  parts:["One explanation for this phenomenon ",{c:["is","are",0,"주어 One explanation(단수) → is"]}," ",{c:["that","what",1,"is의 보어절을 이끄는 명사절 접속사 that"]}," people like ",{c:["new","newly",0,"명사 things를 수식하는 형용사 new"]}," and provocative things."]},
+  parts:["One explanation for this phenomenon ",{c:["is","are",0,"주어 One explanation(단수) → is"]}," ",{c:["what","that",1,"is의 보어절을 이끄는 명사절 접속사 that"]}," people like ",{c:["newly","new",1,"명사 things를 수식하는 형용사 new"]}," and provocative things."]},
  {ko:"정보가 놀라운 것일 때 사람들은 그것이 놀랍다고 느낄 뿐만 아니라, 그 자극적인 뉴스를 다른 사람들과 공유하고 싶어 한다.",
-  parts:["When information is ",{c:["astonishing","astonished",1,"information이 '놀라움을 주는' 능동 의미 → astonishing"]},", people not only ",{c:["feel","feels",0,"주어 people(복수) → feel"]}," that it is ",{c:["surprising","surprised",0,"it(=information)이 '놀라움을 주는' 능동 의미 → surprising"]},", but they also want ",{c:["to share","sharing",1,"want + to부정사(목적어)"]}," the ",{c:["stimulating","stimulated",1,"news가 '자극을 주는' 능동 의미 → stimulating"]}," news with ",{c:["others","other",0,"대명사로 쓰이는 others(복수)"]},"."]},
+  parts:["When information is ",{c:["astonished","astonishing",1,"information이 '놀라움을 주는' 능동 의미 → astonishing"]},", people not only ",{c:["feel","feels",0,"주어 people(복수) → feel"]}," that it is ",{c:["surprising","surprised",0,"it(=information)이 '놀라움을 주는' 능동 의미 → surprising"]},", but they also want ",{c:["sharing","to share",1,"want + to부정사(목적어)"]}," the ",{c:["stimulated","stimulating",1,"news가 '자극을 주는' 능동 의미 → stimulating"]}," news with ",{c:["others","other",0,"대명사로 쓰이는 others(복수)"]},"."]},
  {ko:"소셜 미디어를 통해 그것을 다른 사람들에게 전달함으로써, 그들은 아직 알려지지 않았지만 아마도 거짓일 수 있는 정보를 게시한 첫 번째 사람이기 때문에 주목을 받을 수 있다.",
-  parts:["By passing ",{c:["it","them",0,"앞의 단수명사 it(=information)을 가리키는 대명사 it"]}," to others on social media, ",{c:["they","it",1,"they(=사람들)가 주목을 받는 주체"]}," can gain attention ",{c:["because","because of",0,"뒤에 절(they are...)이 이어지므로 접속사 because"]}," they are the first to ",{c:["post","be posted",0,"the first가 정보를 '게시하는' 능동 의미 → to post"]}," previously unknown, but possibly false, information."]},
+  parts:["By passing ",{c:["it","them",0,"앞의 단수명사 it(=information)을 가리키는 대명사 it"]}," to others on social media, ",{c:["it","they",1,"they(=사람들)가 주목을 받는 주체"]}," can gain attention ",{c:["because of","because",1,"뒤에 절(they are...)이 이어지므로 접속사 because"]}," they are the first to ",{c:["be posted","post",1,"the first가 정보를 '게시하는' 능동 의미 → to post"]}," previously unknown, but possibly false, information."]},
  {ko:"또한, 가짜 뉴스는 사람들이 일상생활에서 단순하고 쉽게 생각하는 경향이 있기 때문에 널리 퍼진다.",
-  parts:["Also, fake news ",{c:["goes","go",0,"주어 fake news(단수 취급) → goes"]}," viral ",{c:["because","because of",0,"뒤에 절(people tend to...)이 이어지므로 접속사 because"]}," people in their daily lives ",{c:["tend","tends",0,"주어 people(복수) → tend"]}," to think simply and ",{c:["effortlessly","effortless",1,"동사 think를 수식하는 부사, simply와 병렬 → effortlessly"]},"."]},
+  parts:["Also, fake news ",{c:["goes","go",0,"주어 fake news(단수 취급) → goes"]}," viral ",{c:["because","because of",0,"뒤에 절(people tend to...)이 이어지므로 접속사 because"]}," people in their daily lives ",{c:["tend","tends",0,"주어 people(복수) → tend"]}," to think simply and ",{c:["effortless","effortlessly",1,"동사 think를 수식하는 부사, simply와 병렬 → effortlessly"]},"."]},
  {ko:"사람들은 비판적으로 그것을 조사하는 대신에, 어떠한 증거도 없이 새로운 정보를 믿을 가능성이 더 크다.",
-  parts:[{c:["It","That",0,"가주어 It ~ for them to believe(진주어) 구문"]}," is more likely for them ",{c:["to believe","believing",1,"가주어 It ~ for them(의미상 주어) to believe(진주어) 구문"]}," new information without any proof, instead of critically ",{c:["examining","examined",1,"전치사 of의 목적어 자리 → 동명사 examining"]}," ",{c:["it","them",0,"단수명사 new information을 가리키는 대명사 it"]},"."]},
+  parts:[{c:["It","That",0,"가주어 It ~ for them to believe(진주어) 구문"]}," is more likely for them ",{c:["believing","to believe",1,"가주어 It ~ for them(의미상 주어) to believe(진주어) 구문"]}," new information without any proof, instead of critically ",{c:["examined","examining",1,"전치사 of의 목적어 자리 → 동명사 examining"]}," ",{c:["it","them",0,"단수명사 new information을 가리키는 대명사 it"]},"."]},
  {ko:"또한, 사람들은 사실이 아니더라도 자신의 편견이나 경험에 부합하는 정보를 믿으려는 경향이 있다.",
-  parts:["Moreover, people are inclined ",{c:["to believe","believing",0,"be inclined to V 관용표현"]}," information ",{c:["that","what",1,"선행사 information을 수식하는 주격 관계대명사 that"]}," ",{c:["fits","fit",0,"선행사 information(단수)을 수식하는 관계대명사절의 동사 → fits"]}," their prejudices or experiences even when ",{c:["not","is not",1,"부사절의 반복되는 주어+be동사(it is) 생략 → not"]}," true."]},
+  parts:["Moreover, people are inclined ",{c:["believing","to believe",1,"be inclined to V 관용표현"]}," information ",{c:["what","that",1,"선행사 information을 수식하는 주격 관계대명사 that"]}," ",{c:["fits","fit",0,"선행사 information(단수)을 수식하는 관계대명사절의 동사 → fits"]}," their prejudices or experiences even when ",{c:["is not","not",1,"부사절의 반복되는 주어+be동사(it is) 생략 → not"]}," true."]},
  {ko:"이 과정에서 사람들은 '확증 편향'의 함정에 쉽게 빠진다.",
   parts:["In this process, people easily ",{c:["fall","are fallen",0,"자동사 fall은 수동태 불가 → fall"]}," into the trap of “confirmation bias.”"]},
  {ko:"즉, 그들은 자신의 신념을 확인시켜주는 뉴스만 선별적으로 받아들이고 이를 뒷받침하지 않는 뉴스는 무시한다.",
-  parts:["That is, they selectively ",{c:["accept","are accepted",0,"they가 뉴스를 '받아들이는' 능동 주체 → accept"]}," news in a way ",{c:["that","how",0,"선행사 a way를 수식하는 관계부사 자리이나 that이 관용적으로 쓰임(the way that)"]}," only ",{c:["confirms","confirm",0,"선행사 a way(단수)를 수식하는 관계대명사절의 동사 → confirms"]}," their beliefs and ",{c:["ignore","ignores",1,"accept와 등위접속사 and로 연결된 병렬 동사원형 ignore"]}," news ",{c:["that","what",1,"선행사 news를 수식하는 목적격 관계대명사 that"]}," doesn’t support them."]},
+  parts:["That is, they selectively ",{c:["accept","are accepted",0,"they가 뉴스를 '받아들이는' 능동 주체 → accept"]}," news in a way ",{c:["that","how",0,"선행사 a way를 수식하는 관계부사 자리이나 that이 관용적으로 쓰임(the way that)"]}," only ",{c:["confirms","confirm",0,"선행사 a way(단수)를 수식하는 관계대명사절의 동사 → confirms"]}," their beliefs and ",{c:["ignores","ignore",1,"accept와 등위접속사 and로 연결된 병렬 동사원형 ignore"]}," news ",{c:["what","that",1,"선행사 news를 수식하는 목적격 관계대명사 that"]}," doesn’t support them."]},
  {ko:"예를 들어, 선거철에는 자신이 선호하는 후보를 긍정적으로 묘사하는 모든 뉴스를 맹목적으로 믿는 반면, 다른 후보에 대해 부정적인 내용을 보도하는 뉴스는 무의식적으로 믿는 경향이 있다.",
-  parts:[{c:["During","While",0,"뒤에 명사구(election season)가 이어지므로 전치사 During"]}," election season, for example, people tend to blindly believe any news ",{c:["describing","described",1,"news가 후보를 '묘사하는' 능동 의미 → 현재분사 describing"]}," their favored candidates in a positive way, while unconsciously ",{c:["believing","believed",0,"while(부사절 접속사) 뒤 분사구문의 능동형 believing"]}," news ",{c:["that","what",0,"선행사 news를 수식하는 주격 관계대명사 that"]}," reports ",{c:["something negative","negative something",0,"-thing으로 끝나는 대명사는 형용사가 뒤에서 수식"]}," about ",{c:["other","another",1,"복수명사 candidates를 수식하는 other"]}," candidates."]},
+  parts:[{c:["While","During",1,"뒤에 명사구(election season)가 이어지므로 전치사 During"]}," election season, for example, people tend to blindly believe any news ",{c:["described","describing",1,"news가 후보를 '묘사하는' 능동 의미 → 현재분사 describing"]}," their favored candidates in a positive way, while unconsciously ",{c:["believing","believed",0,"while(부사절 접속사) 뒤 분사구문의 능동형 believing"]}," news ",{c:["that","what",0,"선행사 news를 수식하는 주격 관계대명사 that"]}," reports ",{c:["something negative","negative something",0,"-thing으로 끝나는 대명사는 형용사가 뒤에서 수식"]}," about ",{c:["another","other",1,"복수명사 candidates를 수식하는 other"]}," candidates."]},
  {ko:"가짜 뉴스를 식별하고 피하는 방법 — 인터넷에 그렇게 많은 정보가 있는데 어떻게 가짜 뉴스가 당신을 현혹하지 않는지 확신할 수 있을까?",
   parts:["Ways to Spot and Avoid Fake News. With so ",{c:["much","many",0,"information은 불가산명사이므로 much 사용"]}," information on the Internet, how can you make sure ",{c:["that","what",0,"make sure의 목적어절을 이끄는 명사절 접속사 that"]}," fake news does not mislead you?"]},
  {ko:"첫째, 자극적인 표제를 넘어 읽어라.",
@@ -1784,29 +2208,29 @@ sentences:[
  {ko:"따라서 표제만 읽지 말고 본문을 주의 깊게 읽어라.",
   parts:["So don’t just read the headlines, but ",{c:["read","reading",0,"don’t just read와 but으로 연결된 병렬 명령문 동사원형 read"]}," the text carefully."]},
  {ko:"둘째, 뉴스를 액면 그대로 읽지 말아라.",
-  parts:["Second, don’t read the news at face ",{c:["value","valuable",0,"at face value 관용표현(명사 value)"]},"."]},
+  parts:["Second, don’t read the news at face ",{c:["valuable","value",1,"at face value 관용표현(명사 value)"]},"."]},
  {ko:"뉴스를 판단하기 위해 비판적인 사고 기술을 연습해라.",
   parts:[{c:["Exercise","Exercising",0,"명령문의 동사원형 Exercise"]}," critical thinking skills to ",{c:["judge","be judged",0,"skills가 뉴스를 '판단하는' 능동 목적 → to judge"]}," the news."]},
  {ko:"당신은 당신이 읽은 내용에 대해 질문하고, 분석하고, 평가해야 한다.",
-  parts:["You should question, analyze, and ",{c:["evaluate","evaluates",1,"should 뒤 question·analyze와 병렬된 동사원형 evaluate"]}," ",{c:["what","that",0,"read의 목적어, 선행사 없는 관계대명사 what"]}," you read."]},
+  parts:["You should question, analyze, and ",{c:["evaluates","evaluate",1,"should 뒤 question·analyze와 병렬된 동사원형 evaluate"]}," ",{c:["what","that",0,"read의 목적어, 선행사 없는 관계대명사 what"]}," you read."]},
  {ko:"셋째, 당신의 편견을 점검해라.",
-  parts:["Third, ",{c:["examine","examines",1,"명령문의 동사원형 examine"]}," your biases."]},
+  parts:["Third, ",{c:["examines","examine",1,"명령문의 동사원형 examine"]}," your biases."]},
  {ko:"자신의 신념이 당신의 판단에 영향을 미칠 수 있는지를 고려해라.",
-  parts:["Consider if your own beliefs could ",{c:["affect","be affected",1,"beliefs가 판단에 '영향을 미치는' 능동 주체 → affect"]}," your judgment."]},
+  parts:["Consider if your own beliefs could ",{c:["be affected","affect",1,"beliefs가 판단에 '영향을 미치는' 능동 주체 → affect"]}," your judgment."]},
  {ko:"자신의 의견에 맞는 기사만 읽고 있는 것은 아닌지 스스로에게 물어보고, 자신의 의견에 반대되는 기사도 찾아보아라.",
-  parts:[{c:["Ask","Asking",1,"명령문의 동사원형 Ask"]}," ",{c:["yourself","you",0,"주어(생략된 you)와 일치하는 재귀대명사 yourself"]}," if you are only ",{c:["reading","read",1,"be동사 are 뒤 현재진행형 reading"]}," articles that ",{c:["suit","suits",1,"선행사 articles(복수)를 수식하는 관계대명사절의 동사 → suit"]}," your opinion, and ",{c:["look","looks",1,"Ask와 병렬된 명령문 동사원형 look"]}," for articles ",{c:["that","what",1,"선행사 articles를 수식하는 주격 관계대명사 that"]}," ",{c:["oppose","are opposed",0,"articles가 의견에 '반대하는' 능동 의미 → oppose"]}," your opinion as well."]},
+  parts:[{c:["Asking","Ask",1,"명령문의 동사원형 Ask"]}," ",{c:["yourself","you",0,"주어(생략된 you)와 일치하는 재귀대명사 yourself"]}," if you are only ",{c:["read","reading",1,"be동사 are 뒤 현재진행형 reading"]}," articles that ",{c:["suits","suit",1,"선행사 articles(복수)를 수식하는 관계대명사절의 동사 → suit"]}," your opinion, and ",{c:["looks","look",1,"Ask와 병렬된 명령문 동사원형 look"]}," for articles ",{c:["what","that",1,"선행사 articles를 수식하는 주격 관계대명사 that"]}," ",{c:["oppose","are opposed",0,"articles가 의견에 '반대하는' 능동 의미 → oppose"]}," your opinion as well."]},
  {ko:"마지막으로, 출처의 신뢰성을 확인해라.",
   parts:["Finally, ",{c:["check","checks",0,"명령문의 동사원형 check"]}," the credibility of the source."]},
  {ko:"당신은 뉴스 기사를 작성한 사람이 누구인지, 뉴스 기사를 작성한 의도가 무엇인지 살펴봐야 한다.",
-  parts:["You should examine ",{c:["who","whom",0,"wrote의 주어 역할을 하는 의문사 who"]}," wrote the news story and what ",{c:["the intent was","was the intent",1,"간접의문문 어순(의문사+주어+동사) → the intent was"]}," behind writing the news story."]},
+  parts:["You should examine ",{c:["who","whom",0,"wrote의 주어 역할을 하는 의문사 who"]}," wrote the news story and what ",{c:["was the intent","the intent was",1,"간접의문문 어순(의문사+주어+동사) → the intent was"]}," behind writing the news story."]},
  {ko:"또한 당신은 뉴스 기사가 신뢰할 수 있는 미디어 출처에서 나온 것인지, 증거가 타당한지 확인할 필요가 있다.",
-  parts:["You also need to ",{c:["check","be checked",0,"you가 '확인하는' 능동 주체 → check"]}," whether the news story is from a ",{c:["reliable","reliably",1,"명사 source를 수식하는 형용사 reliable"]}," media source and the evidence is valid."]},
+  parts:["You also need to ",{c:["be checked","check",1,"you가 '확인하는' 능동 주체 → check"]}," whether the news story is from a ",{c:["reliably","reliable",1,"명사 source를 수식하는 형용사 reliable"]}," media source and the evidence is valid."]},
  {ko:"디지털 시대에는 온라인에서 퍼지는 모든 거짓 정보를 피하거나 없애는 것은 불가능할 수 있다.",
-  parts:["In the digital age, ",{c:["it","they",0,"가주어 it ~ to avoid or eliminate(진주어) 구문"]}," might be ",{c:["impossible","impossibly",0,"be동사의 보어(형용사) → impossible"]}," to avoid or ",{c:["eliminate","eliminates",0,"to avoid와 or로 병렬된 to부정사(to가 공유됨) → eliminate"]}," all false information ",{c:["that","what",0,"선행사 all false information을 수식하는 주격 관계대명사 that"]}," ",{c:["spreads","spread",1,"선행사 all false information(단수 취급)을 수식하는 관계대명사절의 동사 → spreads"]}," online."]},
+  parts:["In the digital age, ",{c:["it","they",0,"가주어 it ~ to avoid or eliminate(진주어) 구문"]}," might be ",{c:["impossible","impossibly",0,"be동사의 보어(형용사) → impossible"]}," to avoid or ",{c:["eliminate","eliminates",0,"to avoid와 or로 병렬된 to부정사(to가 공유됨) → eliminate"]}," all false information ",{c:["that","what",0,"선행사 all false information을 수식하는 주격 관계대명사 that"]}," ",{c:["spread","spreads",1,"선행사 all false information(단수 취급)을 수식하는 관계대명사절의 동사 → spreads"]}," online."]},
  {ko:"하지만 만약 당신이 정보를 비판적이고 객관적으로 볼 수 있는 능력을 가지고 있다면, 당신은 가짜 뉴스가 야기할 수 있는 피해를 줄일 수 있을 것이다.",
-  parts:["However, ",{c:["if","whether",0,"조건을 나타내는 부사절 접속사 if"]}," you ",{c:["have","will have",0,"조건 부사절에서는 현재시제가 미래를 대신 → have"]}," the ability ",{c:["to view","viewing",0,"명사 ability를 수식하는 형용사적 용법의 to부정사"]}," information critically and ",{c:["objectively","objective",0,"critically와 병렬된 부사 objectively"]},", you will be able to reduce the damage ",{c:["that","what",1,"선행사 the damage를 수식하는 목적격 관계대명사 that"]}," fake news can ",{c:["cause","be caused",1,"fake news가 피해를 '야기하는' 능동 주체 → cause"]},"."]},
+  parts:["However, ",{c:["if","whether",0,"조건을 나타내는 부사절 접속사 if"]}," you ",{c:["have","will have",0,"조건 부사절에서는 현재시제가 미래를 대신 → have"]}," the ability ",{c:["to view","viewing",0,"명사 ability를 수식하는 형용사적 용법의 to부정사"]}," information critically and ",{c:["objectively","objective",0,"critically와 병렬된 부사 objectively"]},", you will be able to reduce the damage ",{c:["what","that",1,"선행사 the damage를 수식하는 목적격 관계대명사 that"]}," fake news can ",{c:["be caused","cause",1,"fake news가 피해를 '야기하는' 능동 주체 → cause"]},"."]},
  {ko:"잊지 말아라! 누구나 가짜 뉴스를 생산하거나 퍼뜨리는 다음의 사람이 될 수 있다!",
-  parts:["Don’t forget! Anyone can be the next person ",{c:["producing","produce",0,"person이 가짜 뉴스를 '생산하는' 능동 의미 → 현재분사 producing"]}," or spreading fake news!"]}
+  parts:["Don’t forget! Anyone can be the next person ",{c:["produce","producing",1,"person이 가짜 뉴스를 '생산하는' 능동 의미 → 현재분사 producing"]}," or spreading fake news!"]}
 ],
 writings:[
  {tag:"동격의 that",
@@ -1934,23 +2358,23 @@ title:"교과서 1과 - 본문 외 지문(에코 챔버)",
 sub:"제일고1 · 워크북4 해석연습 본문 외 지문",
 sentences:[
  {ko:"요즘 모든 사람들은 인터넷이나 소셜 미디어를 통해 뉴스를 접하고, 자주 자신의 취향이나 신념에 맞는 정보를 선택적으로 받아들인다.",
-  parts:["These days, everyone ",{c:["accesses","access",1,"주어 everyone(단수 취급) → accesses"]}," the news through the Internet or social media, and often selectively ",{c:["takes","take",1,"주어 everyone(단수 취급) → takes"]}," the information ",{c:["that","what",1,"선행사 the information을 수식하는 목적격 관계대명사 that"]}," ",{c:["suits","suit",0,"선행사 the information(단수)을 수식하는 관계대명사절의 동사 → suits"]}," their tastes or beliefs."]},
+  parts:["These days, everyone ",{c:["access","accesses",1,"주어 everyone(단수 취급) → accesses"]}," the news through the Internet or social media, and often selectively ",{c:["take","takes",1,"주어 everyone(단수 취급) → takes"]}," the information ",{c:["what","that",1,"선행사 the information을 수식하는 목적격 관계대명사 that"]}," ",{c:["suits","suit",0,"선행사 the information(단수)을 수식하는 관계대명사절의 동사 → suits"]}," their tastes or beliefs."]},
  {ko:"하지만 대안적인 관점을 고려하지 않고 지속적으로 유사한 관점에만 노출되는 것은 당신을 '에코 챔버(반향실)'에 갇히게 할 수 있다.",
-  parts:["However, consistently ",{c:["encountering","encounter",0,"문장의 주어 역할(동명사) → encountering"]}," similar perspectives without considering alternative views can ",{c:["lead","be led",1,"consistently encountering가 '이끄는' 능동 주체 → lead"]}," you ",{c:["to be trapped","to trap",0,"you가 '갇히게 되는' 수동 의미 → to be trapped"]}," in an ”echo chamber.”"]},
+  parts:["However, consistently ",{c:["encountering","encounter",0,"문장의 주어 역할(동명사) → encountering"]}," similar perspectives without considering alternative views can ",{c:["be led","lead",1,"consistently encountering가 '이끄는' 능동 주체 → lead"]}," you ",{c:["to be trapped","to trap",0,"you가 '갇히게 되는' 수동 의미 → to be trapped"]}," in an ”echo chamber.”"]},
  {ko:"반향실은 소리가 밖으로 새어 나가지 않고 메아리로 되돌아오는 밀폐된 공간을 말한다.",
-  parts:["An echo chamber refers to an ",{c:["enclosed","enclosing",1,"space가 '밀폐된' 수동 의미 → enclosed"]}," space ",{c:["where","when",0,"장소를 나타내는 선행사 space를 수식하는 관계부사 where"]}," sound doesn’t leak out and ",{c:["returns","return",0,"주어 sound(단수) → returns"]}," as an echo."]},
+  parts:["An echo chamber refers to an ",{c:["enclosing","enclosed",1,"space가 '밀폐된' 수동 의미 → enclosed"]}," space ",{c:["where","when",0,"장소를 나타내는 선행사 space를 수식하는 관계부사 where"]}," sound doesn’t leak out and ",{c:["returns","return",0,"주어 sound(단수) → returns"]}," as an echo."]},
  {ko:"'에코 챔버'라는 용어는 또한 당신이 이미 동의하는 의견만 듣는 모든 상황을 설명할 때도 사용된다.",
-  parts:["The term “echo chamber” is also ",{c:["used","using",1,"The term이 '사용되는' 수동 → used"]}," to describe any situation ",{c:["in which","which",0,"situation을 수식, 뒤에 완전한 절이 이어지므로 전치사+관계대명사 in which"]}," you only hear opinions you already agree with."]},
+  parts:["The term “echo chamber” is also ",{c:["using","used",1,"The term이 '사용되는' 수동 → used"]}," to describe any situation ",{c:["in which","which",0,"situation을 수식, 뒤에 완전한 절이 이어지므로 전치사+관계대명사 in which"]}," you only hear opinions you already agree with."]},
  {ko:"이는 현실에 대한 당신의 이해를 왜곡하고, 비판적으로 사고하고 의미 있는 토론에 참여하는 당신의 능력을 제한할 수 있다.",
-  parts:["This can ",{c:["distort","be distorted",0,"This(=echo chamber)가 이해를 '왜곡하는' 능동 주체 → distort"]}," your understanding of reality, and ",{c:["limit","limits",0,"조동사 can 뒤 distort와 병렬된 동사원형 limit"]}," your ability ",{c:["to think","thinking",0,"명사 ability를 수식하는 형용사적 용법의 to부정사"]}," ",{c:["critically","critical",0,"동사 think를 수식하는 부사 critically"]}," and ",{c:["engage","engages",1,"to think와 and로 병렬된 to부정사(to가 공유됨) → engage"]}," in meaningful debates."]},
+  parts:["This can ",{c:["be distorted","distort",1,"This(=echo chamber)가 이해를 '왜곡하는' 능동 주체 → distort"]}," your understanding of reality, and ",{c:["limit","limits",0,"조동사 can 뒤 distort와 병렬된 동사원형 limit"]}," your ability ",{c:["to think","thinking",0,"명사 ability를 수식하는 형용사적 용법의 to부정사"]}," ",{c:["critically","critical",0,"동사 think를 수식하는 부사 critically"]}," and ",{c:["engages","engage",1,"to think와 and로 병렬된 to부정사(to가 공유됨) → engage"]}," in meaningful debates."]},
  {ko:"더 나쁜 것은, 에코 챔버가 공통 문제에 대한 협력을 어렵게 만들면서 사회적 분열을 조장할 수 있다는 것이다.",
-  parts:["Worse still, an echo chamber may ",{c:["foster","be fostered",0,"an echo chamber가 분열을 '조장하는' 능동 주체 → foster"]}," social division, ",{c:["making","made",0,"주절에 대한 부대상황 분사구문(능동) → making"]}," collaboration on ",{c:["common","commonly",0,"명사 issues를 수식하는 형용사 common"]}," issues ",{c:["challenging","challenged",1,"make + 목적어(collaboration) + 목적격보어(형용사) challenging"]},"."]},
+  parts:["Worse still, an echo chamber may ",{c:["foster","be fostered",0,"an echo chamber가 분열을 '조장하는' 능동 주체 → foster"]}," social division, ",{c:["making","made",0,"주절에 대한 부대상황 분사구문(능동) → making"]}," collaboration on ",{c:["common","commonly",0,"명사 issues를 수식하는 형용사 common"]}," issues ",{c:["challenged","challenging",1,"make + 목적어(collaboration) + 목적격보어(형용사) challenging"]},"."]},
  {ko:"이러한 함정에 빠지지 않으려면 당신은 다양한 정보 출처를 적극적으로 찾고, 다른 견해를 가진 사람들과 교류해야 한다.",
-  parts:["To avoid ",{c:["falling","to fall",0,"동사 avoid의 목적어 자리 → 동명사 falling"]}," into this trap, you must ",{c:["actively","active",0,"동사 seek를 수식하는 부사 actively"]}," seek diverse sources of information and ",{c:["engage","engages",1,"조동사 must 뒤 seek와 병렬된 동사원형 engage"]}," with people ",{c:["who","whom",0,"선행사 people(주격)을 수식하는 관계대명사 who"]}," ",{c:["have","has",1,"선행사 people(복수) → have"]}," different views."]},
+  parts:["To avoid ",{c:["to fall","falling",1,"동사 avoid의 목적어 자리 → 동명사 falling"]}," into this trap, you must ",{c:["active","actively",1,"동사 seek를 수식하는 부사 actively"]}," seek diverse sources of information and ",{c:["engages","engage",1,"조동사 must 뒤 seek와 병렬된 동사원형 engage"]}," with people ",{c:["who","whom",0,"선행사 people(주격)을 수식하는 관계대명사 who"]}," ",{c:["has","have",1,"선행사 people(복수) → have"]}," different views."]},
  {ko:"항상 당신이 받은 정보를 확인하고, 새로운 아이디어를 논의할 때 열린 마음을 유지하여라.",
-  parts:["Always ",{c:["remember","remembers",1,"명령문의 동사원형 remember"]}," to check the information you ",{c:["receive","are received",1,"you가 정보를 '받는' 능동 주체 → receive"]},", and keep an open mind when ",{c:["discussing","discussing about",0,"discuss는 타동사이므로 전치사 없이 목적어를 취함"]}," ",{c:["new","newly",0,"명사 ideas를 수식하는 형용사 new"]}," ideas."]},
+  parts:["Always ",{c:["remembers","remember",1,"명령문의 동사원형 remember"]}," to check the information you ",{c:["are received","receive",1,"you가 정보를 '받는' 능동 주체 → receive"]},", and keep an open mind when ",{c:["discussing","discussing about",0,"discuss는 타동사이므로 전치사 없이 목적어를 취함"]}," ",{c:["new","newly",0,"명사 ideas를 수식하는 형용사 new"]}," ideas."]},
  {ko:"당신이 어떤 것이 진실이기를 정말로 원한다고 해서 그것이 항상 진실이라는 의미는 아니다.",
-  parts:["Even if you really want something ",{c:["to be","being",0,"want + 목적어 + to부정사(목적격보어)"]}," true, it ",{c:["doesn’t always","always doesn’t",0,"부분부정 표현은 always가 부정어 뒤에 위치 → doesn't always"]}," mean ",{c:["that","which",0,"mean의 목적어절을 이끄는 명사절 접속사 that"]}," it is ",{c:["true","truly",0,"be동사 is의 보어(형용사) → true"]},"."]}
+  parts:["Even if you really want something ",{c:["being","to be",1,"want + 목적어 + to부정사(목적격보어)"]}," true, it ",{c:["always doesn’t","doesn’t always",1,"부분부정 표현은 always가 부정어 뒤에 위치 → doesn't always"]}," mean ",{c:["that","which",0,"mean의 목적어절을 이끄는 명사절 접속사 that"]}," it is ",{c:["true","truly",0,"be동사 is의 보어(형용사) → true"]},"."]}
 ],
 writings:[],
 verbForms:[
@@ -2593,8 +3017,9 @@ function buildCombinedPassage(regex, title){
 const COMBINED=[
   {key:'m5', label:'🔥 매삼영 5 DAY 전체 한번에 풀기', match:/^매삼영 5 DAY - /},
   {key:'m6', label:'🔥 매삼영 6 DAY 전체 한번에 풀기', match:/^매삼영 6 DAY - /},
+  {key:'m7', label:'🔥 매삼영 7 DAY 전체 한번에 풀기', match:/^매삼영 7 DAY - /},
   {key:'m10', label:'🔥 매삼영 10 DAY 전체 한번에 풀기', match:/^매삼영 10 DAY - /},
-  {key:'txt1', label:'🔥 교과서 1과 전체 한번에 풀기', match:/^교과서\s*1과/},
+  {key:'txt1', label:'🔥 교과서 1과 전체 한번에 풀기', match:/^교과서\s*1과(?!.*본문\s*외)/}, // 본문 외 지문(에코 챔버)은 별개 자료라 제외
   {key:'txt2', label:'🔥 교과서 2과 전체 한번에 풀기', match:/^교과서\s*2과/}
 ];
 function openCombined(key){

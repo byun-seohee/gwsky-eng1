@@ -40,6 +40,10 @@
   h1 em{font-style:normal;color:var(--navy)}
 
   /* ── 홈: 지문 목록 ── */
+  .termbar{display:flex;gap:8px;margin:4px 0 14px}
+  .termbar button{flex:1;padding:11px 6px;border-radius:12px;border:2px solid var(--navy);background:#fff;color:var(--navy);font-weight:800;font-size:13px;font-family:inherit;cursor:pointer;line-height:1.3}
+  .termbar button.on{background:var(--navy);color:#fff}
+  .termbar small{display:block;font-weight:600;font-size:10.5px;opacity:.8;margin-top:3px}
   .home-guide{font-size:12.5px;color:var(--ink-dim);margin:6px 2px 14px}
   .plist{display:flex;flex-direction:column;gap:10px}
   .pcard{
@@ -424,9 +428,10 @@
       <h1>제일고1 <em>자습실</em></h1>
     </header>
     <div id="wrongCardBox"></div>
-    <p class="home-guide">지문을 선택하면 <b>① 어법 → ② 서술형 → ③ 순서·삽입</b> 순서로 연습할 수 있어요. 새 지문은 계속 추가됩니다.</p>
+    <div class="termbar" id="termbar"></div>
+    <p class="home-guide">지문을 선택하면 <b>① 어법 → ② 동사형고치기</b> 순서로 연습할 수 있어요. 새 지문은 계속 추가됩니다.</p>
     <div class="plist" id="plist"></div>
-    <p class="home-guide" style="margin-top:20px">📒 <b>단어 암기</b> — 플래시카드로 외우고, 객관식으로 점검하세요.</p>
+    <p class="home-guide" id="vguide" style="margin-top:20px">📒 <b>단어 암기</b> — 플래시카드로 외우고, 객관식으로 점검하세요.</p>
     <div class="plist" id="vlist"></div>
     <footer>경운SKY입시학원 · 변서희 선생님 영어 자료</footer>
   </div>
@@ -479,11 +484,7 @@
       </div>
       <div class="tabs" style="flex-wrap:wrap">
         <div class="tab on" data-tab="quiz" onclick="switchTab('quiz')" style="font-size:12.5px;flex:1 1 45%">① 어법</div>
-        <div class="tab" data-tab="write" onclick="switchTab('write')" style="font-size:12.5px;flex:1 1 45%">② 서술형</div>
-        <div class="tab" data-tab="flow" onclick="switchTab('flow')" style="font-size:12.5px;flex:1 1 45%">③ 순서·삽입</div>
-        <div class="tab" data-tab="vf" onclick="switchTab('vf')" style="font-size:12.5px;flex:1 1 45%">④ 동사형고치기</div>
-        <div class="tab" data-tab="abc" onclick="switchTab('abc')" style="font-size:12.5px;flex:1 1 45%">⑤ 순서배열(A·B·C)</div>
-        <div class="tab" data-tab="ox" onclick="switchTab('ox')" style="font-size:12.5px;flex:1 1 45%">⑥ OX퀴즈</div>
+        <div class="tab" data-tab="vf" onclick="switchTab('vf')" style="font-size:12.5px;flex:1 1 45%">② 동사형고치기</div>
       </div>
     </header>
 
@@ -1412,7 +1413,15 @@ verbForms:[
  {ko:"올림픽 메달리스트 수영 선수도 마찬가지이다.",
   parts:["The same can ",{b:"say",a:"be said"}," of an Olympic medalist swimmer."]},
  {ko:"사람들은 그가 수영장에서 할 수 있는 것 때문에 그의 말을 경청한다.",
-  parts:["People ",{b:"listen",a:"listen"}," to him because of what he can ",{b:"do",a:"do"}," in the pool."]}
+  parts:["People ",{b:"listen",a:"listen"}," to him because of what he can ",{b:"do",a:"do"}," in the pool."]},
+ {ko:"그리고 어떤 배우가 우리에게 특정 자동차를 운전해야 한다고 말할 때, 우리는 엔진에 대한 그의 전문 지식 때문에 경청하는 것은 아니다.",
+  parts:["And when an actor ",{b:"tell",a:"tells"}," us we ",{b:"should, drive",a:"should drive"}," a certain car, we ",{b:"not, listen",a:"don't listen"}," because of his expertise on engines."]},
+ {ko:"우리는 그의 재능을 존경하기 때문에 경청한다.",
+  parts:["We ",{b:"listen",a:"listen"}," because we ",{b:"admire",a:"admire"}," his talent."]},
+ {ko:"탁월함이 연결된다.",
+  parts:["Excellence ",{b:"connect",a:"connects"},"."]},
+ {ko:"만약 당신이 어떤 분야에서 높은 수준의 능력을 갖고 있다면, 다른 사람들은 그것 때문에 당신과 연결되기를 원할 수도 있다.",
+  parts:["If you ",{b:"possess",a:"possess"}," a high level of ability in an area, others may ",{b:"desire",a:"desire"}," ",{b:"connect",a:"to connect"}," with you because of it."]}
 ]
 },
 
@@ -1615,34 +1624,6 @@ verbForms:[
 ]
 },
 
-/* ───────── 매삼영 6 DAY - A ───────── */
-{
-title:"매삼영 6 DAY - A",
-sub:"제일고1 시험범위 · 자녀의 감정에 공감하며 대화하기 (32번)",
-sentences:[],
-writings:[],
-verbForms:[
- {ko:"여러분이 어떤 감정적인 순간에 놓인 자녀의 말을 들을 때, 대화가 계속 굴러가게 하기 위해 질문을 하는 것보다 단순한 관찰 결과를 공유하는 것이 대개는 더 효과적임을 인식해라.",
-  parts:["As you ",{b:"listen",a:"listen"}," to your child in an emotional moment, ",{b:"be",a:"be"}," aware that ",{b:"share",a:"sharing"}," simple observations usually ",{b:"work",a:"works"}," better than ",{b:"ask",a:"asking"}," questions to get a conversation ",{b:"roll",a:"rolling"},"."]},
- {ko:"여러분이 자녀에게 “왜 슬픈 기분이 드니?”라고 물으면 그녀는 짐작조차 못 할 수도 있다.",
-  parts:["You may ",{b:"ask",a:"ask"}," your child “Why ",{b:"do",a:"do"}," you ",{b:"feel",a:"feel"}," sad?” and she may not ",{b:"have",a:"have"}," a clue."]},
- {ko:"아이라서, 그녀는 답이 당장 떠오르지 않을지도 모른다.",
-  parts:["As a child, she may not ",{b:"have",a:"have"}," an answer on the tip of her tongue."]},
- {ko:"어쩌면 그녀는 부모님의 말다툼에 대해 슬픔을 느끼고 있거나, 혹은 그녀가 극도로 지쳤기 때문이거나, 혹은 피아노 연주회를 걱정할지도 모른다.",
-  parts:["Maybe she ",{b:"be",a:"is"}," ",{b:"feel",a:"feeling"}," sad about her parents’ arguments, or because she ",{b:"feel",a:"feels"}," overtired, or she ",{b:"be",a:"is"}," ",{b:"worry",a:"worried"}," about a piano recital."]},
- {ko:"그러나 그녀는 이것에 대해 설명할 수도 있고 어떤 것도 설명하지 못할 수도 있다.",
-  parts:["But she may or may not ",{b:"be",a:"be"}," able ",{b:"explain",a:"to explain"}," any of this."]},
- {ko:"그리고 그녀가 정말로 답이 떠오를 때조차도 그 대답이 그 감정을 정당화하기에는 충분하지 않다고 걱정할 수도 있다.",
-  parts:["And even when she ",{b:"do",a:"does"}," ",{b:"come",a:"come"}," up with an answer, she might ",{b:"worry",a:"be worried"}," that the answer ",{b:"be",a:"is"}," not good enough ",{b:"justify",a:"to justify"}," the feeling."]},
- {ko:"이러한 상황에서는 연속된 질문들이 그저 자녀를 침묵하게 만들 수 있다.",
-  parts:["Under these circumstances, a series of questions can just ",{b:"make",a:"make"}," a child silent."]},
- {ko:"여러분이 인지한 것을 단순히 나타내는 것이 더 낫다.",
-  parts:["It ",{b:"be",a:"is"}," better ",{b:"simply, reflect",a:"to simply reflect"}," what you ",{b:"notice",a:"notice"},"."]},
- {ko:"“너 오늘 조금 피곤해 보이네.” 혹은 “내가 연주회 얘기를 꺼냈을 때 네가 얼굴을 찡그린 것을 알아챘어.”라고 말하고, 그녀의 반응을 기다려 볼 수 있다.",
-  parts:["You can ",{b:"say",a:"say"},", “You ",{b:"seem",a:"seem"}," a little ",{b:"tire",a:"tired"}," today,” or, “I ",{b:"notice",a:"noticed"}," that you ",{b:"frown",a:"frowned"}," when I ",{b:"mention",a:"mentioned"}," the recital,” and ",{b:"wait",a:"wait"}," for her response."]}
-]
-},
-
 /* ───────── 매삼영 6 DAY - B ───────── */
 {
 title:"매삼영 6 DAY - B",
@@ -1684,7 +1665,7 @@ sentences:[
  {ko:"생물학자들은 때때로 이 ‘붉은 여왕 효과’를 사용해 진화 원리를 설명한다.",
   parts:["Biologists sometimes use this Red Queen Effect to ",{c:["explain","explaining",0,"목적(~하기 위해)의 to부정사 to explain"]}," an evolutionary principle."]},
  {ko:"만약 여우가 더 많은 토끼를 잡기 위해 더 빨리 달리도록 진화한다면, 그러면 오직 가장 빠른 토끼만이 충분히 오래 살아 훨씬 더 빨리 달리는 새로운 세대의 토끼를 낳을 텐데, 물론 이 경우 가장 빠른 여우만이 충분한 토끼를 잡아 번성하여 자신들의 유전자를 물려줄 것이다.",
-  parts:["If foxes evolve to ",{c:["run","running",0,"to evolve to + 동사원형"]}," faster so they can catch more rabbits, then only the fastest rabbits will live ",{c:["long enough","enough long",0,"형용사/부사+enough 어순(enough는 뒤에서 수식)"]}," ",{c:["making","to make",1,"목적(~하기 위해)의 to부정사 to make"]}," a new generation of bunnies ",{c:["what","that",1,"선행사 a new generation of bunnies를 수식하는 주격 관계대명사 that"]}," ",{c:["run","runs",1,"선행사가 단수 취급되는 a new generation → runs"]}," ",{c:["very","even",1,"비교급 강조부사는 even(very는 비교급 수식 불가)"]}," faster—in which case, of course, only the fastest foxes will catch enough rabbits to ",{c:["thrive","decline",0,"문맥상 '번성하다' thrive"]}," and ",{c:["pass","passing",0,"to thrive와 등위접속사 and로 연결된 병렬 to부정사 pass"]}," on their genes."]},
+  parts:["If foxes evolve to ",{c:["run","running",0,"to evolve to + 동사원형"]}," faster so they can catch more rabbits, then only the fastest rabbits will live ",{c:["long enough","enough long",0,"형용사/부사+enough 어순(enough는 뒤에서 수식)"]}," ",{c:["making","to make",1,"목적(~하기 위해)의 to부정사 to make"]}," a new generation of bunnies ",{c:["what","that",1,"선행사 bunnies(복수)를 수식하는 주격 관계대명사 that"]}," ",{c:["run","runs",0,"관계대명사 that의 선행사는 bunnies(복수) → run"]}," ",{c:["very","even",1,"비교급 강조부사는 even(very는 비교급 수식 불가)"]}," faster—in which case, of course, only the fastest foxes will catch enough rabbits to ",{c:["thrive","decline",0,"문맥상 '번성하다' thrive"]}," and ",{c:["pass","passing",0,"to thrive와 등위접속사 and로 연결된 병렬 to부정사 pass"]}," on their genes."]},
  {ko:"그 두 종이 달린다 해도 그것들은 제자리에 머무를 뿐이다.",
   parts:["Even though they might run, the two species just ",{c:["stay","staying",0,"문장의 본동사(3인칭 복수 species) → stay"]}," in place."]}
 ],
@@ -1699,7 +1680,7 @@ verbForms:[
  {ko:"생물학자들은 때때로 이 ‘붉은 여왕 효과’를 사용해 진화 원리를 설명한다.",
   parts:["Biologists sometimes ",{b:"use",a:"use"}," this Red Queen Effect ",{b:"explain",a:"to explain"}," an evolutionary principle."]},
  {ko:"만약 여우가 더 많은 토끼를 잡기 위해 더 빨리 달리도록 진화한다면, 그러면 오직 가장 빠른 토끼만이 충분히 오래 살아 훨씬 더 빨리 달리는 새로운 세대의 토끼를 낳을 텐데, 물론 이 경우 가장 빠른 여우만이 충분한 토끼를 잡아 번성하여 자신들의 유전자를 물려줄 것이다.",
-  parts:["If foxes ",{b:"evolve",a:"evolve"}," ",{b:"run",a:"to run"}," faster so they can ",{b:"catch",a:"catch"}," more rabbits, then only the fastest rabbits will ",{b:"live",a:"live"}," long enough ",{b:"make",a:"to make"}," a new generation of bunnies that ",{b:"run",a:"runs"}," even faster—in which case, of course, only the fastest foxes will ",{b:"catch",a:"catch"}," enough rabbits ",{b:"to thrive",a:"to thrive"}," and ",{b:"pass",a:"pass"}," on their genes."]},
+  parts:["If foxes ",{b:"evolve",a:"evolve"}," ",{b:"run",a:"to run"}," faster so they can ",{b:"catch",a:"catch"}," more rabbits, then only the fastest rabbits will ",{b:"live",a:"live"}," long enough ",{b:"make",a:"to make"}," a new generation of bunnies that ",{b:"run",a:"run"}," even faster—in which case, of course, only the fastest foxes will ",{b:"catch",a:"catch"}," enough rabbits ",{b:"to thrive",a:"to thrive"}," and ",{b:"pass",a:"pass"}," on their genes."]},
  {ko:"그 두 종이 달린다 해도 그것들은 제자리에 머무를 뿐이다.",
   parts:["Even though they might ",{b:"run",a:"run"},", the two species just ",{b:"stay",a:"stay"}," in place."]}
 ]
@@ -1764,7 +1745,7 @@ sentences:[
  {ko:"그 그릇들을 만드는데 무슨 나무를 사용했나? 어디서 그 바나나를 얻게 되었나?",
   parts:["What wood was ",{c:["using","used",1,"주어 wood가 '사용된' 수동태 → was used"]}," for the bowls? Where did you get the bananas?"]},
  {ko:"단지 제스처와 혼란스런 소음만을 사용해서는 그 상업 거래는 거의 불가능 했을 것이고, 합의된 조항에 따라서 그것을 실행하는 것이 신뢰라는 결속을 만든다.",
-  parts:["That business deal would have been nearly impossible ",{c:["using","used",0,"전치사 없이 이어지는 분사구문(수단, 능동) using"]}," only gestures and ",{c:["confusing","confused",1,"noises가 '혼란스럽게 하는' 것이 아니라 '혼란스러워진' 것 → confused"]}," noises, and ",{c:["carrying it out","carrying out it",0,"동사구+대명사 목적어는 반드시 사이에 위치(carry it out)"]}," according to terms ",{c:["agreeing","agreed",1,"terms가 '합의되는' 수동 → agreed"]}," upon ",{c:["create","creates",1,"주어 carrying out(단수, 동명사구) → creates"]}," a bond of trust."]},
+  parts:["That business deal would have been nearly impossible ",{c:["using","used",0,"전치사 없이 이어지는 분사구문(수단, 능동) using"]}," only gestures and ",{c:["confusing","confused",0,"noises가 사람을 '혼란스럽게 만드는' 능동 의미 → confusing"]}," noises, and ",{c:["carrying it out","carrying out it",0,"동사구+대명사 목적어는 반드시 사이에 위치(carry it out)"]}," according to terms ",{c:["agreeing","agreed",1,"terms가 '합의되는' 수동 → agreed"]}," upon ",{c:["create","creates",1,"주어 carrying out(단수, 동명사구) → creates"]}," a bond of trust."]},
  {ko:"언어는 우리가 구체적이도록 해주고 이것이 대화가 중요한 역할을 하는 지점이다.",
   parts:["Language allows us ",{c:["being","to be",1,"allow + 목적어 + to부정사(목적격보어)"]}," specific, and this is where conversation plays a key role."]}
 ],
@@ -1793,7 +1774,7 @@ title:"매삼영 6 DAY - F",
 sub:"제일고1 시험범위 · 아기는 왜 흔들어주면 진정할까 (20년 9월 34번)",
 sentences:[
  {ko:"신생아와 유아가 흔들림에 의해 편안해지는데, 이것은 이런 움직임이 자궁 안에서 그들이 경험했던 것과 유사하기 때문이고, 그들이 이런 친숙한 느낌에서 편안해지는 것이 틀림없다는 말을 자주 듣는다.",
-  parts:["We’re often ",{c:["told","tell",0,"주어 We가 '듣게 되는' 수동태 → told"]}," ",{c:["that","what",0,"told 뒤 완전한 절을 이끄는 명사절 접속사 that"]}," newborns and infants are ",{c:["comforting","comforted",1,"newborns가 '편안해지는' 수동 → comforted"]}," by rocking ",{c:["because","because of",0,"뒤에 절(this motion is similar to...)이 이어지므로 접속사 because"]}," this motion is ",{c:["similarly","similar",1,"be동사 is의 보어(형용사) → similar"]}," to ",{c:["that","what",0,"선행사 that(=motion)을 대신하는 지시대명사, 뒤에 they experienced의 목적어가 없는 불완전한 절이지만 that은 앞의 the way/motion을 가리키는 대명사로 사용"]}," they experienced in the womb, and ",{c:["what","that",1,"told의 두 번째 목적어절을 이끄는 명사절 접속사 that (and로 병렬)"]}," they must take comfort in this familiar feeling."]},
+  parts:["We’re often ",{c:["told","tell",0,"주어 We가 '듣게 되는' 수동태 → told"]}," ",{c:["that","what",0,"told 뒤 완전한 절을 이끄는 명사절 접속사 that"]}," newborns and infants are ",{c:["comforting","comforted",1,"newborns가 '편안해지는' 수동 → comforted"]}," by rocking ",{c:["because","because of",0,"뒤에 절(this motion is similar to...)이 이어지므로 접속사 because"]}," this motion is ",{c:["similarly","similar",1,"be동사 is의 보어(형용사) → similar"]}," to ",{c:["that","what",1,"선행사 없이 '~하는 것'을 뜻하는 관계대명사 what — similar to what they experienced(그들이 경험했던 것과 유사한)"]}," they experienced in the womb, and ",{c:["what","that",1,"told의 두 번째 목적어절을 이끄는 명사절 접속사 that (and로 병렬)"]}," they must take comfort in this familiar feeling."]},
  {ko:"이것은 사실일 수 있지만, 현재까지 임신 기간 동안 엄마가 움직이는 시간의 양과 흔들림에 대한 신생아의 반응 사이에 상당한 관계가 있음을 입증하는 설득력 있는 데이터는 없다.",
   parts:["This may be true; however, to date there are no ",{c:["convinced","convincing",1,"data가 '설득력을 주는' 능동의 의미 → 현재분사 convincing"]}," data ",{c:["what","that",1,"선행사 data를 수식하는 주격 관계대명사 that"]}," demonstrate a ",{c:["significantly","significant",1,"명사 relationship을 수식하는 형용사 significant"]}," relationship between the amount of time a mother moves during pregnancy and her newborn’s response to rocking."]},
  {ko:"신생아가 부드러운 흔들림을 젖을 먹는 것과 연관시키게 된다는 생각도 그만큼 가능할 법하다.",
@@ -1826,7 +1807,7 @@ sentences:[
  {ko:"비전은 움직이는 목표물을 쏘아 맞히는 것과 같다. 많은 것들이 미래에 잘못될 수 있고, 더 많은 것들이 예측할 수 없는 방식들로 변할 수 있다.",
   parts:["Vision is like ",{c:["to shoot","shooting",1,"전치사 like의 목적어 자리 → 동명사 shooting"]}," at a moving target. Plenty of ",{c:["thing","things",1,"Plenty of + 복수명사 things"]}," can go ",{c:["wrong","wrongly",0,"2형식 동사 go의 주격보어(형용사) wrong"]}," in the future and plenty more can change in ",{c:["unpredictable","unpredictably",0,"명사 ways를 꾸미는 형용사 unpredictable"]}," ways."]},
  {ko:"그러한 일들이 일어날 때, 당신은 새로운 현실에 당신의 비전을 맞출 수 있도록 준비되어야 한다.",
-  parts:["When ",{c:["so","such",1,"such + 명사(such things) 어순"]}," things ",{c:["happen","are happened",0,"자동사 happen은 수동태 불가"]},", you should be prepared ",{c:["making","to make",1,"be prepared + to부정사 관용표현"]}," your vision ",{c:["conform","to conform",1,"make + 목적어 + to부정사(목적격보어)"]}," to the new reality."]},
+  parts:["When ",{c:["so","such",1,"such + 명사(such things) 어순"]}," things ",{c:["happen","are happened",0,"자동사 happen은 수동태 불가"]},", you should be prepared ",{c:["making","to make",1,"be prepared + to부정사 관용표현"]}," your vision ",{c:["conform","to conform",0,"make + 목적어 + 목적격보어(동사원형) — 사역동사 make는 목적격보어로 동사원형을 취함"]}," to the new reality."]},
  {ko:"예를 들어, 한 사업가의 낙관적인 예측은 그가 예견할 수 없었던 방식으로 잔혹한 경기 침체나 공격적인 경쟁에 의해 날아갈 수 있다.",
   parts:["For example, a businessman’s ",{c:["optimistic","optimistically",0,"명사 forecast를 꾸미는 형용사 optimistic"]}," forecast can ",{c:["blow","be blown",1,"forecast가 '날아가 버리는' 수동태 → be blown"]}," away by a cruel recession or by ",{c:["aggressive","aggressively",0,"명사 competition을 꾸미는 형용사 aggressive"]}," competition in ways he could not ",{c:["have","have been",0,"조동사 could not have + p.p.(과거완료 추측)"]}," foreseen."]},
  {ko:"혹은 또 다른 시나리오에서는 그의 판매가 급등하거나 그의 수익이 훨씬 더 나아질 수 있다.",
@@ -2983,6 +2964,283 @@ verbForms:[
   parts:["In contrast, it ",{b:"be",a:"is"}," best ",{b:"face",a:"to face"}," cold environments with layers so you can ",{b:"adjust",a:"adjust"}," your body temperature ",{b:"avoid",a:"to avoid"}," ",{b:"sweat",a:"sweating"}," and ",{b:"remain",a:"remain"}," comfortable."]}
 ]
 }
+,
+
+/* ───────── 매삼영 11 DAY - B ───────── */
+{
+title:"매삼영 11 DAY - B",
+term:"final",
+sub:"제일고1 시험범위 · 우울증의 근본 원인 — 의식의 문제",
+sentences:[
+ {ko:"전통 의학은 오랫동안 우울증이 뇌 속 신경 전달 물질의 불균형에 의해 생긴다고 믿어 왔다.",
+  parts:["Conventional medicine has long ",{c:["been believed","believed",1,"현재완료 능동: 주어 Conventional medicine이 '믿어 왔다' → has long believed"]}," that depression ",{c:["is caused","causes",0,"depression이 '유발되는' 수동 관계 → is caused (by ~에 의해)"]}," by an imbalance of neurotransmitters in the brain."]},
+ {ko:"그러나 이 설명에는 중대한 문제가 있다.",
+  parts:["However, there ",{c:["is","are",0,"there 구문은 뒤의 명사 a major problem(단수)에 수 일치 → is"]}," a major problem with this explanation."]},
+ {ko:"이는 뇌 속 물질의 불균형이 우울증의 원인이 아니라 결과이기 때문이다.",
+  parts:["This is ",{c:["because of","because",1,"뒤에 절(주어+동사)이 이어지므로 접속사 because (because of는 뒤에 명사구)"]}," the imbalance of substances in the brain ",{c:["is","are",0,"주어 the imbalance(단수) → is"]}," a consequence of depression, not ",{c:["their","its",1,"depression(단수)의 → its (their는 복수)"]}," cause."]},
+ {ko:"다시 말해, 우울증이 세로토닌과 노르아드레날린 같은 뇌 속 물질의 감소를 일으키는 것이지, 뇌 속 물질의 감소가 우울증을 일으키는 것이 아니다.",
+  parts:["In other words, depression ",{c:["causing","causes",1,"문장 본동사 자리, 주어 depression(단수) → causes"]}," a decrease in brain substances such as serotonin and noradrenaline, not a decrease in brain substances ",{c:["causes","cause",0,"주어 a decrease(단수, in brain substances는 수식어) → causes"]}," depression."]},
+ {ko:"이렇게 수정된 인과 관계에서 핵심은 우울증을 의식의 문제로 재구성하는 것이다.",
+  parts:["In this ",{c:["revising","revised",1,"cause-and-effect가 '수정된' 수동 의미 → 과거분사 revised"]}," cause-and-effect, the key ",{c:["is","are",0,"주어 the key(단수) → is"]}," ",{c:["to reframe","reframe",0,"be동사 보어(핵심은 ~하는 것) → to부정사 to reframe"]}," depression as a problem of consciousness."]},
+ {ko:"우리의 의식은 뇌의 기능을 넘어서는 더 근본적인 실체이다.",
+  parts:["Our consciousness is a more fundamental entity ",{c:["what","that",1,"선행사 entity가 있으므로 주격 관계대명사 that (what은 선행사를 쓰지 않음)"]}," ",{c:["goes","go",0,"선행사 entity(단수) → goes"]}," beyond the functioning of the brain."]},
+ {ko:"뇌는 의식의 한 기관에 불과하다.",
+  parts:["The brain ",{c:["being","is",1,"문장의 본동사 필요 (being은 단독으로 동사 역할 불가) → is"]}," no more than an organ of consciousness."]},
+ {ko:"그것이 의식 그 자체가 아니라면, 우울증의 근본 원인 또한 우리 의식 상태의 왜곡, 즉 자아 감각과 삶의 의미를 잃어버린 의식이다.",
+  parts:["If it is not consciousness ",{c:["themselves","itself",1,"강조·재귀: it(단수) 자신 → itself"]},", then the root cause of depression is also a distortion of our state of consciousness: a consciousness that ",{c:["has","have",0,"선행사 a consciousness(단수) → has"]}," lost ",{c:["their","its",1,"a consciousness(단수)의 → its"]}," sense of self and the meaning of life."]},
+ {ko:"그러한 의식의 병이 우울증의 형태로 나타날 수 있다.",
+  parts:["Such a disease of consciousness may ",{c:["manifest","manifests",0,"조동사 may 뒤에는 동사원형 → manifest"]}," ",{c:["itself","themselves",0,"주어 Such a disease와 목적어가 같으므로 재귀대명사 itself (단수)"]}," in the form of depression."]}
+],
+writings:[],
+verbForms:[
+ {ko:"전통 의학은 오랫동안 우울증이 뇌 속 신경 전달 물질의 불균형에 의해 생긴다고 믿어 왔다.",
+  parts:["Conventional medicine ",{b:"long, believe",a:"has long believed"}," that depression ",{b:"cause",a:"is caused"}," by an imbalance of neurotransmitters in the brain."]},
+ {ko:"그러나 이 설명에는 중대한 문제가 있다.",
+  parts:["However, there ",{b:"be",a:"is"}," a major problem with this explanation."]},
+ {ko:"이는 뇌 속 물질의 불균형이 우울증의 원인이 아니라 결과이기 때문이다.",
+  parts:["This ",{b:"be",a:"is"}," because the imbalance of substances in the brain ",{b:"be",a:"is"}," a consequence of depression, not its cause."]},
+ {ko:"다시 말해, 우울증이 세로토닌과 노르아드레날린 같은 뇌 속 물질의 감소를 일으키는 것이지, 뇌 속 물질의 감소가 우울증을 일으키는 것이 아니다.",
+  parts:["In other words, depression ",{b:"cause",a:"causes"}," a decrease in brain substances such as serotonin and noradrenaline, not a decrease in brain substances ",{b:"cause",a:"causes"}," depression."]},
+ {ko:"이렇게 수정된 인과 관계에서 핵심은 우울증을 의식의 문제로 재구성하는 것이다.",
+  parts:["In this ",{b:"revise",a:"revised"}," cause-and-effect, the key ",{b:"be",a:"is"}," ",{b:"reframe",a:"to reframe"}," depression as a problem of consciousness."]},
+ {ko:"우리의 의식은 뇌의 기능을 넘어서는 더 근본적인 실체이다.",
+  parts:["Our consciousness ",{b:"be",a:"is"}," a more fundamental entity that ",{b:"go",a:"goes"}," beyond the functioning of the brain."]},
+ {ko:"뇌는 의식의 한 기관에 불과하다.",
+  parts:["The brain ",{b:"be",a:"is"}," no more than an organ of consciousness."]},
+ {ko:"그것이 의식 그 자체가 아니라면, 우울증의 근본 원인 또한 우리 의식 상태의 왜곡, 즉 자아 감각과 삶의 의미를 잃어버린 의식이다.",
+  parts:["If it ",{b:"not, be",a:"is not"}," consciousness itself, then the root cause of depression ",{b:"be",a:"is"}," also a distortion of our state of consciousness: a consciousness that ",{b:"lose",a:"has lost"}," its sense of self and the meaning of life."]},
+ {ko:"그러한 의식의 병이 우울증의 형태로 나타날 수 있다.",
+  parts:["Such a disease of consciousness ",{b:"may, manifest",a:"may manifest"}," itself in the form of depression."]}
+]
+},
+
+/* ───────── 매삼영 11 DAY - C ───────── */
+{
+title:"매삼영 11 DAY - C",
+term:"final",
+sub:"제일고1 시험범위 · 광물의 형성과 결정의 크기",
+sentences:[
+ {ko:"자연의 작용은 여러 방식으로 광물을 형성한다.",
+  parts:["Natural processes ",{c:["forms","form",1,"주어 Natural processes(복수) → form"]}," minerals in many ways."]},
+ {ko:"예를 들어, 마그마라고 불리는 뜨겁게 녹은 암석 물질은 지구 표면에 도달할 때, 또는 표면 아래에 갇혀 있을 때조차 식는다.",
+  parts:["For example, hot ",{c:["melted","melting",0,"rock material이 '녹여진' 수동 의미 → 과거분사 melted"]}," rock material, ",{c:["calling","called",1,"magma라고 '불리는' 수동 의미 → called"]}," magma, ",{c:["cool","cools",1,"주어 hot melted rock material(단수) → cools"]}," when it reaches the Earth’s surface, or even if it’s ",{c:["trapped","trapping",0,"it's(= it is) 뒤 '갇힌' 수동 의미 → trapped"]}," below the surface."]},
+ {ko:"마그마가 식으면서 그 원자들은 열에너지를 잃고, 서로 더 가까이 이동하며, 결합하여 화합물이 되기 시작한다.",
+  parts:["As magma cools, ",{c:["their","its",1,"magma(단수)의 → its"]}," atoms ",{c:["lose","loses",0,"주어 its atoms(복수) → lose"]}," heat energy, move closer together, and ",{c:["begin","begins",0,"lose·move와 병렬, 주어 atoms(복수) → begin"]}," to combine into compounds."]},
+ {ko:"이 과정 동안 서로 다른 화합물의 원자들은 스스로 질서 있고 반복되는 패턴으로 배열된다.",
+  parts:[{c:["While","During",1,"뒤에 명사구 this process가 오므로 전치사 During (While은 접속사)"]}," this process, atoms of the different compounds ",{c:["arrange","arranges",0,"주어 atoms(복수) → arrange"]}," ",{c:["them","themselves",1,"주어 atoms와 목적어가 같으므로 재귀대명사 themselves"]}," into orderly, repeating patterns."]},
+ {ko:"마그마에 존재하는 원소의 종류와 양이 어떤 광물이 형성될지를 부분적으로 결정한다.",
+  parts:["The type and amount of elements ",{c:["presenting","present",1,"'마그마에 존재하는' 원소 → 형용사 present(후치 수식)"]}," in a magma partly ",{c:["determine","determines",0,"주어 The type and amount(복수) → determine"]}," which minerals will form."]},
+ {ko:"또한 형성되는 결정의 크기는 마그마가 얼마나 빨리 식느냐에 부분적으로 달려 있다.",
+  parts:["Also, the size of the crystals that ",{c:["forms","form",1,"선행사 the crystals(복수) → form"]}," ",{c:["depends","depend",0,"주어 the size(단수) → depends"]}," partly on how ",{c:["rapidly","rapid",0,"동사 cools를 수식하는 부사 → rapidly"]}," the magma cools."]},
+ {ko:"마그마가 천천히 식을 때 형성되는 결정은 대체로 맨눈으로 볼 수 있을 만큼 충분히 크다.",
+  parts:["When magma cools ",{c:["slow","slowly",1,"동사 cools를 수식 → 부사 slowly"]},", the crystals that form ",{c:["are","is",0,"선행사 the crystals(복수) → are"]}," generally ",{c:["enough large","large enough",1,"enough는 형용사 뒤에서 수식 → large enough"]}," to see with the unaided eye."]},
+ {ko:"이는 원자들이 함께 이동해 더 큰 결정을 형성할 충분한 시간을 갖기 때문이다.",
+  parts:["This is ",{c:["because of","because",1,"뒤에 절(the atoms have ~)이 오므로 접속사 because"]}," the atoms ",{c:["have","has",0,"주어 the atoms(복수) → have"]}," enough time ",{c:["moving","to move",1,"enough time을 수식하는 to부정사(형용사적 용법) → to move"]}," together and form into larger crystals."]},
+ {ko:"마그마가 빠르게 식으면 형성되는 결정은 작을 것이다.",
+  parts:["When magma cools ",{c:["rapidly","rapid",0,"동사 cools를 수식하는 부사 → rapidly"]},", the crystals that ",{c:["form","forms",0,"선행사 the crystals(복수) → form"]}," will be small."]},
+ {ko:"그런 경우에는 개별 광물 결정을 쉽게 볼 수 없다.",
+  parts:["In such cases, you can’t ",{c:["easy","easily",1,"동사 see를 수식하는 부사 → easily"]}," see ",{c:["individual","individually",0,"명사 crystals를 수식하는 형용사 → individual"]}," mineral crystals."]}
+],
+writings:[],
+verbForms:[
+ {ko:"자연의 작용은 여러 방식으로 광물을 형성한다.",
+  parts:["Natural processes ",{b:"form",a:"form"}," minerals in many ways."]},
+ {ko:"예를 들어, 마그마라고 불리는 뜨겁게 녹은 암석 물질은 지구 표면에 도달할 때, 또는 표면 아래에 갇혀 있을 때조차 식는다.",
+  parts:["For example, hot ",{b:"melt",a:"melted"}," rock material, ",{b:"call",a:"called"}," magma, ",{b:"cool",a:"cools"}," when it ",{b:"reach",a:"reaches"}," the Earth’s surface, or even if it’s ",{b:"trap",a:"trapped"}," below the surface."]},
+ {ko:"마그마가 식으면서 그 원자들은 열에너지를 잃고, 서로 더 가까이 이동하며, 결합하여 화합물이 되기 시작한다.",
+  parts:["As magma ",{b:"cool",a:"cools"},", its atoms ",{b:"lose",a:"lose"}," heat energy, ",{b:"move",a:"move"}," closer together, and ",{b:"begin",a:"begin"}," ",{b:"combine",a:"to combine"}," into compounds."]},
+ {ko:"이 과정 동안 서로 다른 화합물의 원자들은 스스로 질서 있고 반복되는 패턴으로 배열된다.",
+  parts:["During this process, atoms of the different compounds ",{b:"arrange",a:"arrange"}," themselves into orderly, ",{b:"repeat",a:"repeating"}," patterns."]},
+ {ko:"마그마에 존재하는 원소의 종류와 양이 어떤 광물이 형성될지를 부분적으로 결정한다.",
+  parts:["The type and amount of elements present in a magma partly ",{b:"determine",a:"determine"}," which minerals ",{b:"will, form",a:"will form"},"."]},
+ {ko:"또한 형성되는 결정의 크기는 마그마가 얼마나 빨리 식느냐에 부분적으로 달려 있다.",
+  parts:["Also, the size of the crystals that ",{b:"form",a:"form"}," ",{b:"depend",a:"depends"}," partly on how rapidly the magma ",{b:"cool",a:"cools"},"."]},
+ {ko:"마그마가 천천히 식을 때 형성되는 결정은 대체로 맨눈으로 볼 수 있을 만큼 충분히 크다.",
+  parts:["When magma ",{b:"cool",a:"cools"}," slowly, the crystals that ",{b:"form",a:"form"}," ",{b:"be",a:"are"}," generally large enough ",{b:"see",a:"to see"}," with the unaided eye."]},
+ {ko:"이는 원자들이 함께 이동해 더 큰 결정을 형성할 충분한 시간을 갖기 때문이다.",
+  parts:["This is because the atoms ",{b:"have",a:"have"}," enough time ",{b:"move",a:"to move"}," together and ",{b:"form",a:"form"}," into larger crystals."]},
+ {ko:"마그마가 빠르게 식으면 형성되는 결정은 작을 것이다.",
+  parts:["When magma ",{b:"cool",a:"cools"}," rapidly, the crystals that ",{b:"form",a:"form"}," ",{b:"will, be",a:"will be"}," small."]},
+ {ko:"그런 경우에는 개별 광물 결정을 쉽게 볼 수 없다.",
+  parts:["In such cases, you can’t easily ",{b:"see",a:"see"}," individual mineral crystals."]}
+]
+},
+
+/* ───────── 매삼영 11 DAY - D ───────── */
+{
+title:"매삼영 11 DAY - D",
+term:"final",
+sub:"제일고1 시험범위 · 좋은 음악과 나쁜 음악, 그리고 연주자의 임무",
+sentences:[
+ {ko:"Robert Schumann 은 언젠가 “도덕의 법칙은 예술의 법칙이다.”라고 말했다.",
+  parts:["Robert Schumann once said, “The laws of morals ",{c:["is","are",1,"주어 The laws(복수) → are"]}," ",{c:["that","those",1,"the laws of art를 대신하는 복수 지시대명사 → those"]}," of art.”"]},
+ {ko:"이 위대한 사람이 여기서 말하고 있는 것은 좋은 음악과 나쁜 음악이 있다는 것이다.",
+  parts:[{c:["What","That",0,"뒤에 see/say의 목적어가 빠진 불완전한 절 → 관계대명사 What(~하는 것)"]}," the great man is saying here ",{c:["are","is",1,"주어 What절(명사절)은 단수 취급 → is"]}," ",{c:["that","what",0,"뒤에 완전한 절(there is ~)이 오므로 접속사 that (what은 불완전한 절)"]}," there is good music and bad music."]},
+ {ko:"가장 위대한 음악은 설령 본질적으로 비극적일지라도 우리를 우리의 세상보다 더 높은 세상으로 데려간다. 어떻게든 그 아름다움이 우리를 고양시킨다.",
+  parts:["The greatest music, even if it’s ",{c:["tragic","tragically",0,"be동사 it's의 보어 → 형용사 tragic"]}," in nature, ",{c:["take","takes",1,"주어 The greatest music(단수) → takes"]}," us to a world ",{c:["higher","highly",0,"a world를 수식하는 형용사, 비교급 higher than → higher"]}," than ",{c:["us","ours",1,"비교 대상이 our world → 소유대명사 ours"]},"; somehow the beauty ",{c:["uplift","uplifts",1,"주어 the beauty(단수) → uplifts"]}," us."]},
+ {ko:"반면에 나쁜 음악은 우리를 격하시킨다.",
+  parts:["Bad music, on the other hand, ",{c:["degrades","degrade",0,"주어 Bad music(단수) → degrades"]}," us."]},
+ {ko:"연주도 마찬가지이다. 나쁜 연주가 반드시 무능의 결과인 것은 아니다.",
+  parts:["It’s the same with performances: a bad performance ",{c:["aren’t","isn’t",1,"주어 a bad performance(단수) → isn't"]}," ",{c:["necessarily","necessary",0,"be동사 뒤 not necessarily(반드시 ~은 아닌) → 부사 necessarily"]}," the result of incompetence."]},
+ {ko:"최악의 연주 중 일부는 연주자들이 아무리 숙달되었더라도 자신이 연주하고 있는 음악보다 자기 자신을 더 생각하고 있을 때 일어난다.",
+  parts:["Some of the ",{c:["worst","worse",0,"Some of the worst performances (최악의) → 최상급 worst"]}," performances ",{c:["occurs","occur",1,"주어 Some of the ~ performances(복수) → occur"]}," when the performers, no matter how ",{c:["accomplished","accomplishing",0,"no matter how accomplished(아무리 숙달되었더라도) → 형용사 accomplished"]},", are thinking more of ",{c:["them","themselves",1,"주어 the performers와 같은 대상 → 재귀대명사 themselves"]}," than of the music they’re ",{c:["played","playing",1,"they're(= they are) 뒤 진행형 → playing"]},"."]},
+ {ko:"이 미덥지 못한 사람들은 작곡가가 말하고 있는 것을 제대로 듣고 있지 않다. 그들은 대중에게 큰 ‘성공’을 거두기를 바라면서 그저 뽐내고 있을 뿐이다.",
+  parts:["These doubtful characters aren’t really ",{c:["listening","listened",0,"aren't really 뒤 진행형 → listening"]}," to ",{c:["that","what",1,"listen to의 목적어, saying의 목적어가 빠진 절 → what"]}," the composer is saying — they’re just ",{c:["showing","shown",0,"they're just 뒤 진행형 → showing"]}," off, ",{c:["hoping","hoped",0,"동시상황 분사구문(능동) → hoping"]}," that they’ll have a great ‘success’ with the public."]},
+ {ko:"연주자의 기본 임무는 음악의 의미를 이해하려고 노력하고, 그런 다음 그것을 다른 사람들에게 정직하게 전달하는 것이다.",
+  parts:["The performer’s basic task ",{c:["are","is",1,"주어 The performer's basic task(단수) → is"]}," to try to understand the meaning of the music, and then ",{c:["to communicate","communicating",0,"to try ~, and then to communicate: 보어 to부정사 병렬 → to communicate"]}," it ",{c:["honest","honestly",1,"동사 communicate를 수식하는 부사 → honestly"]}," to others."]}
+],
+writings:[],
+verbForms:[
+ {ko:"Robert Schumann 은 언젠가 “도덕의 법칙은 예술의 법칙이다.”라고 말했다.",
+  parts:["Robert Schumann once ",{b:"say",a:"said"},", “The laws of morals ",{b:"be",a:"are"}," those of art.”"]},
+ {ko:"이 위대한 사람이 여기서 말하고 있는 것은 좋은 음악과 나쁜 음악이 있다는 것이다.",
+  parts:["What the great man ",{b:"say",a:"is saying"}," here ",{b:"be",a:"is"}," that there ",{b:"be",a:"is"}," good music and bad music."]},
+ {ko:"가장 위대한 음악은 설령 본질적으로 비극적일지라도 우리를 우리의 세상보다 더 높은 세상으로 데려간다. 어떻게든 그 아름다움이 우리를 고양시킨다.",
+  parts:["The greatest music, even if it’s tragic in nature, ",{b:"take",a:"takes"}," us to a world higher than ours; somehow the beauty ",{b:"uplift",a:"uplifts"}," us."]},
+ {ko:"반면에 나쁜 음악은 우리를 격하시킨다.",
+  parts:["Bad music, on the other hand, ",{b:"degrade",a:"degrades"}," us."]},
+ {ko:"연주도 마찬가지이다. 나쁜 연주가 반드시 무능의 결과인 것은 아니다.",
+  parts:["It’s the same with performances: a bad performance ",{b:"not, be",a:"isn’t"}," necessarily the result of incompetence."]},
+ {ko:"최악의 연주 중 일부는 연주자들이 아무리 숙달되었더라도 자신이 연주하고 있는 음악보다 자기 자신을 더 생각하고 있을 때 일어난다.",
+  parts:["Some of the worst performances ",{b:"occur",a:"occur"}," when the performers, no matter how accomplished, ",{b:"think",a:"are thinking"}," more of themselves than of the music they’re ",{b:"play",a:"playing"},"."]},
+ {ko:"이 미덥지 못한 사람들은 작곡가가 말하고 있는 것을 제대로 듣고 있지 않다. 그들은 대중에게 큰 ‘성공’을 거두기를 바라면서 그저 뽐내고 있을 뿐이다.",
+  parts:["These doubtful characters ",{b:"not, really, listen",a:"aren’t really listening"}," to what the composer ",{b:"say",a:"is saying"}," — they’re just ",{b:"show",a:"showing"}," off, ",{b:"hope",a:"hoping"}," that they’ll ",{b:"have",a:"have"}," a great ‘success’ with the public."]},
+ {ko:"연주자의 기본 임무는 음악의 의미를 이해하려고 노력하고, 그런 다음 그것을 다른 사람들에게 정직하게 전달하는 것이다.",
+  parts:["The performer’s basic task ",{b:"be",a:"is"}," ",{b:"try",a:"to try"}," ",{b:"understand",a:"to understand"}," the meaning of the music, and then ",{b:"communicate",a:"to communicate"}," it honestly to others."]}
+]
+},
+
+/* ───────── 매삼영 11 DAY - E ───────── */
+{
+title:"매삼영 11 DAY - E",
+term:"final",
+sub:"제일고1 시험범위 · 잘못된 정보와 정보 문해력",
+sentences:[
+ {ko:"사람들은 많은 시간을 미디어와 상호 작용하며 보내지만, 그것이 사람들이 미디어를 분석하고 이해하는 비판적 능력을 가지고 있다는 뜻은 아니다.",
+  parts:["People spend ",{c:["many","much",1,"time은 셀 수 없는 명사 → much"]}," of their time ",{c:["interacting","to interact",0,"spend + 시간 + (in) -ing → interacting"]}," with media, but that does not ",{c:["means","mean",1,"does not 뒤 동사원형 → mean"]}," that people have the critical skills ",{c:["to analyze","analyzing",0,"skills를 수식하는 to부정사(형용사적 용법) → to analyze"]}," and understand it."]},
+ {ko:"2016 년 Stanford 대학교의 한 유명한 연구는 젊은이들이 잘못된 정보, 특히 소셜 미디어 채널을 통해 들어오는 정보에 쉽게 속는다는 것을 보여 주었다.",
+  parts:["One well-known study from Stanford University in 2016 ",{c:["demonstrated","demonstrating",0,"문장의 본동사(과거) 필요 → demonstrated"]}," that youth are easily ",{c:["fooling","fooled",1,"youth가 '속는' 수동 의미 → fooled"]}," by misinformation, especially when it ",{c:["comes","come",0,"주어 it(단수) → comes"]}," through social media channels."]},
+ {ko:"그러나 이러한 약점은 젊은이들에게서만 발견되는 것은 아니다.",
+  parts:["This weakness is not ",{c:["finding","found",1,"weakness가 '발견되는' 수동 의미 (is not found) → found"]}," only in youth, however."]},
+ {ko:"New York 대학교의 연구는 65 세 이상의 사람들이 더 젊은 사람들보다 7 배 더 많은 잘못된 정보를 공유했다는 것을 발견했다.",
+  parts:["Research from New York University ",{c:["founded","found",1,"'발견했다'는 find의 과거형 found (founded는 '설립했다')"]}," that people over 65 shared seven times as ",{c:["much","many",0,"misinformation은 셀 수 없는 명사 → as much as"]}," misinformation as their ",{c:["young","younger",1,"65세 이상과 대비되는 '더 젊은' 사람들 → 비교급 younger"]}," counterparts."]},
+ {ko:"이 모든 것은 한 가지 의문을 제기한다. 잘못된 정보 문제에 대한 해결책은 무엇인가?",
+  parts:["All of this ",{c:["raises","rises",0,"a question을 목적어로 취하는 타동사 '제기하다' → raise (rise는 자동사), 주어 All(단수) → raises"]}," a question: What’s the solution to the misinformation problem?"]},
+ {ko:"정부와 기술 플랫폼은 분명히 잘못된 정보를 차단하는 데 해야 할 역할이 있다.",
+  parts:["Governments and tech platforms certainly ",{c:["have","has",0,"주어 Governments and tech platforms(복수) → have"]}," a role ",{c:["playing","to play",1,"a role을 수식하는 to부정사 (a role to play) → to play"]}," in ",{c:["blocking","block",0,"전치사 in 뒤 동명사 → blocking"]}," misinformation."]},
+ {ko:"그러나 모든 개인은 정보 문해력을 더 갖춤으로써 이 위협에 맞서는 책임을 져야 한다.",
+  parts:["However, every individual ",{c:["need","needs",1,"주어 every individual(단수) → needs"]}," ",{c:["taking","to take",1,"need + to부정사 → to take"]}," responsibility for ",{c:["combating","combat",0,"전치사 for 뒤 동명사 → combating"]}," this threat by ",{c:["become","becoming",1,"전치사 by 뒤 동명사 → becoming"]}," more information literate."]}
+],
+writings:[],
+verbForms:[
+ {ko:"사람들은 많은 시간을 미디어와 상호 작용하며 보내지만, 그것이 사람들이 미디어를 분석하고 이해하는 비판적 능력을 가지고 있다는 뜻은 아니다.",
+  parts:["People ",{b:"spend",a:"spend"}," much of their time ",{b:"interact",a:"interacting"}," with media, but that ",{b:"not, mean",a:"does not mean"}," that people ",{b:"have",a:"have"}," the critical skills ",{b:"analyze",a:"to analyze"}," and ",{b:"understand",a:"understand"}," it."]},
+ {ko:"2016 년 Stanford 대학교의 한 유명한 연구는 젊은이들이 잘못된 정보, 특히 소셜 미디어 채널을 통해 들어오는 정보에 쉽게 속는다는 것을 보여 주었다.",
+  parts:["One well-known study from Stanford University in 2016 ",{b:"demonstrate",a:"demonstrated"}," that youth are easily ",{b:"fool",a:"fooled"}," by misinformation, especially when it ",{b:"come",a:"comes"}," through social media channels."]},
+ {ko:"그러나 이러한 약점은 젊은이들에게서만 발견되는 것은 아니다.",
+  parts:["This weakness ",{b:"not, find",a:"is not found"}," only in youth, however."]},
+ {ko:"New York 대학교의 연구는 65 세 이상의 사람들이 더 젊은 사람들보다 7 배 더 많은 잘못된 정보를 공유했다는 것을 발견했다.",
+  parts:["Research from New York University ",{b:"find",a:"found"}," that people over 65 ",{b:"share",a:"shared"}," seven times as much misinformation as their younger counterparts."]},
+ {ko:"이 모든 것은 한 가지 의문을 제기한다. 잘못된 정보 문제에 대한 해결책은 무엇인가?",
+  parts:["All of this ",{b:"raise",a:"raises"}," a question: What’s the solution to the misinformation problem?"]},
+ {ko:"정부와 기술 플랫폼은 분명히 잘못된 정보를 차단하는 데 해야 할 역할이 있다.",
+  parts:["Governments and tech platforms certainly ",{b:"have",a:"have"}," a role ",{b:"play",a:"to play"}," in ",{b:"block",a:"blocking"}," misinformation."]},
+ {ko:"그러나 모든 개인은 정보 문해력을 더 갖춤으로써 이 위협에 맞서는 책임을 져야 한다.",
+  parts:["However, every individual ",{b:"need",a:"needs"}," ",{b:"take",a:"to take"}," responsibility for ",{b:"combat",a:"combating"}," this threat by ",{b:"become",a:"becoming"}," more information literate."]}
+]
+},
+
+/* ───────── 매삼영 11 DAY - F ───────── */
+{
+title:"매삼영 11 DAY - F",
+term:"final",
+sub:"제일고1 시험범위 · 잘못된 가정의 수정과 인류의 진보",
+sentences:[
+ {ko:"우리는 우리가 안다고 ‘생각하는’ 것에 근거해 결정을 내린다.",
+  parts:["We make decisions ",{c:["based","basing",0,"decisions가 '근거를 둔' 수동 의미의 과거분사 (based on) → based"]}," on ",{c:["what","that",0,"전치사 on 뒤 명사절, know의 목적어가 빠진 불완전한 절 → what"]}," we think we know."]},
+ {ko:"그리 오래 되지 않은 과거에 대다수의 사람들은 세상이 평평하다고 믿었다.",
+  parts:["It wasn’t too long ago that the majority of people ",{c:["were believed","believed",1,"the majority of people이 '믿었다' (능동, 뒤에 목적어절) → believed"]}," the world ",{c:["was","is",0,"믿던 시점이 과거이므로 시제 일치 → was"]}," flat."]},
+ {ko:"이 인식된 사실은 행동에 영향을 주었다.",
+  parts:["This ",{c:["perceiving","perceived",1,"truth가 '인식된' 수동 의미 → 과거분사 perceived"]}," truth ",{c:["was impacted","impacted",1,"타동사 impact + 목적어 behavior (능동) → impacted"]}," behavior."]},
+ {ko:"이 시기 동안에는 탐험이 거의 없었다.",
+  parts:[{c:["During","While",0,"뒤에 명사구 this period가 오므로 전치사 During (While은 접속사)"]}," this period, there ",{c:["were","was",1,"there 구문 동사는 뒤 명사 exploration(단수·불가산)에 일치 → was"]}," very ",{c:["little","few",0,"exploration은 셀 수 없는 명사 → little (few는 가산 복수)"]}," exploration."]},
+ {ko:"사람들은 너무 멀리 여행하면 지구의 가장자리에서 떨어질지도 모른다고 두려워했다.",
+  parts:["People feared that if they ",{c:["traveled","were traveled",0,"travel은 자동사라 수동태 불가 → traveled"]}," too far they might ",{c:["falling","fall",1,"조동사 might 뒤 동사원형 → fall"]}," off the edge of the earth."]},
+ {ko:"그래서 대체로 그들은 감히 여행하지 못했다.",
+  parts:["So for the most part they didn’t ",{c:["dare","dared",0,"didn't 뒤에는 동사원형 → dare"]}," to travel."]},
+ {ko:"그 사소한 세부 사항, 즉 세상이 둥글다는 것이 밝혀지고 나서야 비로소 행동이 대규모로 바뀌었다.",
+  parts:["It wasn’t until that minor detail ",{c:["revealed","was revealed",1,"It wasn't until ~ that 구문, detail이 '밝혀지는' 수동 → was revealed"]}," — the world is round — ",{c:["when","that",1,"It wasn't until ~ that ... 강조 구문의 that"]}," behaviors ",{c:["changed","were changed",0,"change는 자동사로 '바뀌다' (능동) → changed"]}," on a massive scale."]},
+ {ko:"이 발견과 함께 사회들은 지구 곳곳을 여행하기 시작했다.",
+  parts:["Upon this discovery, societies ",{c:["begun","began",1,"문장의 본동사는 과거형 → began (begun은 p.p.)"]}," to travel across the planet."]},
+ {ko:"무역로가 만들어졌고, 향신료가 거래되었다.",
+  parts:["Trade routes ",{c:["were established","established",0,"trade routes가 '만들어진' 수동 → were established"]},"; spices ",{c:["were traded","traded",0,"spices가 '거래된' 수동 → were traded"]},"."]},
+ {ko:"수학 같은 새로운 생각들이 사회들 사이에서 공유되었고, 이것이 온갖 종류의 혁신과 발전을 가능하게 했다.",
+  parts:["New ideas, like mathematics, ",{c:["shared","were shared",1,"New ideas가 '공유된' 수동 → were shared"]}," between societies ",{c:["which","where",0,"선행사 societies, 뒤에 주어 없이 동사가 이어짐 → 주격 관계대명사 which"]}," ",{c:["allowing","allowed",1,"which절의 동사 자리(과거) → allowed"]}," for all kinds of innovations and advancements."]},
+ {ko:"단순한 잘못된 가정 하나를 바로잡은 것이 인류를 앞으로 나아가게 했다.",
+  parts:["The correction of a simple false assumption ",{c:["moving","moved",1,"주어 The correction의 본동사(과거) → moved"]}," the human race forward."]}
+],
+writings:[],
+verbForms:[
+ {ko:"우리는 우리가 안다고 ‘생각하는’ 것에 근거해 결정을 내린다.",
+  parts:["We ",{b:"make",a:"make"}," decisions ",{b:"base",a:"based"}," on what we think we ",{b:"know",a:"know"},"."]},
+ {ko:"그리 오래 되지 않은 과거에 대다수의 사람들은 세상이 평평하다고 믿었다.",
+  parts:["It ",{b:"not, be",a:"wasn’t"}," too long ago that the majority of people ",{b:"believe",a:"believed"}," the world ",{b:"be",a:"was"}," flat."]},
+ {ko:"이 인식된 사실은 행동에 영향을 주었다.",
+  parts:["This ",{b:"perceive",a:"perceived"}," truth ",{b:"impact",a:"impacted"}," behavior."]},
+ {ko:"이 시기 동안에는 탐험이 거의 없었다.",
+  parts:["During this period, there ",{b:"be",a:"was"}," very little exploration."]},
+ {ko:"사람들은 너무 멀리 여행하면 지구의 가장자리에서 떨어질지도 모른다고 두려워했다.",
+  parts:["People ",{b:"fear",a:"feared"}," that if they ",{b:"travel",a:"traveled"}," too far they ",{b:"might, fall",a:"might fall"}," off the edge of the earth."]},
+ {ko:"그래서 대체로 그들은 감히 여행하지 못했다.",
+  parts:["So for the most part they ",{b:"not, dare",a:"didn’t dare"}," ",{b:"travel",a:"to travel"},"."]},
+ {ko:"그 사소한 세부 사항, 즉 세상이 둥글다는 것이 밝혀지고 나서야 비로소 행동이 대규모로 바뀌었다.",
+  parts:["It ",{b:"not, be",a:"wasn’t"}," until that minor detail ",{b:"reveal",a:"was revealed"}," — the world ",{b:"be",a:"is"}," round — that behaviors ",{b:"change",a:"changed"}," on a massive scale."]},
+ {ko:"이 발견과 함께 사회들은 지구 곳곳을 여행하기 시작했다.",
+  parts:["Upon this discovery, societies ",{b:"begin",a:"began"}," ",{b:"travel",a:"to travel"}," across the planet."]},
+ {ko:"무역로가 만들어졌고, 향신료가 거래되었다.",
+  parts:["Trade routes ",{b:"establish",a:"were established"},"; spices ",{b:"trade",a:"were traded"},"."]},
+ {ko:"수학 같은 새로운 생각들이 사회들 사이에서 공유되었고, 이것이 온갖 종류의 혁신과 발전을 가능하게 했다.",
+  parts:["New ideas, like mathematics, ",{b:"share",a:"were shared"}," between societies which ",{b:"allow",a:"allowed"}," for all kinds of innovations and advancements."]},
+ {ko:"단순한 잘못된 가정 하나를 바로잡은 것이 인류를 앞으로 나아가게 했다.",
+  parts:["The correction of a simple false assumption ",{b:"move",a:"moved"}," the human race forward."]}
+]
+},
+
+/* ───────── 매삼영 11 DAY - G ───────── */
+{
+title:"매삼영 11 DAY - G",
+term:"final",
+sub:"제일고1 시험범위 · 현실적 낙관주의자와 비현실적 낙관주의자",
+sentences:[
+ {ko:"성공하기 위해서는 성공할 것이라고 믿는 것과 쉽게 성공할 것이라고 믿는 것 사이의 결정적인 차이를 이해할 필요가 있다.",
+  parts:[{c:["To be","Be",0,"문두에서 목적(~하기 위해)을 나타내는 to부정사 → To be"]}," successful, you need ",{c:["understanding","to understand",1,"need + to부정사(목적어) → to understand"]}," the vital difference between ",{c:["believing","believe",0,"전치사 between 뒤 동명사 → believing"]}," you will succeed, and believing you will succeed ",{c:["easily","easy",0,"동사 succeed를 수식하는 부사 → easily"]},"."]},
+ {ko:"달리 말하면, 그것은 현실적인 낙관주의자가 되는 것과 비현실적인 낙관주의자가 되는 것 사이의 차이이다.",
+  parts:["Put another way, it’s the difference between ",{c:["be","being",1,"전치사 between 뒤 동명사 → being"]}," a realistic optimist, and an ",{c:["unrealistic","unrealistically",0,"명사 optimist를 수식하는 형용사 → unrealistic"]}," optimist."]},
+ {ko:"현실적인 낙관주의자는 자신이 성공할 것이라고 믿지만, 신중한 계획과 올바른 전략 선택 같은 것들을 통해 성공이 일어나게 만들어야 한다고도 믿는다.",
+  parts:["Realistic optimists ",{c:["believes","believe",1,"주어 Realistic optimists(복수) → believe"]}," they will succeed, but also believe they have to make success ",{c:["to happen","happen",1,"make success happen: 사역동사 make + 목적어 + 동사원형 → happen"]}," — through things like careful planning and ",{c:["choosing","choose",0,"through ~ planning and choosing: 전치사 목적어 병렬(동명사) → choosing"]}," the right strategies."]},
+ {ko:"그들은 장애물에 어떻게 대처할지에 대해 진지하게 생각해 볼 필요성을 인식한다.",
+  parts:["They recognize the need for ",{c:["give","giving",1,"전치사 for 뒤 동명사 → giving"]}," serious thought to ",{c:["how","what",0,"뒤에 완전한 절(they will deal with obstacles)이 오므로 의문사 how (what은 불완전한 절)"]}," they will deal with obstacles."]},
+ {ko:"이러한 준비는 일을 해낼 수 있는 자신의 능력에 대한 자신감을 높여 줄 뿐이다.",
+  parts:["This preparation only ",{c:["increases","increase",0,"주어 This preparation(단수) → increases"]}," their confidence in their own ability ",{c:["getting","to get",1,"ability를 수식하는 to부정사 (ability to get) → to get"]}," things ",{c:["done","do",0,"get + 목적어(things) + p.p. (일이 '해내어지다') 수동 → done"]},"."]},
+ {ko:"반면에 비현실적인 낙관주의자는 성공이 그냥 자신에게 일어날 것이라고, 즉 우주가 그들의 모든 긍정적인 생각에 대해 보상해 줄 것이라고, 혹은 어떻게든 자신이 하룻밤 사이에 장애물이 더 이상 존재하지 않는 그런 종류의 사람으로 변할 것이라고 믿는다.",
+  parts:["Unrealistic optimists, on the other hand, believe that success will happen to ",{c:["themselves","them",1,"to 뒤 목적어는 주어 success와 다른 대상(optimists)이므로 them (themselves는 주어와 같은 대상일 때)"]}," — that the universe will reward them for all their positive thinking, or that somehow they will be ",{c:["transforming","transformed",1,"they가 '변화되다' 수동 will be transformed → transformed"]}," overnight into the kind of person for ",{c:["whom","which",0,"전치사 for 뒤 선행사 person(사람) → whom"]}," obstacles ",{c:["doesn’t","don’t",1,"주어 obstacles(복수) → don't"]}," exist anymore."]}
+],
+writings:[],
+verbForms:[
+ {ko:"성공하기 위해서는 성공할 것이라고 믿는 것과 쉽게 성공할 것이라고 믿는 것 사이의 결정적인 차이를 이해할 필요가 있다.",
+  parts:[{b:"be",a:"To be"}," successful, you ",{b:"need",a:"need"}," ",{b:"understand",a:"to understand"}," the vital difference between ",{b:"believe",a:"believing"}," you ",{b:"will, succeed",a:"will succeed"},", and ",{b:"believe",a:"believing"}," you ",{b:"will, succeed",a:"will succeed"}," easily."]},
+ {ko:"달리 말하면, 그것은 현실적인 낙관주의자가 되는 것과 비현실적인 낙관주의자가 되는 것 사이의 차이이다.",
+  parts:[{b:"put",a:"Put"}," another way, it’s the difference between ",{b:"be",a:"being"}," a realistic optimist, and an unrealistic optimist."]},
+ {ko:"현실적인 낙관주의자는 자신이 성공할 것이라고 믿지만, 신중한 계획과 올바른 전략 선택 같은 것들을 통해 성공이 일어나게 만들어야 한다고도 믿는다.",
+  parts:["Realistic optimists ",{b:"believe",a:"believe"}," they ",{b:"will, succeed",a:"will succeed"},", but also ",{b:"believe",a:"believe"}," they ",{b:"have",a:"have"}," ",{b:"make",a:"to make"}," success ",{b:"happen",a:"happen"}," — through things like careful planning and ",{b:"choose",a:"choosing"}," the right strategies."]},
+ {ko:"그들은 장애물에 어떻게 대처할지에 대해 진지하게 생각해 볼 필요성을 인식한다.",
+  parts:["They ",{b:"recognize",a:"recognize"}," the need for ",{b:"give",a:"giving"}," serious thought to how they ",{b:"will, deal",a:"will deal"}," with obstacles."]},
+ {ko:"이러한 준비는 일을 해낼 수 있는 자신의 능력에 대한 자신감을 높여 줄 뿐이다.",
+  parts:["This preparation only ",{b:"increase",a:"increases"}," their confidence in their own ability ",{b:"get",a:"to get"}," things ",{b:"do",a:"done"},"."]},
+ {ko:"반면에 비현실적인 낙관주의자는 성공이 그냥 자신에게 일어날 것이라고, 즉 우주가 그들의 모든 긍정적인 생각에 대해 보상해 줄 것이라고, 혹은 어떻게든 자신이 하룻밤 사이에 장애물이 더 이상 존재하지 않는 그런 종류의 사람으로 변할 것이라고 믿는다.",
+  parts:["Unrealistic optimists, on the other hand, ",{b:"believe",a:"believe"}," that success ",{b:"will, happen",a:"will happen"}," to them — that the universe ",{b:"will, reward",a:"will reward"}," them for all their positive thinking, or that somehow they ",{b:"will, transform",a:"will be transformed"}," overnight into the kind of person for whom obstacles ",{b:"not, exist",a:"don’t exist"}," anymore."]}
+]
+}
 
 
 /* ───────── 새 지문/자료를 추가하려면 위 블록을 통째로 복사해
@@ -3014,13 +3272,31 @@ function buildCombinedPassage(regex, title){
     noFlow:true // 여러 지문을 이어붙인 통합 자료라 ③ 순서·삽입 훈련은 지원하지 않음
   };
 }
+/* ═══ 시험 카테고리 ═══
+   자료(PASSAGES/VOCAB/COMBINED)에 term 이 없으면 '중간고사'(mid)로 취급합니다.
+   기말고사 자료는 term:"final" 을 붙여 추가하세요. 새 시험이 생기면 TERMS 에 한 줄만 추가하면 됩니다. */
+const TERMS=[
+  {key:'mid',   label:'2026년 2학기 중간고사', short:'중간고사'},
+  {key:'final', label:'2026년 2학기 기말고사', short:'기말고사'}
+];
+PASSAGES.forEach(p=>{ if(!p.term) p.term='mid'; });
+VOCAB.forEach(v=>{ if(!v.term) v.term=/^DAY 11-/.test(v.title)?'final':'mid'; }); // 매삼영 11 단어는 기말고사 범위
+let CUR_TERM='final';
+try{ const t=localStorage.getItem('gwsky_term'); if(TERMS.some(x=>x.key===t)) CUR_TERM=t; }catch(e){}
+function setTerm(k){
+  CUR_TERM=k;
+  try{ localStorage.setItem('gwsky_term',k); }catch(e){}
+  buildHome();
+}
+
 const COMBINED=[
-  {key:'m5', label:'🔥 매삼영 5 DAY 전체 한번에 풀기', match:/^매삼영 5 DAY - /},
-  {key:'m6', label:'🔥 매삼영 6 DAY 전체 한번에 풀기', match:/^매삼영 6 DAY - /},
-  {key:'m7', label:'🔥 매삼영 7 DAY 전체 한번에 풀기', match:/^매삼영 7 DAY - /},
-  {key:'m10', label:'🔥 매삼영 10 DAY 전체 한번에 풀기', match:/^매삼영 10 DAY - /},
-  {key:'txt1', label:'🔥 교과서 1과 전체 한번에 풀기', match:/^교과서\s*1과(?!.*본문\s*외)/}, // 본문 외 지문(에코 챔버)은 별개 자료라 제외
-  {key:'txt2', label:'🔥 교과서 2과 전체 한번에 풀기', match:/^교과서\s*2과/}
+  {key:'m5', term:'mid', label:'🔥 매삼영 5 DAY 전체 한번에 풀기', match:/^매삼영 5 DAY - /},
+  {key:'m6', term:'mid', label:'🔥 매삼영 6 DAY 전체 한번에 풀기', match:/^매삼영 6 DAY - /},
+  {key:'m7', term:'mid', label:'🔥 매삼영 7 DAY 전체 한번에 풀기', match:/^매삼영 7 DAY - /},
+  {key:'m10', term:'mid', label:'🔥 매삼영 10 DAY 전체 한번에 풀기', match:/^매삼영 10 DAY - /},
+  {key:'txt1', term:'mid', label:'🔥 교과서 1과 전체 한번에 풀기', match:/^교과서\s*1과(?!.*본문\s*외)/}, // 본문 외 지문(에코 챔버)은 별개 자료라 제외
+  {key:'txt2', term:'mid', label:'🔥 교과서 2과 전체 한번에 풀기', match:/^교과서\s*2과/},
+  {key:'m11', term:'final', label:'🔥 매삼영 11 DAY 전체 한번에 풀기', match:/^매삼영 11 DAY - /}
 ];
 function openCombined(key){
   const c=COMBINED.find(x=>x.key===key);
@@ -3029,38 +3305,49 @@ function openCombined(key){
   document.getElementById('home').style.display='none';
   document.getElementById('study').style.display='block';
   document.getElementById('pTitle').innerHTML=`<em>${cur.title}</em>`;
-  switchTab(cur.sentences.length?'quiz':'write');
+  switchTab('quiz');
   buildQuiz(); buildWrite(); buildFlow(); buildVF(); buildABC();
   window.scrollTo({top:0});
 }
 
 function buildHome(){
   renderWrongCard();
+  // 시험 카테고리 선택 막대
+  document.getElementById('termbar').innerHTML=TERMS.map(t=>{
+    const n=PASSAGES.filter(p=>p.term===t.key).length, m=VOCAB.filter(v=>v.term===t.key).length;
+    return `<button class="${t.key===CUR_TERM?'on':''}" onclick="setTerm('${t.key}')">${t.label}<small>지문 ${n} · 단어 ${m}</small></button>`;
+  }).join('');
   const list=document.getElementById('plist');
-  const combinedHtml=COMBINED.filter(c=>PASSAGES.some(p=>c.match.test(p.title))).map(c=>{
-    const n=PASSAGES.filter(p=>c.match.test(p.title)).length;
+  const inTerm=PASSAGES.map((p,i)=>({p,i})).filter(x=>x.p.term===CUR_TERM);
+  const combinedHtml=COMBINED.filter(c=>c.term===CUR_TERM && inTerm.some(x=>c.match.test(x.p.title))).map(c=>{
+    const n=inTerm.filter(x=>c.match.test(x.p.title)).length;
     return `<div class="pcard" style="border:2px solid var(--navy);background:#eef1fa" onclick="openCombined('${c.key}')">
       <div class="pnum" style="background:var(--navy)">전체</div>
       <div class="pinfo"><div class="t">${c.label}</div>
-      <div class="m">지문 ${n}개 통합 · 어법·서술형·동사형고치기를 이어서 풀고 전송은 한 번만</div></div>
+      <div class="m">지문 ${n}개 통합 · 어법·동사형고치기를 이어서 풀고 전송은 한 번만</div></div>
       <div class="go">›</div></div>`;
   }).join('');
-  list.innerHTML=combinedHtml+PASSAGES.map((p,i)=>{
+  const comingTxt=CUR_TERM==='final'
+    ? '📚 기말고사 대비 자료가 계속 업데이트됩니다'
+    : '📚 2026년 2학기 중간고사 시험범위 자료입니다 (복습용)';
+  list.innerHTML=combinedHtml+inTerm.map(({p,i},k)=>{
     const n=p.sentences.reduce((a,s)=>a+s.parts.filter(x=>typeof x!=='string').length,0);
     const qTxt=n?`어법 ${n}문항`:'서술형 전용';
-    const wTxt=p.writings.length?`영작 ${p.writings.length}문장`:'영작 준비중';
+    
     return `<div class="pcard" onclick="openPassage(${i})">
-      <div class="pnum">${String(i+1).padStart(2,'0')}</div>
+      <div class="pnum">${String(k+1).padStart(2,'0')}</div>
       <div class="pinfo"><div class="t">${p.title}</div>
-      <div class="m">${p.sub} · ${qTxt} · ${wTxt}</div></div>
+      <div class="m">${p.sub} · ${qTxt}</div></div>
       <div class="go">›</div></div>`;
-  }).join('')+`<div class="coming">📚 시험범위 지문이 계속 업데이트됩니다 (예정: 총 30개)</div>`;
-  document.getElementById('vlist').innerHTML=VOCAB.map((v,i)=>{
+  }).join('')+`<div class="coming">${comingTxt}</div>`;
+  const vInTerm=VOCAB.map((v,i)=>({v,i})).filter(x=>x.v.term===CUR_TERM);
+  document.getElementById('vguide').style.display=vInTerm.length?'':'none';
+  document.getElementById('vlist').innerHTML=vInTerm.map(({v,i},k)=>{
     // "DAY 05-A" → "DAY 05", "교과서 1과 · ..." → "교과서" 로 그룹 구분
     const grpOf=t=>t.startsWith('DAY')?t.split('-')[0].trim():'교과서';
     const grp=grpOf(v.title);
-    const prevGrp=i>0?grpOf(VOCAB[i-1].title):null;
-    const divider=grp!==prevGrp?`<div style="font-size:12px;font-weight:800;color:var(--ink-dim);margin:${i?'12px':'0'} 2px 6px;letter-spacing:.5px">📗 ${grp}</div>`:'';
+    const prevGrp=k>0?grpOf(vInTerm[k-1].v.title):null;
+    const divider=grp!==prevGrp?`<div style="font-size:12px;font-weight:800;color:var(--ink-dim);margin:${k?'12px':'0'} 2px 6px;letter-spacing:.5px">📗 ${grp}</div>`:'';
     return divider+`<div class="pcard" onclick="openVocab(${i})">
       <div class="pnum" style="background:var(--amber)">단어</div>
       <div class="pinfo"><div class="t">${v.title}</div>
@@ -3074,7 +3361,7 @@ function openPassage(i){
   document.getElementById('home').style.display='none';
   document.getElementById('study').style.display='block';
   document.getElementById('pTitle').innerHTML=`${String(i+1).padStart(2,'0')} <em>${cur.title}</em>`;
-  switchTab(cur.sentences.length?'quiz':'write');
+  switchTab('quiz');
   buildQuiz(); buildWrite(); buildFlow(); buildVF(); buildABC();
   window.scrollTo({top:0});
 }
@@ -3908,6 +4195,7 @@ function sendABC(){
     })
     .catch(()=>{btn.disabled=false;btn.textContent='📤 다시 전송하기';msg.className='wstatus bad';msg.textContent='전송 실패 — 인터넷 연결 확인 후 다시 눌러주세요';});
 }
+
 
 let VMODE='ko'; // 'ko' 뜻 모드 | 'syn' 유의어 모드
 let WRONGNOTE=false; // 현재 화면이 오답노트인지 여부

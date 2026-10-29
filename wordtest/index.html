@@ -328,13 +328,30 @@ function maxQuestions(pool,n){ // 중등 단어가 10%를 넘지 않게 만들 �
   for(let k=n;k>0;k--) if(hi+Math.min(mid,midCap(k))>=k) return k;
   return 0;
 }
-function buildTest(pool,n,mode,letter){
-  const cap=midCap(n), picked=[]; let mid=0;
-  for(const w of shuffle(pool)){
-    if(picked.length>=n) break;
-    if(w.lv==="mid"){ if(mid>=cap) continue; mid++; }
-    picked.push(w);
+function pickWords(pool,n){
+  // 1) 단어가 넉넉하면: 무작위로 뽑되 중등 단어는 10%까지만
+  if(maxQuestions(pool,n)>=n){
+    const cap=midCap(n), picked=[]; let mid=0;
+    for(const w of shuffle(pool)){
+      if(picked.length>=n) break;
+      if(w.lv==="mid"){ if(mid>=cap) continue; mid++; }
+      picked.push(w);
+    }
+    return picked;
   }
+  // 2) 모자라면: 핵심·고난도 → 어려운 유의·반의 → 쉬운 유의·반의 순으로 채움
+  const tiers=[
+    pool.filter(w=>isMain(w)&&w.lv!=="mid"),
+    pool.filter(w=>isMain(w)&&w.lv==="mid"),
+    pool.filter(w=>!isMain(w)&&w.lv!=="mid"),
+    pool.filter(w=>!isMain(w)&&w.lv==="mid"),
+  ];
+  const picked=[];
+  for(const t of tiers){ for(const w of shuffle(t)){ if(picked.length>=n) break; picked.push(w); } }
+  return shuffle(picked);
+}
+function buildTest(pool,n,mode,letter){
+  const picked=pickWords(pool,n);
   let dirs;
   if(mode==="mix"){const half=Math.floor(picked.length/2); dirs=shuffle(picked.map((_,i)=>i<half?"e2k":"k2e"));}
   else dirs=picked.map(()=>mode);
@@ -345,8 +362,7 @@ $("m-gen").onclick=()=>{
   if(!units.length){status("m-status","범위를 먼저 골라주세요.",false);return}
   if(!pool.length){status("m-status","선택한 범위에 단어가 없습니다.",false);return}
   let want=pool.length<ALL_UNDER?pool.length:(parseInt($("m-count").value,10)||100); want=Math.max(1,Math.min(want,pool.length));
-  const n=maxQuestions(pool,want); $("m-count").value=n;
-  if(!n){status("m-status","선택한 범위로는 시험지를 만들 수 없습니다. 범위를 넓혀주세요.",false);return}
+  const n=want; $("m-count").value=n;
   let v=parseInt($("m-versions").value,10)||1; v=Math.max(1,Math.min(6,v)); $("m-versions").value=v;
   let copies=parseInt($("m-copies").value,10)||1; copies=Math.max(1,Math.min(60,copies)); $("m-copies").value=copies;
   const letters="ABCDEF";
@@ -360,7 +376,7 @@ $("m-gen").onclick=()=>{
   const prev=$("m-preview"); prev.hidden=false;
   prev.innerHTML=sheetsHTML(generated).map(h=>`<div class="sheetwrap">${h}</div>`).join("");
   $("m-print").disabled=false;
-  status("m-status",`시험지 ${v}종류와 정답지를 만들었습니다. 인쇄하면 시험지가 종류마다 ${copies}부씩(총 ${v*copies}부), 정답지는 종류마다 1부씩 나옵니다.`+(n<want?` 선택한 범위로는 ${n}문항까지만 만들 수 있어 문항 수를 줄였습니다. 범위를 넓히면 늘어납니다.`:""),true);
+  status("m-status",`시험지 ${v}종류와 정답지를 만들었습니다. 인쇄하면 시험지가 종류마다 ${copies}부씩(총 ${v*copies}부), 정답지는 종류마다 1부씩 나옵니다.`,true);
 };
 
 const MODE_LABEL={e2k:"영어 → 우리말 뜻 쓰기",k2e:"우리말 → 영어 쓰기",mix:"영어↔우리말 혼합"};

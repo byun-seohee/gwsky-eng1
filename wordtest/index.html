@@ -1,0 +1,450 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>경운SKY 단어시험 생성기</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=Source+Serif+4:wght@400;600&display=swap">
+<style>
+/* Layout: one working column — school/grade picker on top, range chips, options, then live A4 preview. Second tab handles word upload. */
+:root{
+  --bg:#F5F7FB; --surface:#FFFFFF; --ink:#141B2D; --muted:#5B6478; --line:#DCE2EE;
+  --navy:#1E3A8A; --navy-soft:#E6ECF8; --on-navy:#FFFFFF; --ok:#1F7A4D; --warn:#A4361F;
+  --sheet:#FFFFFF; --sheet-ink:#111827; --sheet-box:#E5E7EB;
+  --f-ui:"IBM Plex Sans KR","Malgun Gothic","맑은 고딕",system-ui,sans-serif;
+  --f-en:"Source Serif 4",Georgia,"Times New Roman",serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0E1322; --surface:#161D31; --ink:#E7EBF5; --muted:#99A3BA; --line:#2A3450;
+  --navy:#8FA8EC; --navy-soft:#1E2A4C; --on-navy:#0E1322; --ok:#6CCB9B; --warn:#F09A84; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0E1322; --surface:#161D31; --ink:#E7EBF5; --muted:#99A3BA; --line:#2A3450;
+  --navy:#8FA8EC; --navy-soft:#1E2A4C; --on-navy:#0E1322; --ok:#6CCB9B; --warn:#F09A84; color-scheme:dark}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-ui);font-size:15px;line-height:1.55}
+.wrap{max-width:980px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:24px 56px;display:flex;flex-direction:column;gap:20px}
+header.top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px}
+.brand{display:flex;flex-direction:column;gap:2px}
+.brand small{color:var(--muted);font-size:12px;letter-spacing:.06em}
+.brand h1{margin:0;font-size:24px;font-weight:700;color:var(--navy);text-wrap:balance}
+.tabs{display:flex;gap:4px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:4px}
+.tabs button{border:0;background:transparent;color:var(--muted);font:inherit;font-weight:600;padding:8px 14px;border-radius:7px;cursor:pointer}
+.tabs button[aria-selected="true"]{background:var(--navy);color:var(--on-navy)}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:16px;min-width:0}
+.panel h2{margin:0;font-size:16px;font-weight:700}
+.step{display:flex;flex-direction:column;gap:8px}
+.lbl{font-size:12px;font-weight:600;color:var(--muted);letter-spacing:.04em}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+select,input[type=text],input[type=number],textarea{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 10px;min-width:0}
+textarea{width:100%;min-height:180px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px;box-sizing:border-box;resize:vertical}
+input[type=number]{width:84px;font-variant-numeric:tabular-nums}
+:focus-visible{outline:2px solid var(--navy);outline-offset:2px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.seg button{border:0;background:var(--bg);color:var(--ink);font:inherit;padding:8px 12px;cursor:pointer;border-right:1px solid var(--line)}
+.seg button:last-child{border-right:0}
+.seg button[aria-pressed="true"]{background:var(--navy);color:var(--on-navy);font-weight:600}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1px solid var(--line);background:var(--bg);color:var(--ink);font:inherit;font-size:13px;padding:6px 10px;border-radius:999px;cursor:pointer;font-variant-numeric:tabular-nums;user-select:none}
+.chip span{color:var(--muted);font-size:11px;margin-left:4px}
+.chip[aria-pressed="true"]{background:var(--navy-soft);border-color:var(--navy);color:var(--navy);font-weight:600}
+.btn{border:1px solid var(--line);background:var(--surface);color:var(--ink);font:inherit;font-weight:600;padding:9px 14px;border-radius:8px;cursor:pointer}
+.btn.primary{background:var(--navy);border-color:var(--navy);color:var(--on-navy)}
+.btn.small{padding:5px 10px;font-size:13px;font-weight:500}
+.btn.danger{color:var(--warn)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.hint{font-size:13px;color:var(--muted);margin:0}
+.status{font-size:13px;font-weight:600}
+.status.ok{color:var(--ok)} .status.err{color:var(--warn)}
+.empty{border:1px dashed var(--line);border-radius:10px;padding:20px;color:var(--muted);font-size:14px;display:flex;flex-direction:column;gap:6px}
+.empty b{color:var(--ink)}
+.tablebox{overflow-x:auto;border:1px solid var(--line);border-radius:8px}
+table.t{border-collapse:collapse;width:100%;font-size:13px}
+table.t th,table.t td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+table.t th{color:var(--muted);font-weight:600;font-size:12px;background:var(--bg)}
+table.t tr:last-child td{border-bottom:0}
+.tag{display:inline-block;font-size:11px;font-weight:600;padding:2px 7px;border-radius:999px;background:var(--navy-soft);color:var(--navy)}
+.tag.over{background:transparent;border:1px solid var(--warn);color:var(--warn)}
+.summary{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.summary b{color:var(--ink)}
+.previewbox{overflow-x:auto;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:16px;align-items:flex-start}
+.sheetwrap{background:var(--sheet);color:var(--sheet-ink);width:794px;flex:none;box-shadow:0 1px 3px rgba(20,27,45,.12)}
+.grp{display:flex;flex-direction:column;gap:10px;padding-block:12px;border-top:1px solid var(--line)}
+.grp:first-child{border-top:0;padding-top:0}
+.grp-h{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between}
+.grp-h b{font-size:14px}
+.guide{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 18px;font-size:14px}
+.guide summary{cursor:pointer;font-weight:700;color:var(--navy)}
+.guide ol{margin:10px 0 4px;padding-left:20px;display:flex;flex-direction:column;gap:6px;max-width:70ch}
+.guide ul{margin:4px 0 0;padding-left:18px;display:flex;flex-direction:column;gap:2px}
+.note{background:var(--navy-soft);color:var(--ink);border-radius:8px;padding:10px 12px;font-size:13px}
+@media (max-width:520px){.brand h1{font-size:20px}.panel{padding:16px}}
+#print-area{display:none}
+@media print{
+  @page{size:A4;margin:10mm}
+  body{background:#fff}
+  .wrap{display:none!important}
+  #print-area{display:block}
+  #print-area .ws{min-height:auto;padding:0 2mm;break-after:page;page-break-after:always}
+  #print-area .ws:last-child{break-after:auto;page-break-after:auto}
+  #print-area .ws-grid{flex:none}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<style id="sheet-css">
+.ws{font-family:"Malgun Gothic","맑은 고딕","IBM Plex Sans KR",sans-serif;color:#111827;padding:40px 46px 34px;line-height:1.6;box-sizing:border-box;min-height:1080px;display:flex;flex-direction:column}
+.ws-head{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:3px solid #1E3A8A;padding-bottom:8px}
+.ws-brand{font-size:26px;font-weight:800;color:#1E3A8A;letter-spacing:-.01em}
+.ws-target{font-size:17px;font-weight:700;color:#111827;text-align:right}
+.ws-target small{display:block;font-size:12px;font-weight:500;color:#4B5563}
+.ws-info{display:flex;justify-content:space-between;gap:12px;background:#E5E7EB;padding:8px 12px;margin-top:10px;font-size:12.5px}
+.ws-info .nm{display:flex;gap:18px;white-space:nowrap}
+.ws-info .nm span{display:inline-block;min-width:90px;border-bottom:1px solid #111827}
+.ws-grid{display:grid;grid-template-columns:1fr 1fr;column-gap:26px;margin-top:14px;flex:1;align-content:start}
+.ws-item{display:grid;grid-template-columns:26px minmax(0,1fr) 42%;align-items:end;gap:6px;padding:3px 0;line-height:1.4;border-bottom:1px solid #E5E7EB;font-size:14px}
+.ws-no{color:#1E3A8A;font-weight:700;font-variant-numeric:tabular-nums;font-size:12.5px}
+.ws-q{overflow-wrap:anywhere;font-size:12.5px;letter-spacing:-.02em}
+.ws-q.en{font-family:"Source Serif 4",Georgia,"Times New Roman",serif;font-size:15px}
+.ws-blank{border-bottom:1px solid #6B7280;height:20px}
+.ws-key .ws-grid{column-gap:14px}
+.ws-key .ws-item{grid-template-columns:24px minmax(0,1fr);font-size:11.5px;padding:3px 0;line-height:1.35}
+.ws-key .ws-a{overflow-wrap:anywhere}
+.ws-key .ws-a .en{font-family:"Source Serif 4",Georgia,"Times New Roman",serif}
+.ws-cont{display:flex;justify-content:space-between;border-bottom:2px solid #1E3A8A;padding-bottom:6px;font-size:13px;font-weight:700;color:#1E3A8A}
+.ws-foot{margin-top:18px;border-top:1px solid #D1D5DB;padding-top:6px;font-size:11px;color:#4B5563;display:flex;justify-content:space-between}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand"><small>경운SKY입시학원 · 영어과</small><h1>단어시험 생성기</h1></div>
+    <nav class="tabs" role="tablist">
+      <button id="tab-make" role="tab" aria-selected="true">시험지 만들기</button>
+      <button id="tab-manage" role="tab" aria-selected="false">단어장 목록</button>
+    </nav>
+  </header>
+
+  <div id="banner" class="note" hidden></div>
+
+  <details class="guide" id="guide">
+    <summary>조교쌤용 사용 가이드</summary>
+    <ol>
+      <li><b>학교 · 학년</b>을 고릅니다.</li>
+      <li><b>시험 범위</b>를 클릭해서 고릅니다. 첫 범위를 누르고 마지막 범위를 Shift+클릭하면 사이가 한 번에 선택됩니다.</li>
+      <li><b>문항 수</b>
+        <ul>
+          <li>보통 시험에서는 단어 개수를 <b>100</b>으로 지정합니다.</li>
+          <li>출제 가능 단어가 <b>80개 미만</b>이면 출제 가능한 단어 개수를 <b>모두</b> 출제합니다.</li>
+          <li>범위를 고르면 문항 수가 자동으로 맞춰지므로(80개 이상 → 100, 80개 미만 → 전부) 따로 고칠 필요가 없습니다.</li>
+        </ul>
+      </li>
+      <li><b>출제 방식</b>(영어 → 뜻 / 뜻 → 영어 / 섞어서)을 고릅니다.</li>
+      <li><b>인쇄 매수</b>에 학생 수만큼 입력합니다. 시험지를 다르게 나눠야 할 때만 ‘서로 다른 시험지’를 2 이상으로 바꿉니다.</li>
+      <li><b>새 시험지 만들기</b> → <b>인쇄하기</b>를 누르면 인쇄 창이 뜹니다. 정답지는 맨 뒤에 있습니다.</li>
+    </ol>
+  </details>
+
+  <!-- 시험지 만들기 -->
+  <section id="view-make" class="panel">
+    <div id="make-empty" class="empty">
+      <b>아직 등록된 단어장이 없습니다.</b>
+      <span>단어장 파일을 불러오는 중입니다. 계속 이 화면이면 페이지를 새로고침해 주세요.</span>
+    </div>
+    <div id="make-body" class="step" hidden style="gap:18px">
+      <div class="step">
+        <span class="lbl">1. 학교 · 학년</span>
+        <div class="row">
+          <select id="m-school" aria-label="학교"></select>
+          <select id="m-grade" aria-label="학년"></select>
+        </div>
+      </div>
+      <div class="step">
+        <div class="row" style="justify-content:space-between">
+          <span class="lbl">2. 시험 범위 (클릭으로 선택 · Shift+클릭으로 구간 선택)</span>
+          <div class="row" style="gap:6px">
+            <button class="btn small" id="m-all">전체 선택</button>
+            <button class="btn small" id="m-none">선택 해제</button>
+          </div>
+        </div>
+        <div id="m-units" class="chips"></div>
+        <div class="summary" id="m-pool"></div>
+      </div>
+      <div class="step">
+        <span class="lbl">3. 출제 방식</span>
+        <div class="row">
+          <div class="seg" id="m-mode">
+            <button data-v="e2k" aria-pressed="true">영어 → 뜻</button>
+            <button data-v="k2e" aria-pressed="false">뜻 → 영어</button>
+            <button data-v="mix" aria-pressed="false">섞어서</button>
+          </div>
+          <label class="row" style="gap:6px">문항 수 <input type="number" id="m-count" min="1" value="100"></label>
+          <span class="hint" id="m-countnote"></span>
+          <label class="row" style="gap:6px">서로 다른 시험지 <input type="number" id="m-versions" min="1" max="6" value="1">종류</label>
+          <label class="row" style="gap:6px">인쇄 매수 <input type="number" id="m-copies" min="1" max="60" value="1">부씩</label>
+        </div>
+        <label class="row" id="m-synwrap" style="gap:6px" hidden><input type="checkbox" id="m-syn"> 유의어·반의어도 섞어서 출제</label>
+        <div class="row">
+          <label class="row" style="gap:6px;flex:1;min-width:240px">하단 문구 <input type="text" id="m-footer" style="flex:1"></label>
+        </div>
+      </div>
+      <div class="row">
+        <button class="btn primary" id="m-gen">새 시험지 만들기</button>
+        <button class="btn" id="m-print" disabled>인쇄하기</button>
+        <span id="m-status" class="status"></span>
+      </div>
+      <p class="hint">버튼을 누를 때마다 범위 안에서 단어를 새로 뽑고 순서도 새로 섞습니다. ‘인쇄 매수’는 같은 시험지를 몇 부 넣을지 정하는 칸이라, 시험지를 만든 뒤에 바꿔도 새로 뽑지 않고 인쇄할 때 그대로 반영됩니다. 시험지마다 찍히는 코드(예: A-7KQ2)가 정답지와 짝을 이룹니다. ‘인쇄하기’를 누르면 인쇄 창이 뜨고, 프린터 대신 ‘PDF로 저장’을 고르면 파일로도 받을 수 있습니다.</p>
+      <div id="m-preview" class="previewbox" hidden></div>
+    </div>
+  </section>
+
+  <!-- 단어 등록·관리 -->
+  <section id="view-manage" class="panel" hidden>
+    <p class="hint">새 단어장 추가·수정은 서희T가 Claude 대화에 단어 파일을 올리면 Claude가 이 목록에 반영합니다.</p>
+    <h2>등록된 단어장</h2>
+    <div id="g-list"></div>
+  </section>
+</div>
+
+<script>
+(function(){
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const HANGUL=/[가-힣]/;
+const DEFAULT_FOOTER="경운SKY입시학원 고등 담당 변서희 선생님";
+const GRADE_ORDER=["중1","중2","중3","고1","고2","고3"];
+const natural=(a,b)=>String(a).localeCompare(String(b),"ko",{numeric:true});
+const ls={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+
+let db=null, canWrite=true, banks=[]; // banks: {id, school, grade, unit, words:[{en,ko}]}
+let selected=new Set(), lastIdx=null, mode="e2k", generated=null, parsed=null;
+
+/* ---------- tabs ---------- */
+function showTab(t){
+  $("tab-make").setAttribute("aria-selected",t==="make");
+  $("tab-manage").setAttribute("aria-selected",t==="manage");
+  $("view-make").hidden=t!=="make"; $("view-manage").hidden=t!=="manage";
+}
+$("tab-make").onclick=()=>showTab("make");
+$("tab-manage").onclick=()=>showTab("manage");
+
+/* ---------- data ---------- */
+function setBanks(list){
+  banks=list; renderMakeOptions(); renderManageList();
+}
+async function boot(){
+  $("m-footer").value=ls.get("footer")||DEFAULT_FOOTER;
+  canWrite=false;
+  try{
+    const r=await fetch("words.json?t="+Date.now(),{cache:"no-store"});
+    if(!r.ok) throw new Error(r.status);
+    const data=await r.json();
+    setBanks((data.banks||[]).map((b,i)=>({id:"b"+i,...b})).filter(b=>b.school&&b.grade&&Array.isArray(b.words)));
+  }catch(e){
+    $("banner").hidden=false; $("banner").textContent="단어장 파일을 불러오지 못했습니다. 인터넷 연결을 확인하고 새로고침해 주세요.";
+  }
+}
+
+/* ---------- make: options ---------- */
+function schoolsList(){return [...new Set(banks.map(b=>b.school))].sort(natural)}
+function gradesFor(s){return [...new Set(banks.filter(b=>b.school===s).map(b=>b.grade))].sort((a,b)=>GRADE_ORDER.indexOf(a)-GRADE_ORDER.indexOf(b)||natural(a,b))}
+function unitsFor(s,g){return banks.filter(b=>b.school===s&&b.grade===g).sort((a,b)=>(a.order??1e12)-(b.order??1e12)||natural(a.unit,b.unit))}
+const isMain=w=>!w.kind||w.kind==="core"||w.kind==="star";
+const mainCount=u=>u.words.filter(isMain).length;
+
+function renderMakeOptions(){
+  const has=banks.length>0;
+  $("make-empty").hidden=has; $("make-body").hidden=!has;
+  if(!has) return;
+  const prevS=$("m-school").value||ls.get("school"), prevG=$("m-grade").value||ls.get("grade");
+  const ss=schoolsList();
+  $("m-school").innerHTML=ss.map(s=>`<option>${esc(s)}</option>`).join("");
+  $("m-school").value=ss.includes(prevS)?prevS:ss[0];
+  fillGrades(prevG);
+}
+function fillGrades(prevG){
+  const gs=gradesFor($("m-school").value);
+  $("m-grade").innerHTML=gs.map(g=>`<option>${esc(g)}</option>`).join("");
+  $("m-grade").value=gs.includes(prevG)?prevG:gs[0];
+  renderUnits();
+}
+$("m-school").onchange=()=>{ls.set("school",$("m-school").value);selected.clear();fillGrades()};
+$("m-grade").onchange=()=>{ls.set("grade",$("m-grade").value);selected.clear();renderUnits()};
+
+function renderUnits(){
+  const us=unitsFor($("m-school").value,$("m-grade").value);
+  const ids=new Set(us.map(u=>u.id));
+  [...selected].forEach(id=>{if(!ids.has(id))selected.delete(id)});
+  $("m-units").innerHTML=us.map((u,i)=>`<button class="chip" data-i="${i}" data-id="${esc(u.id)}" aria-pressed="${selected.has(u.id)}">${esc(u.unit)}<span>${mainCount(u)}</span></button>`).join("");
+  $("m-units").querySelectorAll(".chip").forEach(ch=>ch.onclick=ev=>{
+    const i=+ch.dataset.i, id=ch.dataset.id;
+    if(ev.shiftKey&&lastIdx!==null){
+      const [a,b]=[Math.min(lastIdx,i),Math.max(lastIdx,i)];
+      for(let k=a;k<=b;k++) selected.add(us[k].id);
+    }else{ selected.has(id)?selected.delete(id):selected.add(id); }
+    lastIdx=i; renderUnits();
+  });
+  updatePool();
+}
+$("m-all").onclick=()=>{unitsFor($("m-school").value,$("m-grade").value).forEach(u=>selected.add(u.id));renderUnits()};
+$("m-none").onclick=()=>{selected.clear();lastIdx=null;renderUnits()};
+
+function currentPool(){
+  const us=unitsFor($("m-school").value,$("m-grade").value).filter(u=>selected.has(u.id));
+  const withSyn=$("m-syn").checked, seen=new Set(), pool=[]; let extra=0;
+  const add=w=>{const k=(w.en||"").trim().toLowerCase(); if(k&&!seen.has(k)){seen.add(k);pool.push(w);return true}return false};
+  us.forEach(u=>u.words.filter(isMain).forEach(add));
+  const main=pool.length;
+  us.forEach(u=>u.words.filter(w=>!isMain(w)).forEach(w=>{if(withSyn) add(w); else if(!seen.has((w.en||"").trim().toLowerCase())) extra++;}));
+  return {units:us,pool,main,syn:pool.length-main,hasSyn:us.some(u=>u.words.some(w=>!isMain(w)))};
+}
+function rangeLabel(us){
+  if(!us.length) return "";
+  if(us.length<=3) return us.map(u=>u.unit).join(", ");
+  return `${us[0].unit} ~ ${us[us.length-1].unit} (${us.length}개)`;
+}
+function updatePool(){
+  const {units,pool,main,syn,hasSyn}=currentPool();
+  $("m-synwrap").hidden=!hasSyn;
+  $("m-pool").innerHTML=units.length
+    ? `<span>선택 범위 <b>${esc(rangeLabel(units))}</b></span><span>출제 가능 단어 <b>${pool.length}</b>개${syn?` (핵심 ${main} · 유의·반의 ${syn})`:""}</span>`
+    : `<span>범위를 하나 이상 골라주세요.</span>`;
+  $("m-count").max=Math.max(1,pool.length);
+  const all=pool.length<ALL_UNDER;
+  $("m-count").value=all?Math.max(1,pool.length):100;
+  $("m-countnote").textContent=units.length?(all?`출제 가능 단어가 ${ALL_UNDER}개 미만이라 전부 출제`:""):"";
+}
+$("m-mode").querySelectorAll("button").forEach(b=>b.onclick=()=>{
+  mode=b.dataset.v; $("m-mode").querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===b));
+});
+$("m-syn").onchange=updatePool;
+$("m-footer").onchange=()=>ls.set("footer",$("m-footer").value.trim()||DEFAULT_FOOTER);
+
+/* ---------- make: generate ---------- */
+function rand(n){const a=new Uint32Array(1);crypto.getRandomValues(a);return a[0]%n}
+function shuffle(arr){const a=arr.slice();for(let i=a.length-1;i>0;i--){const j=rand(i+1);[a[i],a[j]]=[a[j],a[i]]}return a}
+function code(){const c="ABCDEFGHJKMNPQRSTUVWXYZ23456789";let s="";for(let i=0;i<4;i++)s+=c[rand(c.length)];return s}
+
+const MID_RATIO=0.1, ALL_UNDER=80;
+const midCap=n=>Math.floor(n*MID_RATIO);
+function maxQuestions(pool,n){ // 중등 단어가 10%를 넘지 않게 만들 수 있는 최대 문항 수
+  const hi=pool.filter(w=>w.lv!=="mid").length, mid=pool.length-hi;
+  for(let k=n;k>0;k--) if(hi+Math.min(mid,midCap(k))>=k) return k;
+  return 0;
+}
+function buildTest(pool,n,mode,letter){
+  const cap=midCap(n), picked=[]; let mid=0;
+  for(const w of shuffle(pool)){
+    if(picked.length>=n) break;
+    if(w.lv==="mid"){ if(mid>=cap) continue; mid++; }
+    picked.push(w);
+  }
+  let dirs;
+  if(mode==="mix"){const half=Math.floor(picked.length/2); dirs=shuffle(picked.map((_,i)=>i<half?"e2k":"k2e"));}
+  else dirs=picked.map(()=>mode);
+  return {code:`${letter}-${code()}`,items:picked.map((w,i)=>({en:w.en,ko:w.ko,dir:dirs[i]}))};
+}
+$("m-gen").onclick=()=>{
+  const {units,pool}=currentPool();
+  if(!units.length){status("m-status","범위를 먼저 골라주세요.",false);return}
+  if(!pool.length){status("m-status","선택한 범위에 단어가 없습니다.",false);return}
+  let want=pool.length<ALL_UNDER?pool.length:(parseInt($("m-count").value,10)||100); want=Math.max(1,Math.min(want,pool.length));
+  const n=maxQuestions(pool,want); $("m-count").value=n;
+  if(!n){status("m-status","선택한 범위로는 시험지를 만들 수 없습니다. 범위를 넓혀주세요.",false);return}
+  let v=parseInt($("m-versions").value,10)||1; v=Math.max(1,Math.min(6,v)); $("m-versions").value=v;
+  let copies=parseInt($("m-copies").value,10)||1; copies=Math.max(1,Math.min(60,copies)); $("m-copies").value=copies;
+  const letters="ABCDEF";
+  generated={
+    school:$("m-school").value, grade:$("m-grade").value, range:rangeLabel(units),
+    mode, n, footer:($("m-footer").value.trim()||DEFAULT_FOOTER),
+    date:new Date().toLocaleDateString("ko-KR"),
+    copies,
+    tests:Array.from({length:v},(_,i)=>buildTest(pool,n,mode,letters[i]))
+  };
+  const prev=$("m-preview"); prev.hidden=false;
+  prev.innerHTML=sheetsHTML(generated).map(h=>`<div class="sheetwrap">${h}</div>`).join("");
+  $("m-print").disabled=false;
+  status("m-status",`시험지 ${v}종류와 정답지를 만들었습니다. 인쇄하면 시험지가 종류마다 ${copies}부씩(총 ${v*copies}부), 정답지는 종류마다 1부씩 나옵니다.`+(n<want?` 선택한 범위로는 ${n}문항까지만 만들 수 있어 문항 수를 줄였습니다. 범위를 넓히면 늘어납니다.`:""),true);
+};
+
+const MODE_LABEL={e2k:"영어 → 우리말 뜻 쓰기",k2e:"우리말 → 영어 쓰기",mix:"영어↔우리말 혼합"};
+function head(g,t,key){
+  return `<div class="ws-head"><div class="ws-brand">경운SKY입시학원</div>
+  <div class="ws-target">${esc(g.school)} ${esc(g.grade)} 단어 시험${key?" · 정답지":""}<small>시험지 코드 ${esc(t.code)}</small></div></div>
+  <div class="ws-info"><span>범위: ${esc(g.range)} · ${g.n}문항 · ${MODE_LABEL[g.mode]}</span>
+  ${key?`<span>${esc(g.date)}</span>`:`<span class="nm">이름 <span></span> 점수 <span style="min-width:60px"></span>/ ${g.n}</span>`}</div>`;
+}
+function foot(g,t,pg=""){return `<div class="ws-foot"><span>${esc(g.footer)}</span><span>${esc(t.code)}${pg}</span></div>`}
+function sheetsHTML(g,copies=1){
+  const out=[];
+  const PER=50;
+  g.tests.forEach(t=>{
+    const total=Math.ceil(t.items.length/PER), pages=[];
+    for(let p=0;p<total;p++){
+      const chunk=t.items.slice(p*PER,(p+1)*PER), rows=Math.ceil(chunk.length/2);
+      const top=p===0?head(g,t,false):`<div class="ws-cont"><span>${esc(g.school)} ${esc(g.grade)} 단어 시험 (계속)</span><span>${esc(t.code)}</span></div>`;
+      pages.push(`<div class="ws">${top}<div class="ws-grid" style="grid-template-rows:repeat(${rows},auto);grid-auto-flow:column">${
+        chunk.map((it,k)=>`<div class="ws-item"><span class="ws-no">${p*PER+k+1}</span><span class="ws-q ${it.dir==="e2k"?"en":""}">${esc(it.dir==="e2k"?it.en:it.ko)}</span><span class="ws-blank"></span></div>`).join("")
+      }</div>${foot(g,t,total>1?` · ${p+1}/${total}쪽`:"")}</div>`);
+    }
+    for(let c=0;c<copies;c++) out.push(...pages);
+  });
+  g.tests.forEach(t=>{
+    out.push(`<div class="ws ws-key">${head(g,t,true)}<div class="ws-grid" style="grid-template-columns:repeat(${t.items.length>60?4:3},1fr);grid-template-rows:repeat(${Math.ceil(t.items.length/(t.items.length>60?4:3))},auto);grid-auto-flow:column">${
+      t.items.map((it,i)=>`<div class="ws-item"><span class="ws-no">${i+1}</span><span class="ws-a">${it.dir==="e2k"?esc(it.ko):`<span class="en">${esc(it.en)}</span>`}</span></div>`).join("")
+    }</div>${foot(g,t)}</div>`);
+  });
+  return out;
+}
+function fileName(g,ext){
+  const d=new Date(), p=x=>String(x).padStart(2,"0");
+  return `${g.school}_${g.grade}_단어시험_${d.getFullYear()}${p(d.getMonth()+1)}${p(d.getDate())}_${p(d.getHours())}${p(d.getMinutes())}.${ext}`.replace(/[\\/:*?"<>|\s]+/g,"_");
+}
+function doPrint(){
+  if(!generated) return;
+  let copies=parseInt($("m-copies").value,10)||1; copies=Math.max(1,Math.min(60,copies)); $("m-copies").value=copies;
+  generated.copies=copies;
+  $("print-area").innerHTML=sheetsHTML(generated,copies).join("");
+  window.print();
+}
+$("m-print").onclick=doPrint;
+
+function status(id,msg,ok){const el=$(id);el.textContent=msg;el.className="status "+(ok?"ok":"err")}
+
+/* ---------- manage: list ---------- */
+const armed=new Map();
+function arm(btn,key,label,action){
+  if(armed.get(key)){armed.delete(key);action();return}
+  armed.set(key,true); const old=btn.textContent; btn.textContent=label;
+  setTimeout(()=>{armed.delete(key);if(btn.isConnected)btn.textContent=old},3000);
+}
+function renderManageList(){
+  const el=$("g-list");
+  if(!banks.length){el.innerHTML='<div class="empty"><span>저장된 단어장이 없습니다. 위에서 첫 단어장을 등록해 주세요.</span></div>';return}
+  const keys=[...new Set(banks.map(b=>b.school+"\u0000"+b.grade))].sort((a,b)=>{
+    const [s1,g1]=a.split("\u0000"),[s2,g2]=b.split("\u0000");return natural(s1,s2)||GRADE_ORDER.indexOf(g1)-GRADE_ORDER.indexOf(g2)});
+  el.innerHTML=keys.map(k=>{
+    const [s,g]=k.split("\u0000"), us=unitsFor(s,g), total=us.reduce((n,u)=>n+mainCount(u),0), midN=us.reduce((n,u)=>n+u.words.filter(w=>isMain(w)&&w.lv==="mid").length,0);
+    return `<div class="grp"><div class="grp-h"><b>${esc(s)} ${esc(g)} <span class="hint" style="display:inline;font-weight:400">· ${us.length}개 범위 · ${total}단어</span></b>
+      ${canWrite?`<button class="btn small danger" data-delgrp="${esc(k)}">이 학년 전체 삭제</button>`:""}</div>
+      <div class="chips">${us.map(u=>`<span class="chip" style="cursor:default">${esc(u.unit)}<span>${mainCount(u)}</span>${canWrite?` <button class="btn small danger" style="padding:0 4px;border:0;background:none" data-del="${esc(u.id)}" aria-label="${esc(u.unit)} 삭제">×</button>`:""}</span>`).join("")}</div></div>`;
+  }).join("");
+  el.querySelectorAll("[data-del]").forEach(b=>b.onclick=()=>arm(b,"u"+b.dataset.del,"삭제?",()=>delUnits([b.dataset.del])));
+  el.querySelectorAll("[data-delgrp]").forEach(b=>b.onclick=()=>arm(b,"g"+b.dataset.delgrp,"한 번 더 누르면 삭제",()=>{
+    const [s,g]=b.dataset.delgrp.split("\u0000"); delUnits(unitsFor(s,g).map(u=>u.id));
+  }));
+}
+async function delUnits(ids){
+  try{
+    if(db){for(const id of ids) await db.collection("banks").doc(id).delete();}
+    else setBanks(banks.filter(b=>!ids.includes(b.id)));
+    status("r-status",`${ids.length}개 범위를 삭제했습니다.`,true);
+  }catch(e){status("r-status","삭제하지 못했습니다. 권한을 확인해 주세요.",false)}
+}
+
+setBanks([]);
+boot();
+})();
+</script>
+<div id="print-area"></div>
+</body>
+</html>

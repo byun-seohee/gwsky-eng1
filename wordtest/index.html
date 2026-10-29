@@ -111,6 +111,7 @@ table.t tr:last-child td{border-bottom:0}
 .ws-key .ws-a{overflow-wrap:anywhere}
 .ws-key .ws-a .en{font-family:"Source Serif 4",Georgia,"Times New Roman",serif}
 .ws-cont{display:flex;justify-content:space-between;border-bottom:2px solid #1E3A8A;padding-bottom:6px;font-size:13px;font-weight:700;color:#1E3A8A}
+.ws-src{margin-left:4px;font-size:9px;color:#6B7280;white-space:nowrap;font-family:"Malgun Gothic","맑은 고딕",sans-serif}
 .ws-foot{margin-top:18px;border-top:1px solid #D1D5DB;padding-top:6px;font-size:11px;color:#4B5563;display:flex;justify-content:space-between}
 </style>
 </head>
@@ -130,7 +131,12 @@ table.t tr:last-child td{border-bottom:0}
     <summary>조교쌤용 사용 가이드</summary>
     <ol>
       <li><b>학교 · 학년</b>을 고릅니다.</li>
-      <li><b>시험 범위</b>를 클릭해서 고릅니다. 첫 범위를 누르고 마지막 범위를 Shift+클릭하면 사이가 한 번에 선택됩니다.</li>
+      <li><b>시험 범위</b>
+        <ul>
+          <li>정규 시험: <b>‘DAY11 전체’</b>, <b>‘DAY12 전체’</b> 버튼을 누릅니다. 두 DAY를 같이 칠 때는 두 번째 버튼을 Shift+클릭합니다.</li>
+          <li>재시: 정답지에서 틀린 번호 옆의 지문 표시(예: <b>11-B</b>)를 확인하고, 아래 칩에서 그 지문만 골라 시험지를 다시 만듭니다. 지문이 여러 개면 칩을 하나씩 더 누르면 됩니다.</li>
+        </ul>
+      </li>
       <li><b>문항 수</b>
         <ul>
           <li>보통 시험에서는 단어 개수를 <b>100</b>으로 지정합니다.</li>
@@ -160,12 +166,13 @@ table.t tr:last-child td{border-bottom:0}
       </div>
       <div class="step">
         <div class="row" style="justify-content:space-between">
-          <span class="lbl">2. 시험 범위 (클릭으로 선택 · Shift+클릭으로 구간 선택)</span>
+          <span class="lbl">2. 시험 범위 (DAY·강 전체는 위 버튼 · 지문 하나씩은 아래 칩 · Shift+클릭으로 추가/구간)</span>
           <div class="row" style="gap:6px">
             <button class="btn small" id="m-all">전체 선택</button>
             <button class="btn small" id="m-none">선택 해제</button>
           </div>
         </div>
+        <div id="m-groups" class="chips"></div>
         <div id="m-units" class="chips"></div>
         <div class="summary" id="m-pool"></div>
       </div>
@@ -269,10 +276,27 @@ function fillGrades(prevG){
 $("m-school").onchange=()=>{ls.set("school",$("m-school").value);selected.clear();fillGrades()};
 $("m-grade").onchange=()=>{ls.set("grade",$("m-grade").value);selected.clear();renderUnits()};
 
+// "매삼영 DAY11-B" → 묶음 "매삼영 DAY11", "올림포스 14강-1" → "올림포스 14강"
+function groupKey(unit){const m=String(unit).match(/^(.*?(DAY\s*\d+|\d+\s*강))/i);return m?m[1]:null}
+function groupLabel(key){return key.replace(/^\S+\s+/,"")}
+function shortSrc(unit){return String(unit||"").replace(/^\S+\s+/,"").replace(/^DAY\s*/i,"")}
+function renderGroups(us){
+  const keys=[...new Set(us.map(u=>groupKey(u.unit)).filter(Boolean))];
+  $("m-groups").innerHTML=keys.length>1||keys.length&&us.some(u=>groupKey(u.unit)===keys[0])?keys.map(k=>{
+    const mem=us.filter(u=>groupKey(u.unit)===k), on=mem.every(u=>selected.has(u.id));
+    return `<button class="chip grp-btn" data-k="${esc(k)}" aria-pressed="${on}">${esc(groupLabel(k))} 전체<span>${mem.reduce((n,u)=>n+mainCount(u),0)}</span></button>`;
+  }).join(""):"";
+  $("m-groups").querySelectorAll(".grp-btn").forEach(b=>b.onclick=ev=>{
+    const mem=us.filter(u=>groupKey(u.unit)===b.dataset.k);
+    if(!ev.shiftKey) selected.clear();
+    mem.forEach(u=>selected.add(u.id)); lastIdx=null; renderUnits();
+  });
+}
 function renderUnits(){
   const us=unitsFor($("m-school").value,$("m-grade").value);
   const ids=new Set(us.map(u=>u.id));
   [...selected].forEach(id=>{if(!ids.has(id))selected.delete(id)});
+  renderGroups(us);
   $("m-units").innerHTML=us.map((u,i)=>`<button class="chip" data-i="${i}" data-id="${esc(u.id)}" aria-pressed="${selected.has(u.id)}">${esc(u.unit)}<span>${mainCount(u)}</span></button>`).join("");
   $("m-units").querySelectorAll(".chip").forEach(ch=>ch.onclick=ev=>{
     const i=+ch.dataset.i, id=ch.dataset.id;
@@ -290,14 +314,22 @@ $("m-none").onclick=()=>{selected.clear();lastIdx=null;renderUnits()};
 function currentPool(){
   const us=unitsFor($("m-school").value,$("m-grade").value).filter(u=>selected.has(u.id));
   const withSyn=true, seen=new Set(), pool=[]; let extra=0;
-  const add=w=>{const k=(w.en||"").trim().toLowerCase(); if(k&&!seen.has(k)){seen.add(k);pool.push(w);return true}return false};
-  us.forEach(u=>u.words.filter(isMain).forEach(add));
+  const add=(w,u)=>{const k=(w.en||"").trim().toLowerCase(); if(k&&!seen.has(k)){seen.add(k);pool.push({...w,src:u.unit});return true}return false};
+  us.forEach(u=>u.words.filter(isMain).forEach(w=>add(w,u)));
   const main=pool.length;
-  us.forEach(u=>u.words.filter(w=>!isMain(w)).forEach(w=>{if(withSyn) add(w); else if(!seen.has((w.en||"").trim().toLowerCase())) extra++;}));
+  us.forEach(u=>u.words.filter(w=>!isMain(w)).forEach(w=>{if(withSyn) add(w,u); else if(!seen.has((w.en||"").trim().toLowerCase())) extra++;}));
   return {units:us,pool,main,syn:pool.length-main,hasSyn:us.some(u=>u.words.some(w=>!isMain(w)))};
 }
 function rangeLabel(us){
   if(!us.length) return "";
+  const all=unitsFor($("m-school").value,$("m-grade").value), parts=[], done=new Set();
+  us.forEach(u=>{
+    const k=groupKey(u.unit); if(done.has(u.id)) return;
+    const mem=k?all.filter(x=>groupKey(x.unit)===k):[];
+    if(k&&mem.length>1&&mem.every(x=>us.some(y=>y.id===x.id))){parts.push(k+" 전체");mem.forEach(x=>done.add(x.id));}
+    else {parts.push(u.unit);done.add(u.id);}
+  });
+  if(parts.length<=3) return parts.join(", ");
   if(us.length<=3) return us.map(u=>u.unit).join(", ");
   return `${us[0].unit} ~ ${us[us.length-1].unit} (${us.length}개)`;
 }
@@ -355,7 +387,7 @@ function buildTest(pool,n,mode,letter){
   let dirs;
   if(mode==="mix"){const half=Math.floor(picked.length/2); dirs=shuffle(picked.map((_,i)=>i<half?"e2k":"k2e"));}
   else dirs=picked.map(()=>mode);
-  return {code:`${letter}-${code()}`,items:picked.map((w,i)=>({en:w.en,ko:w.ko,dir:dirs[i]}))};
+  return {code:`${letter}-${code()}`,items:picked.map((w,i)=>({en:w.en,ko:w.ko,src:w.src,dir:dirs[i]}))};
 }
 $("m-gen").onclick=()=>{
   const {units,pool}=currentPool();
@@ -403,7 +435,7 @@ function sheetsHTML(g,copies=1){
   });
   g.tests.forEach(t=>{
     out.push(`<div class="ws ws-key">${head(g,t,true)}<div class="ws-grid" style="grid-template-columns:repeat(${t.items.length>60?4:3},1fr);grid-template-rows:repeat(${Math.ceil(t.items.length/(t.items.length>60?4:3))},auto);grid-auto-flow:column">${
-      t.items.map((it,i)=>`<div class="ws-item"><span class="ws-no">${i+1}</span><span class="ws-a">${it.dir==="e2k"?esc(it.ko):`<span class="en">${esc(it.en)}</span>`}</span></div>`).join("")
+      t.items.map((it,i)=>`<div class="ws-item"><span class="ws-no">${i+1}</span><span class="ws-a">${it.dir==="e2k"?esc(it.ko):`<span class="en">${esc(it.en)}</span>`}<span class="ws-src">${esc(shortSrc(it.src))}</span></span></div>`).join("")
     }</div>${foot(g,t)}</div>`);
   });
   return out;

@@ -113,7 +113,9 @@
   .choice.done button{color:var(--ink-dim);opacity:.55}
   .choice button.hit{background:var(--ok-bg);color:var(--ok);opacity:1;font-weight:800}
   .choice button.miss{background:var(--no-bg);color:var(--no);opacity:1;text-decoration:line-through}
-  .choice button.picked{background:rgba(27,47,94,.10);color:var(--navy);opacity:1;font-weight:800}
+  .choice button.picked{background:#a9d8f7;color:#0f2a5c;opacity:1;font-weight:800;box-shadow:inset 0 0 0 2px #4a9fd8}
+  /* 전체 한번에 풀기: 아직 안 고른 문제는 노란 점선으로 표시 */
+  #quizArea.combined .choice:not([data-picked]):not(.done){border-style:dashed;border-color:#d9962b;background:#fff1c2}
 
   .reset{
     width:100%;margin:2px 0 18px;padding:12px;border-radius:12px;border:1px solid var(--line);
@@ -279,18 +281,20 @@
     background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
     padding:14px;margin-bottom:12px;
   }
+  .vfq{content-visibility:auto;contain-intrinsic-size:auto 170px}
   .vfq .ko{font-size:12.5px;color:var(--ink-dim);margin-bottom:9px;padding-bottom:8px;border-bottom:1px dashed var(--line)}
   .vfq .sent{font-size:15px;line-height:2.4}
   .vfinput{
     display:inline-block;width:100px;max-width:38vw;padding:4px 7px;margin:0 2px;
-    border-radius:7px;border:1.5px solid var(--navy);background:var(--card-2);
-    color:var(--ink);font-size:14px;font-weight:700;outline:none;text-align:center;
-    vertical-align:baseline;
+    border-radius:7px;border:1.5px solid #6db3e0;background:#e4f3fc;
+    color:var(--ink);font-size:16px;font-weight:700;outline:none;text-align:center;
+    vertical-align:baseline;-webkit-appearance:none;appearance:none;touch-action:manipulation;
   }
   .vfinput::placeholder{color:var(--ink-dim);font-weight:500;font-size:11.5px}
-  .vfinput:focus{border-color:var(--navy);background:var(--card)}
-  .vfinput.ok{border-color:var(--ok);background:var(--ok-bg);color:var(--ok)}
-  .vfinput.bad{border-color:var(--no);background:var(--no-bg);color:var(--no)}
+  .vfinput:placeholder-shown{background:#fff1c2;border-color:#d9962b;border-style:dashed}
+  .vfinput:focus{border-color:var(--navy);background:#ffffff;border-style:solid}
+  .vfinput.ok{border-style:solid;border-color:var(--ok);background:var(--ok-bg);color:var(--ok)}
+  .vfinput.bad{border-style:solid;border-color:var(--no);background:var(--no-bg);color:var(--no)}
   .vfrow{display:flex;gap:8px;align-items:center;margin-top:10px}
   .vfcheck{
     flex-shrink:0;padding:9px 14px;border-radius:9px;border:0;background:var(--navy);
@@ -3860,6 +3864,7 @@ function goHome(){
 function buildQuiz(){
   total=0; solved=0; correct=0; QUIZ_GRADED=false;
   const area=document.getElementById('quizArea'); area.innerHTML='';
+  area.classList.toggle('combined',!!cur.noFlow);
   const ansArea=document.getElementById('ansArea'); ansArea.innerHTML='';
   const extras=document.querySelectorAll('#quiz .reset, #quiz details');
   document.getElementById('quizCheckBox').style.display='none';
@@ -4365,7 +4370,7 @@ function buildVF(){
       else{
         const id=`vfin-${qi}-${bi}`;
         VFINPUTS.push(id);
-        sent+=`<input class="vfinput" id="${id}" placeholder="(${p.b})" onkeydown="if(event.key==='Enter'){event.preventDefault();vfEnter('${id}');}">`;
+        sent+=`<input class="vfinput" id="${id}" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" enterkeyhint="next" placeholder="(${p.b})" onkeydown="if(event.key==='Enter'){event.preventDefault();vfEnter('${id}');}">`;
         bi++;
       }
     });
@@ -4382,9 +4387,28 @@ function buildVF(){
   }).join('')+`
     <div class="vfq" style="text-align:center">
       <div style="font-size:12.5px;color:var(--ink-dim);margin-bottom:10px">모든 빈칸을 다 채운 뒤, 아래 버튼 <b>한 번</b>으로 전체를 채점하세요.<br>채점 전에는 정답을 볼 수 없어요.</div>
+      <div id="vfEmptyInfo" style="font-size:13px;font-weight:700;margin-bottom:10px"></div>
       <button class="vfcheck" style="width:100%" onclick="checkAllVF()">✅ 다 풀었어요 — 전체 채점하기</button>
     </div>`;
+  updateVFEmpty();
 }
+/* 안 쓴 칸 안내: 비어 있는 칸은 노란 점선으로 보이고, 남은 개수와 이동 버튼을 알려줌 */
+function updateVFEmpty(){
+  const box=document.getElementById('vfEmptyInfo'); if(!box) return;
+  const n=document.querySelectorAll('#vfArea .vfinput:placeholder-shown').length;
+  box.innerHTML=n
+    ? `<span style="color:#b36b00">🟨 아직 안 쓴 칸 ${n}개</span> <button class="wbtn" style="width:auto;display:inline-block;padding:6px 10px;margin:0 0 0 6px" onclick="gotoEmptyVF()">⬇ 안 쓴 칸으로 이동</button>`
+    : `<span style="color:var(--ok)">✅ 모든 칸을 채웠어요</span>`;
+}
+function gotoEmptyVF(){
+  const el=document.querySelector('#vfArea .vfinput:placeholder-shown');
+  if(el){ el.scrollIntoView({behavior:'smooth',block:'center'}); setTimeout(()=>el.focus({preventScroll:true}),350); }
+}
+document.addEventListener('input',e=>{
+  if(e.target && e.target.classList && e.target.classList.contains('vfinput')){
+    if(!updateVFEmpty._t) updateVFEmpty._t=requestAnimationFrame(()=>{updateVFEmpty._t=0;updateVFEmpty();});
+  }
+});
 function vfEnter(id){
   const idx=VFINPUTS.indexOf(id);
   if(idx>-1 && idx<VFINPUTS.length-1){
@@ -4422,8 +4446,9 @@ function checkAllVF(){
       if(typeof p!=='string'){
         total++;
         const el=document.getElementById(`vfin-${qi}-${bi}`);
-        const val=norm(el.value);
-        const ans=norm(p.a);
+        // 띄어쓰기는 채점하지 않음 (예: "tobe", "to  be", "to be" 모두 정답)
+        const val=norm(el.value).replace(/\s+/g,'');
+        const ans=norm(p.a).replace(/\s+/g,'');
         el.classList.remove('ok','bad');
         if(val===ans){ el.classList.add('ok'); correct++; }
         else{ el.classList.add('bad'); }

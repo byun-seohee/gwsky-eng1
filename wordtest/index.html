@@ -277,9 +277,9 @@ $("m-school").onchange=()=>{ls.set("school",$("m-school").value);selected.clear(
 $("m-grade").onchange=()=>{ls.set("grade",$("m-grade").value);selected.clear();renderUnits()};
 
 // "매삼영 DAY11-B" → 묶음 "매삼영 DAY11", "올림포스 14강-1" → "올림포스 14강"
-function groupKey(unit){const m=String(unit).match(/^(.*?(DAY\s*\d+|\d+\s*강))/i);return m?m[1]:null}
+function groupKey(unit){const m=String(unit).match(/^(.*?(DAY\s*\d+|\d+\s*[강과]))/i);return m?m[1]:null}
 function groupLabel(key){return key.replace(/^\S+\s+/,"")}
-function shortSrc(unit){return String(unit||"").replace(/^\S+\s+/,"").replace(/^DAY\s*/i,"")}
+function shortSrc(unit){return String(unit||"").replace(/^\S+\s+/,"").replace(/^DAY\s*/i,"").replace(/PART\s*/i,"P")}
 function renderGroups(us){
   const keys=[...new Set(us.map(u=>groupKey(u.unit)).filter(Boolean))];
   $("m-groups").innerHTML=keys.length>1||keys.length&&us.some(u=>groupKey(u.unit)===keys[0])?keys.map(k=>{

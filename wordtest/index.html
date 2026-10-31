@@ -317,7 +317,7 @@ function currentPool(){
   const add=(w,u)=>{const k=(w.en||"").trim().toLowerCase(); if(k&&!seen.has(k)){seen.add(k);pool.push({...w,src:u.unit});return true}return false};
   us.forEach(u=>u.words.filter(isMain).forEach(w=>add(w,u)));
   const main=pool.length;
-  us.forEach(u=>u.words.filter(w=>!isMain(w)).forEach(w=>{if(withSyn) add(w,u); else if(!seen.has((w.en||"").trim().toLowerCase())) extra++;}));
+  us.forEach(u=>u.words.filter(w=>!isMain(w)&&w.kind!=="ant").forEach(w=>{if(withSyn) add(w,u); else if(!seen.has((w.en||"").trim().toLowerCase())) extra++;}));
   return {units:us,pool,main,syn:pool.length-main,hasSyn:us.some(u=>u.words.some(w=>!isMain(w)))};
 }
 function rangeLabel(us){
@@ -336,7 +336,7 @@ function rangeLabel(us){
 function updatePool(){
   const {units,pool,main,syn,hasSyn}=currentPool();
   $("m-pool").innerHTML=units.length
-    ? `<span>선택 범위 <b>${esc(rangeLabel(units))}</b></span><span>출제 가능 단어 <b>${pool.length}</b>개${syn?` (핵심 ${main} · 유의·반의 ${syn})`:""}</span>`
+    ? `<span>선택 범위 <b>${esc(rangeLabel(units))}</b></span><span>출제 가능 단어 <b>${pool.length}</b>개${syn?` (핵심 ${main} · 유의어 ${syn})`:""}</span>`
     : `<span>범위를 하나 이상 골라주세요.</span>`;
   $("m-count").max=Math.max(1,pool.length);
   const all=pool.length<ALL_UNDER;
@@ -371,7 +371,7 @@ function pickWords(pool,n){
     }
     return picked;
   }
-  // 2) 모자라면: 핵심·고난도 → 어려운 유의·반의 → 쉬운 유의·반의 순으로 채움
+  // 2) 모자라면: 핵심·고난도 → 어려운 유의어 → 쉬운 유의어 순으로 채움 (반의어는 출제하지 않음)
   const tiers=[
     pool.filter(w=>isMain(w)&&w.lv!=="mid"),
     pool.filter(w=>isMain(w)&&w.lv==="mid"),

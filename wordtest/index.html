@@ -74,10 +74,12 @@ table.t tr:last-child td{border-bottom:0}
 .grp-h b{font-size:14px}
 .guide{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 18px;font-size:14px}
 .guide summary{cursor:pointer;font-weight:700;color:var(--navy)}
+.guide-h{margin:12px 0 0;font-weight:700;color:var(--navy)}
 .guide ol{margin:10px 0 4px;padding-left:20px;display:flex;flex-direction:column;gap:6px;max-width:70ch}
 .guide ul{margin:4px 0 0;padding-left:18px;display:flex;flex-direction:column;gap:2px}
 .note{background:var(--navy-soft);color:var(--ink);border-radius:8px;padding:10px 12px;font-size:13px}
 @media (max-width:520px){.brand h1{font-size:20px}.panel{padding:16px}}
+[hidden]{display:none!important}
 #print-area{display:none}
 @media print{
   @page{size:A4;margin:10mm}
@@ -112,6 +114,15 @@ table.t tr:last-child td{border-bottom:0}
 .ws-key .ws-a .en{font-family:"Source Serif 4",Georgia,"Times New Roman",serif}
 .ws-cont{display:flex;justify-content:space-between;border-bottom:2px solid #1E3A8A;padding-bottom:6px;font-size:13px;font-weight:700;color:#1E3A8A}
 .ws-src{margin-left:4px;font-size:9px;color:#6B7280;white-space:nowrap;font-family:"Malgun Gothic","맑은 고딕",sans-serif}
+.ss-list{display:flex;flex-direction:column;margin-top:12px;flex:1}
+.ss-item{display:grid;grid-template-columns:28px minmax(0,1fr);column-gap:8px;padding:9px 0 10px;border-bottom:1px solid #E5E7EB;break-inside:avoid;page-break-inside:avoid}
+.ss-no{color:#1E3A8A;font-weight:700;font-size:13px;font-variant-numeric:tabular-nums;padding-top:1px}
+.ss-en{font-family:"Source Serif 4",Georgia,"Times New Roman",serif;font-size:14.5px;line-height:1.55;overflow-wrap:anywhere}
+.ss-line{grid-column:2;height:27px;border-bottom:1px solid #9CA3AF}
+.ss-key .ss-item{padding:6px 0 7px}
+.ss-key .ss-en{font-size:11.5px;color:#4B5563;line-height:1.45}
+.ss-ko{grid-column:2;font-size:13px;line-height:1.55;margin-top:2px;overflow-wrap:anywhere}
+.ss-key .ws-src{font-size:10px}
 .ws-foot{margin-top:18px;border-top:1px solid #D1D5DB;padding-top:6px;font-size:11px;color:#4B5563;display:flex;justify-content:space-between}
 </style>
 </head>
@@ -148,6 +159,12 @@ table.t tr:last-child td{border-bottom:0}
       <li><b>인쇄 매수</b>에 학생 수만큼 입력합니다. 시험지를 다르게 나눠야 할 때만 ‘서로 다른 시험지’를 2 이상으로 바꿉니다.</li>
       <li><b>새 시험지 만들기</b> → <b>인쇄하기</b>를 누르면 인쇄 창이 뜹니다. 정답지는 맨 뒤에 있습니다.</li>
     </ol>
+    <p class="guide-h">문장 해석 시험</p>
+    <ol>
+      <li>맨 위 <b>시험 종류</b>에서 <b>‘문장 해석 시험’</b>을 누릅니다.</li>
+      <li>학교·학년과 범위를 단어 시험과 똑같이 고릅니다. 지문마다 <b>2문장씩</b> 자동으로 뽑힙니다. (예: 14강 전체 4지문 → 8문장)</li>
+      <li>재시: 정답지의 지문 표시(예: <b>14-2</b>)를 보고 그 지문 칩만 골라 다시 만들면, 같은 지문에서 다른 문장이 나올 수 있습니다.</li>
+    </ol>
   </details>
 
   <!-- 시험지 만들기 -->
@@ -157,6 +174,13 @@ table.t tr:last-child td{border-bottom:0}
       <span>단어장 파일을 불러오는 중입니다. 계속 이 화면이면 페이지를 새로고침해 주세요.</span>
     </div>
     <div id="make-body" class="step" hidden style="gap:18px">
+      <div class="step">
+        <span class="lbl">시험 종류</span>
+        <div class="seg" id="m-type">
+          <button data-v="word" aria-pressed="true">단어 시험</button>
+          <button data-v="sent" aria-pressed="false">문장 해석 시험</button>
+        </div>
+      </div>
       <div class="step">
         <span class="lbl">1. 학교 · 학년</span>
         <div class="row">
@@ -178,14 +202,15 @@ table.t tr:last-child td{border-bottom:0}
       </div>
       <div class="step">
         <span class="lbl">3. 출제 방식</span>
+        <p class="hint" id="m-sentnote" hidden>지문마다 2문장씩 무작위로 뽑아, 영어 문장을 우리말로 해석하는 시험입니다. 문항 수는 고른 지문 수 × 2로 정해집니다.</p>
         <div class="row">
-          <div class="seg" id="m-mode">
+          <div class="seg word-only" id="m-mode">
             <button data-v="e2k" aria-pressed="true">영어 → 뜻</button>
             <button data-v="k2e" aria-pressed="false">뜻 → 영어</button>
             <button data-v="mix" aria-pressed="false">섞어서</button>
           </div>
-          <label class="row" style="gap:6px">문항 수 <input type="number" id="m-count" min="1" value="100"></label>
-          <span class="hint" id="m-countnote"></span>
+          <label class="row word-only" style="gap:6px">문항 수 <input type="number" id="m-count" min="1" value="100"></label>
+          <span class="hint word-only" id="m-countnote"></span>
           <label class="row" style="gap:6px">서로 다른 시험지 <input type="number" id="m-versions" min="1" max="6" value="1">종류</label>
           <label class="row" style="gap:6px">인쇄 매수 <input type="number" id="m-copies" min="1" max="60" value="1">부씩</label>
         </div>
@@ -198,7 +223,7 @@ table.t tr:last-child td{border-bottom:0}
         <button class="btn" id="m-print" disabled>인쇄하기</button>
         <span id="m-status" class="status"></span>
       </div>
-      <p class="hint">버튼을 누를 때마다 범위 안에서 단어를 새로 뽑고 순서도 새로 섞습니다. ‘인쇄 매수’는 같은 시험지를 몇 부 넣을지 정하는 칸이라, 시험지를 만든 뒤에 바꿔도 새로 뽑지 않고 인쇄할 때 그대로 반영됩니다. 시험지마다 찍히는 코드(예: A-7KQ2)가 정답지와 짝을 이룹니다. ‘인쇄하기’를 누르면 인쇄 창이 뜨고, 프린터 대신 ‘PDF로 저장’을 고르면 파일로도 받을 수 있습니다.</p>
+      <p class="hint">버튼을 누를 때마다 범위 안에서 문제를 새로 뽑습니다. ‘인쇄 매수’는 같은 시험지를 몇 부 넣을지 정하는 칸이라, 시험지를 만든 뒤에 바꿔도 새로 뽑지 않고 인쇄할 때 그대로 반영됩니다. 시험지마다 찍히는 코드(예: A-7KQ2)가 정답지와 짝을 이룹니다. ‘인쇄하기’를 누르면 인쇄 창이 뜨고, 프린터 대신 ‘PDF로 저장’을 고르면 파일로도 받을 수 있습니다.</p>
       <div id="m-preview" class="previewbox" hidden></div>
     </div>
   </section>
@@ -221,7 +246,7 @@ const GRADE_ORDER=["중1","중2","중3","고1","고2","고3"];
 const natural=(a,b)=>String(a).localeCompare(String(b),"ko",{numeric:true});
 const ls={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
 
-let db=null, canWrite=true, banks=[]; // banks: {id, school, grade, unit, words:[{en,ko}]}
+let db=null, canWrite=true, banks=[], wordBanks=[], sentBanks=[], testType="word"; // banks: {id, school, grade, unit, words:[{en,ko}]}
 let selected=new Set(), lastIdx=null, mode="e2k", generated=null, parsed=null;
 
 /* ---------- tabs ---------- */
@@ -244,18 +269,35 @@ async function boot(){
     const r=await fetch("words.json?t="+Date.now(),{cache:"no-store"});
     if(!r.ok) throw new Error(r.status);
     const data=await r.json();
-    setBanks((data.banks||[]).map((b,i)=>({id:"b"+i,...b})).filter(b=>b.school&&b.grade&&Array.isArray(b.words)));
+    wordBanks=(data.banks||[]).map((b,i)=>({id:"b"+i,...b})).filter(b=>b.school&&b.grade&&Array.isArray(b.words));
+    setBanks(wordBanks);
   }catch(e){
     $("banner").hidden=false; $("banner").textContent="단어장 파일을 불러오지 못했습니다. 인터넷 연결을 확인하고 새로고침해 주세요.";
   }
+  try{
+    const r=await fetch("sentences.json?t="+Date.now(),{cache:"no-store"});
+    if(r.ok){const data=await r.json(); sentBanks=(data.banks||[]).map((b,i)=>({id:"s"+i,...b})).filter(b=>b.school&&b.grade&&Array.isArray(b.sentences)&&b.sentences.length);}
+  }catch(e){}
+  renderManageList();
 }
+function setType(t){
+  if(t==="sent"&&!sentBanks.length){status("m-status","아직 등록된 문장 자료가 없습니다.",false);return}
+  testType=t;
+  $("m-type").querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x.dataset.v===t));
+  document.querySelectorAll(".word-only").forEach(el=>el.hidden=t!=="word");
+  $("m-sentnote").hidden=t!=="sent";
+  selected.clear(); lastIdx=null; generated=null; $("m-preview").hidden=true; $("m-print").disabled=true; status("m-status","",true);
+  banks=t==="word"?wordBanks:sentBanks; renderMakeOptions();
+}
+$("m-type").querySelectorAll("button").forEach(b=>b.onclick=()=>setType(b.dataset.v));
 
 /* ---------- make: options ---------- */
 function schoolsList(){return [...new Set(banks.map(b=>b.school))].sort(natural)}
 function gradesFor(s){return [...new Set(banks.filter(b=>b.school===s).map(b=>b.grade))].sort((a,b)=>GRADE_ORDER.indexOf(a)-GRADE_ORDER.indexOf(b)||natural(a,b))}
-function unitsFor(s,g){return banks.filter(b=>b.school===s&&b.grade===g).sort((a,b)=>(a.order??1e12)-(b.order??1e12)||natural(a.unit,b.unit))}
+function banksUnits(s,g,src){return unitsFor(s,g,src)}
+function unitsFor(s,g,src=banks){return src.filter(b=>b.school===s&&b.grade===g).sort((a,b)=>(a.order??1e12)-(b.order??1e12)||natural(a.unit,b.unit))}
 const isMain=w=>!w.kind||w.kind==="core"||w.kind==="star";
-const mainCount=u=>u.words.filter(isMain).length;
+const mainCount=u=>u.words?u.words.filter(isMain).length:(u.sentences||[]).length;
 
 function renderMakeOptions(){
   const has=banks.length>0;
@@ -311,6 +353,14 @@ function renderUnits(){
 $("m-all").onclick=()=>{unitsFor($("m-school").value,$("m-grade").value).forEach(u=>selected.add(u.id));renderUnits()};
 $("m-none").onclick=()=>{selected.clear();lastIdx=null;renderUnits()};
 
+const SENT_PER=2;
+function buildSentTest(units,letter){
+  const items=[];
+  units.forEach(u=>{
+    shuffle(u.sentences).slice(0,SENT_PER).sort((a,b)=>a.n-b.n).forEach(x=>items.push({en:x.en,ko:x.ko,src:u.unit}));
+  });
+  return {code:`${letter}-${code()}`,items};
+}
 function currentPool(){
   const us=unitsFor($("m-school").value,$("m-grade").value).filter(u=>selected.has(u.id));
   const withSyn=true, seen=new Set(), pool=[]; let extra=0;
@@ -334,6 +384,14 @@ function rangeLabel(us){
   return `${us[0].unit} ~ ${us[us.length-1].unit} (${us.length}개)`;
 }
 function updatePool(){
+  if(testType==="sent"){
+    const units=unitsFor($("m-school").value,$("m-grade").value).filter(u=>selected.has(u.id));
+    const n=units.reduce((k,u)=>k+Math.min(SENT_PER,u.sentences.length),0);
+    $("m-pool").innerHTML=units.length
+      ? `<span>선택 범위 <b>${esc(rangeLabel(units))}</b></span><span>지문 <b>${units.length}</b>개 × 2문장 = <b>${n}</b>문항</span>`
+      : `<span>범위를 하나 이상 골라주세요.</span>`;
+    return;
+  }
   const {units,pool,main,syn,hasSyn}=currentPool();
   $("m-pool").innerHTML=units.length
     ? `<span>선택 범위 <b>${esc(rangeLabel(units))}</b></span><span>출제 가능 단어 <b>${pool.length}</b>개${syn?` (핵심 ${main} · 유의어 ${syn})`:""}</span>`
@@ -390,6 +448,7 @@ function buildTest(pool,n,mode,letter){
   return {code:`${letter}-${code()}`,items:picked.map((w,i)=>({en:w.en,ko:w.ko,src:w.src,dir:dirs[i]}))};
 }
 $("m-gen").onclick=()=>{
+  if(testType==="sent") return genSent();
   const {units,pool}=currentPool();
   if(!units.length){status("m-status","범위를 먼저 골라주세요.",false);return}
   if(!pool.length){status("m-status","선택한 범위에 단어가 없습니다.",false);return}
@@ -411,22 +470,87 @@ $("m-gen").onclick=()=>{
   status("m-status",`시험지 ${v}종류와 정답지를 만들었습니다. 인쇄하면 시험지가 종류마다 ${copies}부씩(총 ${v*copies}부), 정답지는 종류마다 1부씩 나옵니다.`,true);
 };
 
+function genSent(){
+  const units=unitsFor($("m-school").value,$("m-grade").value).filter(u=>selected.has(u.id));
+  if(!units.length){status("m-status","범위를 먼저 골라주세요.",false);return}
+  let v=parseInt($("m-versions").value,10)||1; v=Math.max(1,Math.min(6,v)); $("m-versions").value=v;
+  let copies=parseInt($("m-copies").value,10)||1; copies=Math.max(1,Math.min(60,copies)); $("m-copies").value=copies;
+  const letters="ABCDEF", tests=Array.from({length:v},(_,i)=>buildSentTest(units,letters[i]));
+  generated={type:"sent",school:$("m-school").value, grade:$("m-grade").value, range:rangeLabel(units),
+    n:tests[0].items.length, footer:($("m-footer").value.trim()||DEFAULT_FOOTER), date:new Date().toLocaleDateString("ko-KR"), copies, tests};
+  const prev=$("m-preview"); prev.hidden=false;
+  prev.innerHTML=sheetsHTML(generated).map(h=>`<div class="sheetwrap">${h}</div>`).join("");
+  $("m-print").disabled=false;
+  status("m-status",`문장 해석 시험지 ${v}종류와 정답지를 만들었습니다. 인쇄하면 시험지가 종류마다 ${copies}부씩(총 ${v*copies}부), 정답지는 종류마다 1부씩 나옵니다.`,true);
+}
 const MODE_LABEL={e2k:"영어 → 우리말 뜻 쓰기",k2e:"우리말 → 영어 쓰기",mix:"영어↔우리말 혼합"};
 function head(g,t,key){
   return `<div class="ws-head"><div class="ws-brand">경운SKY입시학원</div>
-  <div class="ws-target">${esc(g.school)} ${esc(g.grade)} 단어 시험${key?" · 정답지":""}<small>시험지 코드 ${esc(t.code)}</small></div></div>
-  <div class="ws-info"><span>범위: ${esc(g.range)} · ${g.n}문항 · ${MODE_LABEL[g.mode]}</span>
+  <div class="ws-target">${esc(g.school)} ${esc(g.grade)} ${testName(g)}${key?" · 정답지":""}<small>시험지 코드 ${esc(t.code)}</small></div></div>
+  <div class="ws-info"><span>범위: ${esc(g.range)} · ${g.n}문항 · ${g.type==="sent"?"영어 문장 → 우리말 해석 쓰기":MODE_LABEL[g.mode]}</span>
   ${key?`<span>${esc(g.date)}</span>`:`<span class="nm">이름 <span></span> 점수 <span style="min-width:60px"></span>/ ${g.n}</span>`}</div>`;
+}
+const testName=g=>g.type==="sent"?"문장 해석 시험":"단어 시험";
+// 문장 길이로 높이를 어림해 쪽을 나눔
+function paginate(items,est,first,rest){
+  const pages=[[]]; let used=0, cap=first;
+  items.forEach(it=>{const h=est(it); if(pages[pages.length-1].length&&used+h>cap){pages.push([]);used=0;cap=rest} pages[pages.length-1].push(it); used+=h;});
+  return pages;
+}
+const enLines=t=>Math.max(1,Math.ceil(t.length/88));
+const writeLines=t=>enLines(t)>=3?3:2;
+// 화면에서 실제 높이를 재서 A4 한 쪽(인쇄 영역 약 1047px)에 들어가는 만큼씩 나눔
+const PAGE_H=1047, SAFE=36;
+function measure(wsClass,parts){
+  const box=document.createElement("div");
+  box.style.cssText="position:absolute;left:-10000px;top:0;width:794px;visibility:hidden";
+  box.innerHTML=`<div class="ws ${wsClass}" style="min-height:0;display:block">${parts.join("")}</div>`;
+  document.body.appendChild(box);
+  const hs=[...box.firstChild.children].map(el=>{const cs=getComputedStyle(el);return el.getBoundingClientRect().height+parseFloat(cs.marginTop)+parseFloat(cs.marginBottom)});
+  box.remove(); return hs;
+}
+function paginateMeasured(wsClass,items,itemHTML,firstTop,contTop,footHTML){
+  const hs=measure(wsClass,[`<div>${firstTop}</div>`,`<div>${contTop}</div>`,footHTML,...items.map(itemHTML)]);
+  const [hFirst,hCont,hFoot]=hs, ih=hs.slice(3), pages=[[]];
+  let cap=PAGE_H-SAFE-hFirst-hFoot-12, used=0;
+  items.forEach((it,i)=>{
+    if(pages[pages.length-1].length&&used+ih[i]>cap){pages.push([]);used=0;cap=PAGE_H-SAFE-hCont-hFoot-12;}
+    pages[pages.length-1].push(it); used+=ih[i];
+  });
+  return pages;
+}
+function contHead(g,t,key){return `<div class="ws-cont"><span>${esc(g.school)} ${esc(g.grade)} ${testName(g)}${key?" · 정답지":""} (계속)</span><span>${esc(t.code)}</span></div>`}
+function sentSheets(g,copies){
+  const out=[];
+  g.tests.forEach(t=>{
+    const idx=t.items.map((it,i)=>({...it,no:i+1}));
+    const qHTML=it=>`<div class="ss-item"><span class="ss-no">${it.no}</span><div class="ss-en">${esc(it.en)}</div>${'<div class="ss-line"></div>'.repeat(writeLines(it.en))}</div>`;
+    const pages=paginateMeasured("",idx,qHTML,head(g,t,false),contHead(g,t,false),foot(g,t," · 1/2쪽"));
+    const html=pages.map((chunk,p)=>`<div class="ws">${p===0?head(g,t,false):contHead(g,t,false)}<div class="ss-list">${
+      chunk.map(qHTML).join("")
+    }</div>${foot(g,t,pages.length>1?` · ${p+1}/${pages.length}쪽`:"")}</div>`);
+    for(let c=0;c<copies;c++) out.push(...html);
+  });
+  g.tests.forEach(t=>{
+    const idx=t.items.map((it,i)=>({...it,no:i+1}));
+    const aHTML=it=>`<div class="ss-item"><span class="ss-no">${it.no}</span><div class="ss-en">${esc(it.en)} <span class="ws-src">${esc(shortSrc(it.src))}</span></div><div class="ss-ko">${esc(it.ko)}</div></div>`;
+    const pages=paginateMeasured("ss-key",idx,aHTML,head(g,t,true),contHead(g,t,true),foot(g,t," · 1/2쪽"));
+    pages.forEach((chunk,p)=>out.push(`<div class="ws ss-key">${p===0?head(g,t,true):contHead(g,t,true)}<div class="ss-list">${
+      chunk.map(aHTML).join("")
+    }</div>${foot(g,t,pages.length>1?` · ${p+1}/${pages.length}쪽`:"")}</div>`));
+  });
+  return out;
 }
 function foot(g,t,pg=""){return `<div class="ws-foot"><span>${esc(g.footer)}</span><span>${esc(t.code)}${pg}</span></div>`}
 function sheetsHTML(g,copies=1){
+  if(g.type==="sent") return sentSheets(g,copies);
   const out=[];
   const PER=50;
   g.tests.forEach(t=>{
     const total=Math.ceil(t.items.length/PER), pages=[];
     for(let p=0;p<total;p++){
       const chunk=t.items.slice(p*PER,(p+1)*PER), rows=Math.ceil(chunk.length/2);
-      const top=p===0?head(g,t,false):`<div class="ws-cont"><span>${esc(g.school)} ${esc(g.grade)} 단어 시험 (계속)</span><span>${esc(t.code)}</span></div>`;
+      const top=p===0?head(g,t,false):`${contHead(g,t,false)}`;
       pages.push(`<div class="ws">${top}<div class="ws-grid" style="grid-template-rows:repeat(${rows},auto);grid-auto-flow:column">${
         chunk.map((it,k)=>`<div class="ws-item"><span class="ws-no">${p*PER+k+1}</span><span class="ws-q ${it.dir==="e2k"?"en":""}">${esc(it.dir==="e2k"?it.en:it.ko)}</span><span class="ws-blank"></span></div>`).join("")
       }</div>${foot(g,t,total>1?` · ${p+1}/${total}쪽`:"")}</div>`);
@@ -463,16 +587,21 @@ function arm(btn,key,label,action){
   setTimeout(()=>{armed.delete(key);if(btn.isConnected)btn.textContent=old},3000);
 }
 function renderManageList(){
-  const el=$("g-list");
+  const el=$("g-list"), banks=wordBanks, unitsFor=(s,g)=>banksUnits(s,g,wordBanks);
   if(!banks.length){el.innerHTML='<div class="empty"><span>저장된 단어장이 없습니다. 위에서 첫 단어장을 등록해 주세요.</span></div>';return}
   const keys=[...new Set(banks.map(b=>b.school+"\u0000"+b.grade))].sort((a,b)=>{
     const [s1,g1]=a.split("\u0000"),[s2,g2]=b.split("\u0000");return natural(s1,s2)||GRADE_ORDER.indexOf(g1)-GRADE_ORDER.indexOf(g2)});
+  const sentHTML=sentBanks.length?`<h2 style="margin-top:16px">등록된 문장 자료 (문장 해석 시험)</h2>`+[...new Set(sentBanks.map(b=>b.school+"\u0000"+b.grade))].map(k=>{
+    const [s,g]=k.split("\u0000"), us=banksUnits(s,g,sentBanks);
+    return `<div class="grp"><div class="grp-h"><b>${esc(s)} ${esc(g)} <span class="hint" style="display:inline;font-weight:400">· ${us.length}개 지문 · ${us.reduce((n,u)=>n+u.sentences.length,0)}문장</span></b></div>
+      <div class="chips">${us.map(u=>`<span class="chip" style="cursor:default">${esc(u.unit)}<span>${u.sentences.length}</span></span>`).join("")}</div></div>`;
+  }).join(""):"";
   el.innerHTML=keys.map(k=>{
     const [s,g]=k.split("\u0000"), us=unitsFor(s,g), total=us.reduce((n,u)=>n+mainCount(u),0), midN=us.reduce((n,u)=>n+u.words.filter(w=>isMain(w)&&w.lv==="mid").length,0);
     return `<div class="grp"><div class="grp-h"><b>${esc(s)} ${esc(g)} <span class="hint" style="display:inline;font-weight:400">· ${us.length}개 범위 · ${total}단어</span></b>
       ${canWrite?`<button class="btn small danger" data-delgrp="${esc(k)}">이 학년 전체 삭제</button>`:""}</div>
       <div class="chips">${us.map(u=>`<span class="chip" style="cursor:default">${esc(u.unit)}<span>${mainCount(u)}</span>${canWrite?` <button class="btn small danger" style="padding:0 4px;border:0;background:none" data-del="${esc(u.id)}" aria-label="${esc(u.unit)} 삭제">×</button>`:""}</span>`).join("")}</div></div>`;
-  }).join("");
+  }).join("")+sentHTML;
   el.querySelectorAll("[data-del]").forEach(b=>b.onclick=()=>arm(b,"u"+b.dataset.del,"삭제?",()=>delUnits([b.dataset.del])));
   el.querySelectorAll("[data-delgrp]").forEach(b=>b.onclick=()=>arm(b,"g"+b.dataset.delgrp,"한 번 더 누르면 삭제",()=>{
     const [s,g]=b.dataset.delgrp.split("\u0000"); delUnits(unitsFor(s,g).map(u=>u.id));

@@ -174,6 +174,35 @@
   .wstatus.ok{color:var(--ok)}
   .wstatus.bad{color:var(--no)}
   .pool{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
+  /* ═══ 랜덤 단어 모의테스트 ═══ */
+  .rt-step{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:12px 12px 10px;margin-bottom:12px}
+  .rt-lbl{font-size:12px;font-weight:800;color:var(--navy);margin-bottom:8px}
+  .rt-chips{display:flex;flex-wrap:wrap;gap:6px}
+  .rt-chip{border:1.5px solid var(--line);background:#fff;color:var(--ink);border-radius:999px;padding:7px 11px;font:inherit;font-size:12.5px;font-weight:700;cursor:pointer}
+  .rt-chip.on{background:var(--navy);border-color:var(--navy);color:#fff}
+  .rt-chip.grp{border-color:var(--navy);color:var(--navy)}
+  .rt-chip.grp.on{color:#fff}
+  .rt-chips+.rt-chips{margin-top:8px}
+  .rt-info{font-size:12.5px;color:var(--ink-dim);margin-top:8px;line-height:1.5}
+  .rt-info b{color:var(--navy)}
+  .rt-q{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-bottom:8px}
+  .rt-q .top{display:flex;gap:8px;align-items:baseline}
+  .rt-q .no{font-size:11.5px;font-weight:800;color:var(--navy);min-width:24px}
+  .rt-q .rt-w{font-size:16px;font-weight:700;word-break:keep-all;overflow-wrap:anywhere}
+  .rt-q .rt-w.en{font-family:Georgia,'Times New Roman',serif}
+  .rt-q input{width:100%;margin-top:7px;border:1.5px solid var(--line);border-radius:9px;padding:9px 10px;font:inherit;font-size:15px;background:#fff;color:var(--ink)}
+  .rt-q input:focus{outline:none;border-color:var(--navy)}
+  .rt-q input:disabled{background:var(--card-2);color:var(--ink)}
+  .rt-ans{margin-top:7px;font-size:13.5px;padding:7px 9px;border-radius:8px;background:rgba(27,47,94,.06)}
+  .rt-ans b{color:var(--navy)}
+  .rt-mark{display:flex;gap:6px;margin-top:7px}
+  .rt-mark button{flex:1;border:1.5px solid var(--line);background:#fff;border-radius:9px;padding:8px 0;font:inherit;font-size:15px;font-weight:800;cursor:pointer;color:var(--ink-dim)}
+  .rt-mark button.o.on{background:var(--ok);border-color:var(--ok);color:#fff}
+  .rt-mark button.x.on{background:var(--no);border-color:var(--no);color:#fff}
+  .rt-q.ok{border-color:var(--ok);background:var(--ok-bg)}
+  .rt-q.no{border-color:var(--no);background:var(--no-bg)}
+  .rt-bar{position:sticky;bottom:0;background:var(--bg);padding:10px 0 calc(10px + env(safe-area-inset-bottom,0px));border-top:1px solid var(--line);margin-top:6px}
+  .rt-score{text-align:center;font-size:20px;font-weight:900;color:var(--navy);margin:6px 0 10px}
   .wbtn{
     width:100%;padding:9px;border-radius:10px;border:1px solid var(--line);
     background:var(--card);color:var(--navy);font-weight:700;font-size:13px;cursor:pointer;margin-bottom:4px;
@@ -434,6 +463,7 @@
     <div id="wrongCardBox"></div>
     <div class="termbar" id="termbar"></div>
     <p class="home-guide">지문을 선택하면 <b>① 어법 → ② 동사형고치기</b> 순서로 연습할 수 있어요. 새 지문은 계속 추가됩니다.</p>
+    <div id="rtCardBox"></div>
     <div class="plist" id="plist"></div>
     <p class="home-guide" id="vguide" style="margin-top:20px">📒 <b>단어 암기</b> — 플래시카드로 외우고, 객관식으로 점검하세요.</p>
     <div class="plist" id="vlist"></div>
@@ -474,6 +504,40 @@
       <div id="mcArea"></div>
     </section>
 
+    <footer>경운SKY입시학원 · 변서희 선생님 영어 자료</footer>
+  </div>
+
+  <!-- ═══════════ 랜덤 단어 모의테스트 ═══════════ -->
+  <div id="rtest" style="display:none">
+    <header>
+      <button class="back" onclick="rtExit()">← 목록으로</button>
+      <h1>랜덤 단어 <em>모의테스트</em></h1>
+    </header>
+    <div id="rtSetup">
+      <p class="guide">학원 단어시험과 <b>같은 범위·같은 방식</b>으로 매번 새로 뽑아요. 뜻을 직접 쓰고, 다 쓰면 정답을 보고 <b>스스로 O/X 채점</b>해요.</p>
+      <div class="rt-step">
+        <div class="rt-lbl">1. 시험 범위 (여러 개 고를 수 있어요)</div>
+        <div class="rt-chips" id="rtGroups"></div>
+        <div class="rt-chips" id="rtUnits"></div>
+        <div class="rt-info" id="rtPool"></div>
+      </div>
+      <div class="rt-step">
+        <div class="rt-lbl">2. 출제 방식</div>
+        <div class="rt-chips" id="rtMode"></div>
+      </div>
+      <div class="rt-step">
+        <div class="rt-lbl">3. 문항 수</div>
+        <div class="rt-chips" id="rtCount"></div>
+        <div class="rt-info" id="rtCountNote"></div>
+      </div>
+      <button class="wbtn" style="background:var(--navy);color:#fff;border-color:var(--navy);padding:13px;font-size:15px" onclick="rtStart()">🎯 시험 시작</button>
+      <div class="wstatus" id="rtMsg" style="text-align:center"></div>
+    </div>
+    <div id="rtTest" style="display:none">
+      <p class="guide" id="rtHead"></p>
+      <div id="rtList"></div>
+      <div class="rt-bar" id="rtBar"></div>
+    </div>
     <footer>경운SKY입시학원 · 변서희 선생님 영어 자료</footer>
   </div>
 
@@ -4171,6 +4235,11 @@ function buildHome(){
       <div class="m">${p.sub} · ${qTxt}</div></div>
       <div class="go">›</div></div>`;
   }).join('')+`<div class="coming">${comingTxt}</div>`;
+  document.getElementById('rtCardBox').innerHTML=CUR_TERM==='final'?`<div class="pcard" style="border:2px solid var(--amber);background:#fbf3df;margin-bottom:10px" onclick="openRTest()">
+      <div class="pnum" style="background:var(--amber)">모의</div>
+      <div class="pinfo"><div class="t">🎯 랜덤 단어 모의테스트</div>
+      <div class="m">학원 단어시험과 같은 범위에서 매번 새로 출제 · 뜻 쓰기 + 자기채점</div></div>
+      <div class="go">›</div></div>`:'';
   const vInTerm=VOCAB.map((v,i)=>({v,i})).filter(x=>x.v.term===CUR_TERM);
   document.getElementById('vguide').style.display=vInTerm.length?'':'none';
   document.getElementById('vlist').innerHTML=vInTerm.map(({v,i},k)=>{
@@ -4197,7 +4266,183 @@ function openPassage(i){
   window.scrollTo({top:0});
 }
 
+/* ═══ 랜덤 단어 모의테스트 ═══
+   단어시험 생성기(wordtest/)와 같은 단어장 파일·같은 규칙을 씁니다.
+   - 핵심·고난도 어휘 + 유의어 출제, 반의어는 출제하지 않음(같은 학년 어디서든 반의어로 나온 단어는 유의어로도 제외)
+   - 중등 수준 단어는 10%까지만, 단어가 모자라면 핵심어 → 어려운 유의어 → 쉬운 유의어 순으로 채움 */
+const RT={banks:null,sel:new Set(),mode:'e2k',count:20,test:null,checked:false,marks:[]};
+const rtEsc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const rtIsMain=w=>!w.kind||w.kind==='core'||w.kind==='star';
+const rtGroupKey=u=>{const m=String(u).match(/^(.*?(DAY\s*\d+|\d+\s*[강과]))/i);return m?m[1]:u};
+const rtLabel=u=>String(u).replace(/^\S+\s+/,'');
+function rtRand(n){const a=new Uint32Array(1);crypto.getRandomValues(a);return a[0]%n}
+function rtShuffle(arr){const a=arr.slice();for(let i=a.length-1;i>0;i--){const j=rtRand(i+1);[a[i],a[j]]=[a[j],a[i]]}return a}
+async function openRTest(){
+  document.getElementById('home').style.display='none';
+  document.getElementById('rtest').style.display='block';
+  window.scrollTo({top:0});
+  if(RT.test&&!RT.done){ document.getElementById('rtSetup').style.display='none'; document.getElementById('rtTest').style.display='block'; return; }
+  rtShowSetup();
+  if(!RT.banks){
+    document.getElementById('rtPool').textContent='단어장을 불러오는 중…';
+    try{
+      const r=await fetch('wordtest/words.json?t='+Date.now(),{cache:'no-store'});
+      const d=await r.json();
+      RT.banks=(d.banks||[]).filter(b=>b.school==='제일고'&&b.grade==='고1').sort((a,b)=>(a.order||0)-(b.order||0));
+    }catch(e){ document.getElementById('rtPool').textContent='단어장을 불러오지 못했어요. 인터넷 연결을 확인하고 다시 들어와 주세요.'; return; }
+  }
+  rtRender();
+}
+function rtExit(){
+  if(RT.test&&!RT.done&&!RT.checked){
+    if(!window.confirm('시험을 그만두고 나갈까요? 다시 들어오면 이어서 풀 수 있어요.')) return;
+  }
+  goHome();
+}
+function rtShowSetup(){
+  document.getElementById('rtSetup').style.display='block';
+  document.getElementById('rtTest').style.display='none';
+}
+function rtRender(){
+  const units=RT.banks||[];
+  const keys=[...new Set(units.map(u=>rtGroupKey(u.unit)))];
+  document.getElementById('rtGroups').innerHTML=keys.map(k=>{
+    const mem=units.filter(u=>rtGroupKey(u.unit)===k), on=mem.length&&mem.every(u=>RT.sel.has(u.unit));
+    return `<button class="rt-chip grp${on?' on':''}" onclick="rtToggleGroup('${rtEsc(k)}')">${rtEsc(rtLabel(k))} 전체</button>`;
+  }).join('');
+  document.getElementById('rtUnits').innerHTML=units.map(u=>`<button class="rt-chip${RT.sel.has(u.unit)?' on':''}" onclick="rtToggleUnit('${rtEsc(u.unit)}')">${rtEsc(rtLabel(u.unit))}</button>`).join('');
+  const modes=[['e2k','영어 → 뜻 쓰기'],['k2e','뜻 → 영어 쓰기'],['mix','섞어서']];
+  document.getElementById('rtMode').innerHTML=modes.map(([v,l])=>`<button class="rt-chip${RT.mode===v?' on':''}" onclick="RT.mode='${v}';rtRender()">${l}</button>`).join('');
+  document.getElementById('rtCount').innerHTML=[20,50,100].map(n=>`<button class="rt-chip${RT.count===n?' on':''}" onclick="RT.count=${n};rtRender()">${n}문항</button>`).join('');
+  const pool=rtPool();
+  document.getElementById('rtPool').innerHTML=RT.sel.size?`선택 범위의 출제 가능 단어 <b>${pool.length}</b>개`:'범위를 하나 이상 골라 주세요.';
+  document.getElementById('rtCountNote').innerHTML=RT.sel.size&&pool.length<RT.count?`범위 안 단어가 ${pool.length}개라 <b>${pool.length}문항 전부</b> 출제돼요.`:'';
+}
+function rtToggleGroup(k){
+  const mem=RT.banks.filter(u=>rtGroupKey(u.unit)===k), all=mem.every(u=>RT.sel.has(u.unit));
+  mem.forEach(u=>all?RT.sel.delete(u.unit):RT.sel.add(u.unit)); rtRender();
+}
+function rtToggleUnit(n){ RT.sel.has(n)?RT.sel.delete(n):RT.sel.add(n); rtRender(); }
+function rtPool(){
+  const units=(RT.banks||[]).filter(u=>RT.sel.has(u.unit));
+  const ant=new Set((RT.banks||[]).flatMap(u=>u.words.filter(w=>w.kind==='ant').map(w=>(w.en||'').trim().toLowerCase())));
+  const seen=new Set(), pool=[];
+  const add=(w,u)=>{const k=(w.en||'').trim().toLowerCase(); if(k&&!seen.has(k)){seen.add(k);pool.push({...w,src:u.unit})}};
+  units.forEach(u=>u.words.filter(rtIsMain).forEach(w=>add(w,u)));
+  units.forEach(u=>u.words.filter(w=>!rtIsMain(w)&&w.kind!=='ant'&&!ant.has((w.en||'').trim().toLowerCase())).forEach(w=>add(w,u)));
+  return pool;
+}
+function rtPick(pool,n){
+  const cap=k=>Math.floor(k*0.1);
+  const hi=pool.filter(w=>w.lv!=='mid').length, mid=pool.length-hi;
+  if(hi+Math.min(mid,cap(n))>=n){
+    const out=[]; let m=0;
+    for(const w of rtShuffle(pool)){ if(out.length>=n) break; if(w.lv==='mid'){ if(m>=cap(n)) continue; m++; } out.push(w); }
+    return out;
+  }
+  const tiers=[pool.filter(w=>rtIsMain(w)&&w.lv!=='mid'),pool.filter(w=>rtIsMain(w)&&w.lv==='mid'),pool.filter(w=>!rtIsMain(w)&&w.lv!=='mid'),pool.filter(w=>!rtIsMain(w)&&w.lv==='mid')];
+  const out=[]; for(const t of tiers) for(const w of rtShuffle(t)){ if(out.length>=n) break; out.push(w); }
+  return rtShuffle(out);
+}
+function rtRangeLabel(){
+  const units=RT.banks.filter(u=>RT.sel.has(u.unit)), parts=[], done=new Set();
+  units.forEach(u=>{
+    if(done.has(u.unit)) return; const k=rtGroupKey(u.unit), mem=RT.banks.filter(x=>rtGroupKey(x.unit)===k);
+    if(mem.length>1&&mem.every(x=>RT.sel.has(x.unit))){ parts.push(rtLabel(k)+' 전체'); mem.forEach(x=>done.add(x.unit)); }
+    else { parts.push(rtLabel(u.unit)); done.add(u.unit); }
+  });
+  return parts.join(', ');
+}
+function rtStart(){
+  const msg=document.getElementById('rtMsg');
+  if(!RT.banks||!RT.sel.size){ msg.className='wstatus bad'; msg.textContent='시험 범위를 먼저 골라 주세요.'; return; }
+  const pool=rtPool(), n=Math.min(RT.count,pool.length);
+  const picked=rtPick(pool,n);
+  let dirs=picked.map(()=>RT.mode);
+  if(RT.mode==='mix'){ const h=Math.floor(picked.length/2); dirs=rtShuffle(picked.map((_,i)=>i<h?'e2k':'k2e')); }
+  RT.test={range:rtRangeLabel(),items:picked.map((w,i)=>({en:w.en,ko:w.ko,dir:dirs[i],ans:''}))};
+  RT.checked=false; RT.done=false; RT.marks=RT.test.items.map(()=>null);
+  msg.textContent='';
+  document.getElementById('rtSetup').style.display='none';
+  document.getElementById('rtTest').style.display='block';
+  rtDrawTest(); window.scrollTo({top:0});
+}
+function rtDrawTest(){
+  const t=RT.test, modeTxt={e2k:'영어 → 뜻 쓰기',k2e:'뜻 → 영어 쓰기',mix:'영어↔뜻 섞어서'}[RT.mode];
+  document.getElementById('rtHead').innerHTML=`범위: <b>${rtEsc(t.range)}</b> · ${t.items.length}문항 · ${modeTxt}`;
+  document.getElementById('rtList').innerHTML=t.items.map((it,i)=>{
+    const q=it.dir==='e2k'?it.en:it.ko, a=it.dir==='e2k'?it.ko:it.en;
+    const st=RT.marks[i]===true?' ok':RT.marks[i]===false?' no':'';
+    return `<div class="rt-q${st}" id="rtq${i}"><div class="top"><span class="no">${i+1}</span><span class="rt-w${it.dir==='e2k'?' en':''}">${rtEsc(q)}</span></div>
+      <input id="rti${i}" value="${rtEsc(it.ans)}" ${RT.checked?'disabled':''} placeholder="${it.dir==='e2k'?'뜻을 쓰세요':'영어로 쓰세요'}" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="next" oninput="RT.test.items[${i}].ans=this.value;rtDrawBar()" onkeydown="if(event.key==='Enter'){event.preventDefault();const n=document.getElementById('rti${i+1}');if(n)n.focus();else this.blur();}">
+      ${RT.checked?`<div class="rt-ans">정답: <b>${rtEsc(a)}</b></div>
+      <div class="rt-mark"><button class="o${RT.marks[i]===true?' on':''}" onclick="rtMark(${i},true)">O 맞음</button><button class="x${RT.marks[i]===false?' on':''}" onclick="rtMark(${i},false)">X 틀림</button></div>`:''}
+    </div>`;
+  }).join('');
+  rtDrawBar();
+}
+function rtDrawBar(){
+  const t=RT.test, bar=document.getElementById('rtBar'), N=t.items.length;
+  if(!RT.checked){
+    const done=t.items.filter(it=>it.ans.trim()).length;
+    bar.innerHTML=`<div class="wstatus" style="text-align:center;margin-bottom:6px">작성 ${done} / ${N}</div>
+      <button class="vfcheck" style="width:100%" onclick="rtCheck()">✅ 다 썼어요 — 정답 보고 채점하기</button>`;
+    return;
+  }
+  const marked=RT.marks.filter(m=>m!==null).length, ok=RT.marks.filter(m=>m===true).length;
+  if(marked<N){
+    bar.innerHTML=`<div class="wstatus" style="text-align:center;margin-bottom:6px">정답을 보고 <b>O / X</b>를 눌러 주세요 · 채점 ${marked} / ${N}</div>
+      <button class="wbtn" onclick="rtNextUnmarked()">↓ 아직 채점 안 한 문제로</button>`;
+    return;
+  }
+  const sent=RT.sentAt?`✅ 전송 완료 (${RT.sentAt})`:'📤 내 점수 선생님께 전송';
+  bar.innerHTML=`<div class="rt-score">${ok} / ${N}점 (${Math.round(ok/N*100)}%)</div>
+    <button class="wbtn" id="rtSendBtn" style="background:var(--navy);color:#fff;border-color:var(--navy);padding:12px" ${RT.sentAt?'disabled':''} onclick="rtSend()">${sent}</button>
+    <div class="wstatus" id="rtSendMsg" style="text-align:center"></div>
+    <div style="display:flex;gap:8px;margin-top:8px">
+      <button class="wbtn" style="flex:1" onclick="rtOnlyWrong()">✕ 틀린 것만 보기</button>
+      <button class="wbtn" style="flex:1" onclick="rtNew()">🔄 새 시험 만들기</button>
+    </div>`;
+}
+function rtCheck(){
+  const t=RT.test, blank=t.items.filter(it=>!it.ans.trim()).length;
+  if(blank&&!window.confirm(`아직 ${blank}문제를 안 썼어요. 그래도 정답을 볼까요?\n(빈칸은 자동으로 X 처리돼요)`)) return;
+  RT.checked=true; RT.marks=t.items.map(it=>it.ans.trim()?null:false);
+  rtDrawTest();
+  const first=RT.marks.findIndex(m=>m===null); if(first>=0) document.getElementById('rtq'+first).scrollIntoView({behavior:'smooth',block:'center'});
+}
+function rtMark(i,v){
+  RT.marks[i]=v;
+  const el=document.getElementById('rtq'+i); el.classList.toggle('ok',v===true); el.classList.toggle('no',v===false);
+  el.querySelector('.o').classList.toggle('on',v===true); el.querySelector('.x').classList.toggle('on',v===false);
+  rtDrawBar();
+  if(RT.marks.every(m=>m!==null)) RT.done=true;
+}
+function rtNextUnmarked(){ const i=RT.marks.findIndex(m=>m===null); if(i>=0) document.getElementById('rtq'+i).scrollIntoView({behavior:'smooth',block:'center'}); }
+function rtOnlyWrong(){
+  RT.test.items.forEach((_,i)=>{ const el=document.getElementById('rtq'+i); el.style.display=RT.marks[i]===false||el.style.display==='none'?'':'none'; });
+  const anyHidden=RT.test.items.some((_,i)=>document.getElementById('rtq'+i).style.display==='none');
+  if(!anyHidden) RT.test.items.forEach((_,i)=>document.getElementById('rtq'+i).style.display='');
+}
+function rtNew(){ RT.test=null; RT.checked=false; RT.done=false; RT.sentAt=''; rtShowSetup(); rtRender(); window.scrollTo({top:0}); }
+function rtSend(){
+  if(!STUDENT||STUDENT.trim().length<2){
+    const n=(window.prompt('이름을 입력해 주세요 (성적표에 기록됩니다)')||'').trim();
+    if(n.length<2){ alert('이름이 있어야 점수를 전송할 수 있어요!'); return; }
+    STUDENT=n; try{ localStorage.setItem('gwsky_name', n); }catch(e){}
+  }
+  const N=RT.test.items.length, ok=RT.marks.filter(m=>m===true).length;
+  if(!window.confirm(`${STUDENT}님, 단어 모의테스트 점수(${ok}/${N})를 선생님께 전송할까요?`)) return;
+  const btn=document.getElementById('rtSendBtn'), msg=document.getElementById('rtSendMsg');
+  btn.disabled=true; btn.textContent='전송 중…';
+  const data=new URLSearchParams({name:STUDENT,title:'[단어 모의] '+RT.test.range+' · '+N+'문항',score:ok,total:N,pct:Math.round(ok/N*100)+'%'});
+  fetch(RESULT_URL,{method:'POST',mode:'no-cors',body:data})
+    .then(()=>{ RT.sentAt=new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'}); btn.textContent='✅ 전송 완료 ('+RT.sentAt+')'; msg.className='wstatus ok'; msg.textContent='선생님 성적표에 기록되었어요'; })
+    .catch(()=>{ btn.disabled=false; btn.textContent='📤 다시 전송하기'; msg.className='wstatus bad'; msg.textContent='전송에 실패했어요. 인터넷 연결을 확인하고 다시 눌러 주세요.'; });
+}
+
 function goHome(){
+  document.getElementById('rtest').style.display='none';
   document.getElementById('study').style.display='none';
   document.getElementById('vstudy').style.display='none';
   document.getElementById('home').style.display='block';

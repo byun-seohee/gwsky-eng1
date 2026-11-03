@@ -391,7 +391,9 @@ function currentPool(){
   const add=(w,u)=>{const k=(w.en||"").trim().toLowerCase(); if(k&&!seen.has(k)){seen.add(k);pool.push({...w,src:u.unit});return true}return false};
   us.forEach(u=>u.words.filter(isMain).forEach(w=>add(w,u)));
   const main=pool.length;
-  us.forEach(u=>u.words.filter(w=>!isMain(w)&&w.kind!=="ant").forEach(w=>{if(withSyn) add(w,u); else if(!seen.has((w.en||"").trim().toLowerCase())) extra++;}));
+  // 반의어는 출제하지 않음: 같은 학년 어느 지문에서든 반의어로 나온 단어는 유의어 자격으로도 내지 않음(핵심·고난도 어휘는 예외)
+  const antSet=new Set(unitsFor($("m-school").value,$("m-grade").value).flatMap(u=>u.words.filter(w=>w.kind==="ant").map(w=>(w.en||"").trim().toLowerCase())));
+  us.forEach(u=>u.words.filter(w=>!isMain(w)&&w.kind!=="ant"&&!antSet.has((w.en||"").trim().toLowerCase())).forEach(w=>{if(withSyn) add(w,u); else if(!seen.has((w.en||"").trim().toLowerCase())) extra++;}));
   return {units:us,pool,main,syn:pool.length-main,hasSyn:us.some(u=>u.words.some(w=>!isMain(w)))};
 }
 function rangeLabel(us){

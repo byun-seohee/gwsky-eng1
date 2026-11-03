@@ -115,13 +115,14 @@ table.t tr:last-child td{border-bottom:0}
 .ws-cont{display:flex;justify-content:space-between;border-bottom:2px solid #1E3A8A;padding-bottom:6px;font-size:13px;font-weight:700;color:#1E3A8A}
 .ws-src{margin-left:4px;font-size:9px;color:#6B7280;white-space:nowrap;font-family:"Malgun Gothic","맑은 고딕",sans-serif}
 .ss-list{display:flex;flex-direction:column;margin-top:12px;flex:1}
-.ss-item{display:grid;grid-template-columns:28px minmax(0,1fr);column-gap:8px;padding:9px 0 10px;border-bottom:1px solid #E5E7EB;break-inside:avoid;page-break-inside:avoid}
+.ss-item{display:grid;grid-template-columns:28px minmax(0,1fr);column-gap:8px;padding:6px 0 7px;border-bottom:1px solid #E5E7EB;break-inside:avoid;page-break-inside:avoid}
 .ss-no{color:#1E3A8A;font-weight:700;font-size:13px;font-variant-numeric:tabular-nums;padding-top:1px}
-.ss-en{font-family:"Source Serif 4",Georgia,"Times New Roman",serif;font-size:14.5px;line-height:1.55;overflow-wrap:anywhere}
-.ss-line{grid-column:2;height:27px;border-bottom:1px solid #9CA3AF}
+.ss-en{font-family:"Source Serif 4",Georgia,"Times New Roman",serif;font-size:14px;line-height:1.5;overflow-wrap:anywhere}
+.ss-line{grid-column:2;height:25px;border-bottom:1px solid #9CA3AF}
 .ss-key .ss-item{padding:6px 0 7px}
 .ss-key .ss-en{font-size:11.5px;color:#4B5563;line-height:1.45}
 .ss-ko{grid-column:2;font-size:13px;line-height:1.55;margin-top:2px;overflow-wrap:anywhere}
+.ss-pt{grid-column:2;font-size:10.5px;color:#1E3A8A;margin-top:2px}
 .ss-key .ws-src{font-size:10px}
 .ws-foot{margin-top:18px;border-top:1px solid #D1D5DB;padding-top:6px;font-size:11px;color:#4B5563;display:flex;justify-content:space-between}
 </style>
@@ -162,7 +163,7 @@ table.t tr:last-child td{border-bottom:0}
     <p class="guide-h">문장 해석 시험</p>
     <ol>
       <li>맨 위 <b>시험 종류</b>에서 <b>‘문장 해석 시험’</b>을 누릅니다.</li>
-      <li>학교·학년과 범위를 단어 시험과 똑같이 고릅니다. 지문마다 <b>2문장씩</b> 자동으로 뽑힙니다. (예: 14강 전체 4지문 → 8문장)</li>
+      <li>학교·학년과 범위를 단어 시험과 똑같이 고릅니다. 지문마다 <b>2문장씩</b> 자동으로 뽑힙니다. (예: 14강 전체 4지문 → 8문장) 문법 포인트·복문 문장이 우선으로 뽑히고, 정답지에 <b>핵심 구문</b>이 적혀 있어 채점할 때 참고하면 됩니다.</li>
       <li>재시: 정답지의 지문 표시(예: <b>14-2</b>)를 보고 그 지문 칩만 골라 다시 만들면, 같은 지문에서 다른 문장이 나올 수 있습니다.</li>
     </ol>
   </details>
@@ -202,7 +203,7 @@ table.t tr:last-child td{border-bottom:0}
       </div>
       <div class="step">
         <span class="lbl">3. 출제 방식</span>
-        <p class="hint" id="m-sentnote" hidden>지문마다 2문장씩 무작위로 뽑아, 영어 문장을 우리말로 해석하는 시험입니다. 문항 수는 고른 지문 수 × 2로 정해집니다.</p>
+        <p class="hint" id="m-sentnote" hidden>지문마다 2문장씩 무작위로 뽑아, 영어 문장을 우리말로 해석하는 시험입니다. 문법 포인트가 있거나 구조가 복잡한 문장을 우선으로 뽑고, 정답지에 핵심 구문을 적어 줍니다. 문항 수는 고른 지문 수 × 2로 정해집니다.</p>
         <div class="row">
           <div class="seg word-only" id="m-mode">
             <button data-v="e2k" aria-pressed="true">영어 → 뜻</button>
@@ -357,7 +358,9 @@ const SENT_PER=2;
 function buildSentTest(units,letter){
   const items=[];
   units.forEach(u=>{
-    shuffle(u.sentences).slice(0,SENT_PER).sort((a,b)=>a.n-b.n).forEach(x=>items.push({en:x.en,ko:x.ko,src:u.unit}));
+    // 문법 포인트·복문 문장(key)을 먼저 무작위로, 모자라면 나머지에서 채움
+    const pri=shuffle(u.sentences.filter(x=>x.key)), rest=shuffle(u.sentences.filter(x=>!x.key));
+    [...pri,...rest].slice(0,SENT_PER).sort((a,b)=>a.n-b.n).forEach(x=>items.push({en:x.en,ko:x.ko,pt:x.pt||"",src:u.unit}));
   });
   return {code:`${letter}-${code()}`,items};
 }
@@ -500,7 +503,7 @@ function paginate(items,est,first,rest){
 const enLines=t=>Math.max(1,Math.ceil(t.length/88));
 const writeLines=t=>enLines(t)>=3?3:2;
 // 화면에서 실제 높이를 재서 A4 한 쪽(인쇄 영역 약 1047px)에 들어가는 만큼씩 나눔
-const PAGE_H=1047, SAFE=36;
+const PAGE_H=1047, SAFE=28;
 function measure(wsClass,parts){
   const box=document.createElement("div");
   box.style.cssText="position:absolute;left:-10000px;top:0;width:794px;visibility:hidden";
@@ -533,7 +536,7 @@ function sentSheets(g,copies){
   });
   g.tests.forEach(t=>{
     const idx=t.items.map((it,i)=>({...it,no:i+1}));
-    const aHTML=it=>`<div class="ss-item"><span class="ss-no">${it.no}</span><div class="ss-en">${esc(it.en)} <span class="ws-src">${esc(shortSrc(it.src))}</span></div><div class="ss-ko">${esc(it.ko)}</div></div>`;
+    const aHTML=it=>`<div class="ss-item"><span class="ss-no">${it.no}</span><div class="ss-en">${esc(it.en)} <span class="ws-src">${esc(shortSrc(it.src))}</span></div><div class="ss-ko">${esc(it.ko)}</div>${it.pt?`<div class="ss-pt">핵심 구문: ${esc(it.pt)}</div>`:""}</div>`;
     const pages=paginateMeasured("ss-key",idx,aHTML,head(g,t,true),contHead(g,t,true),foot(g,t," · 1/2쪽"));
     pages.forEach((chunk,p)=>out.push(`<div class="ws ss-key">${p===0?head(g,t,true):contHead(g,t,true)}<div class="ss-list">${
       chunk.map(aHTML).join("")

@@ -413,6 +413,7 @@ function rangeLabel(us){
   if(us.length<=3) return us.map(u=>u.unit).join(", ");
   return `${us[0].unit} ~ ${us[us.length-1].unit} (${us.length}개)`;
 }
+function fixedCount(units){return units.length&&units.every(u=>u.count)?Math.max(...units.map(u=>u.count)):0}
 function updatePool(){
   if(testType==="sent"){
     const units=unitsFor($("m-school").value,$("m-grade").value).filter(u=>selected.has(u.id));
@@ -427,9 +428,11 @@ function updatePool(){
     ? `<span>선택 범위 <b>${esc(rangeLabel(units))}</b></span><span>출제 가능 단어 <b>${pool.length}</b>개${syn?` (핵심 ${main} · 유의어 ${syn})`:""}</span>`
     : `<span>범위를 하나 이상 골라주세요.</span>`;
   $("m-count").max=Math.max(1,pool.length);
-  const all=pool.length<ALL_UNDER;
-  $("m-count").value=all?Math.max(1,pool.length):100;
-  $("m-countnote").textContent=units.length?(all?`출제 가능 단어가 ${ALL_UNDER}개 미만이라 전부 출제`:""):"";
+  // 단어장에 문항 수가 정해져 있으면(예: 중3 다의어 20문항) 그 수만큼 무작위 출제
+  const fixed=fixedCount(units);
+  const all=!fixed&&pool.length<ALL_UNDER;
+  $("m-count").value=fixed?Math.min(fixed,Math.max(1,pool.length)):all?Math.max(1,pool.length):100;
+  $("m-countnote").textContent=units.length?(fixed?`범위에서 ${Math.min(fixed,pool.length)}문항 무작위 출제`:all?`출제 가능 단어가 ${ALL_UNDER}개 미만이라 전부 출제`:""):"";
 }
 $("m-mode").querySelectorAll("button").forEach(b=>b.onclick=()=>{
   mode=b.dataset.v; $("m-mode").querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===b));
@@ -482,7 +485,8 @@ $("m-gen").onclick=()=>{
   const {units,pool}=currentPool();
   if(!units.length){status("m-status","범위를 먼저 골라주세요.",false);return}
   if(!pool.length){status("m-status","선택한 범위에 단어가 없습니다.",false);return}
-  let want=pool.length<ALL_UNDER?pool.length:(parseInt($("m-count").value,10)||100); want=Math.max(1,Math.min(want,pool.length));
+  const fixed=fixedCount(units);
+  let want=(!fixed&&pool.length<ALL_UNDER)?pool.length:(parseInt($("m-count").value,10)||fixed||100); want=Math.max(1,Math.min(want,pool.length));
   const n=want; $("m-count").value=n;
   let v=parseInt($("m-versions").value,10)||1; v=Math.max(1,Math.min(6,v)); $("m-versions").value=v;
   let copies=parseInt($("m-copies").value,10)||1; copies=Math.max(1,Math.min(60,copies)); $("m-copies").value=copies;

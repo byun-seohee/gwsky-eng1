@@ -112,6 +112,8 @@ table.t tr:last-child td{border-bottom:0}
 .ws-key .ws-item{grid-template-columns:24px minmax(0,1fr);font-size:11.5px;padding:3px 0;line-height:1.35}
 .ws-key .ws-a{overflow-wrap:anywhere}
 .ws-key .ws-a .en{font-family:"Source Serif 4",Georgia,"Times New Roman",serif}
+.sense{white-space:normal}
+.sense b{color:#1E3A8A;margin-right:1px;font-weight:700}
 .ws-tight .ws-item{padding:1px 0}
 .ws-tight .ws-blank{height:18px}
 .ws-cont{display:flex;justify-content:space-between;border-bottom:2px solid #1E3A8A;padding-bottom:6px;font-size:13px;font-weight:700;color:#1E3A8A}
@@ -618,6 +620,12 @@ function layoutWord(g,t,key,wsClass,cols,itemHTML){
   const avail=h=>PAGE_H-SAFE-h-hFoot-14;
   return packCols(hs,cols,avail(hTop),avail(hCont));
 }
+// 다의어 정답지: 뜻을 ; 기준으로 나눠 ①②③ 번호를 붙임(채점할 때 몇 개 뜻을 썼는지 세기 쉽게)
+function senseList(ko){
+  const parts=String(ko).split(/\s*;\s*/).filter(Boolean);
+  if(parts.length<2) return esc(ko);
+  return parts.map((x,i)=>`<span class="sense"><b>${CIRC[i+1]||i+1}</b>${esc(x)}</span>`).join(" ");
+}
 function sheetsHTML(g,copies=1){
   if(g.type==="sent") return sentSheets(g,copies);
   const out=[];
@@ -636,7 +644,7 @@ function sheetsHTML(g,copies=1){
   });
   g.tests.forEach(t=>{
     const cols=t.items.length>60?4:3;
-    const aHTML=(it,i)=>`<div class="ws-item"><span class="ws-no">${i+1}</span><span class="ws-a">${it.dir==="e2k"?esc(it.ko):`<span class="en">${esc(it.en)}</span>`}${g.multi?`<span class="ws-src">${esc(shortSrc(it.src))}</span>`:""}</span></div>`;
+    const aHTML=(it,i)=>`<div class="ws-item"><span class="ws-no">${i+1}</span><span class="ws-a">${it.dir==="e2k"?(g.hint?senseList(it.ko):esc(it.ko)):`<span class="en">${esc(it.en)}</span>`}${g.multi?`<span class="ws-src">${esc(shortSrc(it.src))}</span>`:""}</span></div>`;
     const counts=layoutWord(g,t,true,"ws-key",cols,aHTML);
     let s=0; counts.forEach((n,p)=>{
       const chunk=t.items.slice(s,s+n), base=s; s+=n;

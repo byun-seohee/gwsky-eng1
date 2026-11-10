@@ -323,6 +323,7 @@ function gradesFor(s){return [...new Set(banks.filter(b=>b.school===s).map(b=>b.
 function banksUnits(s,g,src){return unitsFor(s,g,src)}
 function unitsFor(s,g,src=banks){return src.filter(b=>b.school===s&&b.grade===g).sort((a,b)=>(a.order??1e12)-(b.order??1e12)||natural(a.unit,b.unit))}
 const isMain=w=>!w.kind||w.kind==="core"||w.kind==="star";
+const isTestable=w=>w.kind!=="note"; // 모의고사 각주(*) 단어는 출제하지 않음
 const mainCount=u=>u.words?u.words.filter(isMain).length:(u.sentences||[]).length;
 
 function renderMakeOptions(){
@@ -345,7 +346,7 @@ $("m-school").onchange=()=>{ls.set("school",$("m-school").value);selected.clear(
 $("m-grade").onchange=()=>{ls.set("grade",$("m-grade").value);selected.clear();renderUnits()};
 
 // "매삼영 DAY11-B" → 묶음 "매삼영 DAY11", "올림포스 14강-1" → "올림포스 14강"
-function groupKey(unit){const m=String(unit).match(/^(.*?(DAY\s*\d+|\d+\s*[강과]))/i);return m?m[1]:null}
+function groupKey(unit){const m=String(unit).match(/^(.*?(DAY\s*\d+|\d+\s*[강과월]))/i);return m?m[1]:null}
 function groupLabel(key){return key.replace(/^\S+\s+/,"")}
 function shortSrc(unit){return String(unit||"").replace(/^\S+\s+/,"").replace(/^DAY\s*/i,"").replace(/PART\s*/i,"P")}
 function renderGroups(us){
@@ -393,11 +394,11 @@ function currentPool(){
   const us=unitsFor($("m-school").value,$("m-grade").value).filter(u=>selected.has(u.id));
   const withSyn=true, seen=new Set(), pool=[]; let extra=0;
   const add=(w,u)=>{const k=(w.en||"").trim().toLowerCase(); if(k&&!seen.has(k)){seen.add(k);pool.push({...w,src:u.unit});return true}return false};
-  us.forEach(u=>u.words.filter(isMain).forEach(w=>add(w,u)));
+  us.forEach(u=>u.words.filter(w=>isMain(w)&&isTestable(w)).forEach(w=>add(w,u)));
   const main=pool.length;
   // 반의어는 출제하지 않음: 같은 학년 어느 지문에서든 반의어로 나온 단어는 유의어 자격으로도 내지 않음(핵심·고난도 어휘는 예외)
   const antSet=new Set(unitsFor($("m-school").value,$("m-grade").value).flatMap(u=>u.words.filter(w=>w.kind==="ant").map(w=>(w.en||"").trim().toLowerCase())));
-  us.forEach(u=>u.words.filter(w=>!isMain(w)&&w.kind!=="ant"&&!antSet.has((w.en||"").trim().toLowerCase())).forEach(w=>{if(withSyn) add(w,u); else if(!seen.has((w.en||"").trim().toLowerCase())) extra++;}));
+  us.forEach(u=>u.words.filter(w=>!isMain(w)&&isTestable(w)&&w.kind!=="ant"&&!antSet.has((w.en||"").trim().toLowerCase())).forEach(w=>{if(withSyn) add(w,u); else if(!seen.has((w.en||"").trim().toLowerCase())) extra++;}));
   return {units:us,pool,main,syn:pool.length-main,hasSyn:us.some(u=>u.words.some(w=>!isMain(w)))};
 }
 function rangeLabel(us){

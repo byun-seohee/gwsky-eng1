@@ -190,6 +190,7 @@ table.t tr:last-child td{border-bottom:0}
         </ul>
       </li>
       <li>재시: 정답지의 지문 표시(예: <b>14-2</b>)를 보고 그 지문 칩만 골라 다시 만들면, 같은 지문에서 다른 문장이 나올 수 있습니다.</li>
+      <li><b>달성고 서술형 암기 문장</b>은 지문이 아니라 번호로 출제합니다. 학교를 <b>달성고</b>로 고르면 <b>[번호 __ ~ __번에서] [__문항]</b> 칸이 나오고, 그 범위 안에서 무작위로 뽑습니다. (예: 1~20번에서 10문항) 정답지에 원문 번호가 붙어 있습니다.</li>
     </ol>
   </details>
 
@@ -228,6 +229,11 @@ table.t tr:last-child td{border-bottom:0}
       </div>
       <div class="step">
         <span class="lbl">3. 출제 방식</span>
+        <div class="row" id="m-freebox" hidden>
+          <label class="row" style="gap:6px">번호 <input type="number" id="m-from" min="1" value="1"> ~ <input type="number" id="m-to" min="1" value="20">번에서</label>
+          <label class="row" style="gap:6px"><input type="number" id="m-scount" min="1" value="10">문항</label>
+          <span class="hint" id="m-freenote"></span>
+        </div>
         <p class="hint" id="m-sentnote" hidden>지문마다 2문장씩 무작위로 뽑아, 영어 문장을 우리말로 해석하는 시험입니다. 문법 포인트가 있거나 구조가 복잡한 문장을 우선으로 뽑고, 정답지에 핵심 구문을 적어 줍니다. 문항 수는 고른 지문 수 × 2로 정해집니다.</p>
         <div class="row">
           <div class="seg word-only" id="m-mode">
@@ -311,11 +317,12 @@ function setType(t){
   testType=t;
   $("m-type").querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x.dataset.v===t));
   document.querySelectorAll(".word-only").forEach(el=>el.hidden=t!=="word");
-  $("m-sentnote").hidden=t!=="sent";
+  $("m-sentnote").hidden=t!=="sent"; $("m-freebox").hidden=true;
   selected.clear(); lastIdx=null; generated=null; $("m-preview").hidden=true; $("m-print").disabled=true; status("m-status","",true);
   banks=t==="word"?wordBanks:sentBanks; renderMakeOptions();
 }
 $("m-type").querySelectorAll("button").forEach(b=>b.onclick=()=>setType(b.dataset.v));
+["m-from","m-to","m-scount"].forEach(id=>$(id).addEventListener("input",updatePool));
 
 /* ---------- make: options ---------- */
 function schoolsList(){return [...new Set(banks.map(b=>b.school))].sort(natural)}
@@ -365,6 +372,7 @@ function renderUnits(){
   const us=unitsFor($("m-school").value,$("m-grade").value);
   const ids=new Set(us.map(u=>u.id));
   [...selected].forEach(id=>{if(!ids.has(id))selected.delete(id)});
+  if(us.length===1&&!selected.size) selected.add(us[0].id); // 범위가 하나뿐이면 자동 선택
   renderGroups(us);
   $("m-units").innerHTML=us.map((u,i)=>`<button class="chip" data-i="${i}" data-id="${esc(u.id)}" aria-pressed="${selected.has(u.id)}">${esc(u.unit)}<span>${mainCount(u)}</span></button>`).join("");
   $("m-units").querySelectorAll(".chip").forEach(ch=>ch.onclick=ev=>{
@@ -388,6 +396,24 @@ function buildSentTest(units,letter){
     const pri=shuffle(u.sentences.filter(x=>x.key)), rest=shuffle(u.sentences.filter(x=>!x.key));
     [...pri,...rest].slice(0,SENT_PER).sort((a,b)=>a.n-b.n).forEach(x=>items.push({en:x.en,ko:x.ko,pt:x.pt||"",e:x.e||null,k:x.k||null,src:u.unit}));
   });
+  return {code:`${letter}-${code()}`,items};
+}
+// 번호 범위 + 문항 수로 출제하는 문장 자료(free): 범위 안에서 무작위로 뽑고 순서도 섞음
+const isFree=units=>units.length>0&&units.every(u=>u.free);
+// commit=true(시험지 만들 때)일 때만 정리된 값을 칸에 다시 써 넣음 — 입력 중에는 칸을 건드리지 않음
+function freeRange(units,commit){
+  const all=units.flatMap(u=>u.sentences.map(x=>({...x,src:u.unit}))), max=Math.max(...all.map(x=>x.n));
+  let a=parseInt($("m-from").value,10)||1, b=parseInt($("m-to").value,10)||max;
+  if(a>b) [a,b]=[b,a];
+  a=Math.max(1,Math.min(a,max)); b=Math.max(a,Math.min(b,max));
+  const cand=all.filter(x=>x.n>=a&&x.n<=b);
+  let c=parseInt($("m-scount").value,10)||units[0].defCount||10; c=Math.max(1,Math.min(c,cand.length));
+  if(commit){ $("m-from").value=a; $("m-to").value=b; $("m-scount").value=c; }
+  return {a,b,c,cand,max};
+}
+function buildFreeTest(units,letter){
+  const {c,cand}=freeRange(units,true);
+  const items=shuffle(cand).slice(0,c).map(x=>({en:x.en,ko:x.ko,pt:x.pt||"",e:x.e||null,k:x.k||null,src:`${x.n}번`}));
   return {code:`${letter}-${code()}`,items};
 }
 function currentPool(){
@@ -418,6 +444,14 @@ function fixedCount(units){return units.length&&units.every(u=>u.count)?Math.max
 function updatePool(){
   if(testType==="sent"){
     const units=unitsFor($("m-school").value,$("m-grade").value).filter(u=>selected.has(u.id));
+    const free=isFree(units);
+    $("m-freebox").hidden=!free; $("m-sentnote").hidden=free;
+    if(free){
+      const {a,b,c,cand}=freeRange(units);
+      $("m-freenote").textContent=`(${a}~${b}번 문장 ${cand.length}개 중 무작위)`;
+      $("m-pool").innerHTML=`<span>선택 범위 <b>${esc(rangeLabel(units))}</b></span><span><b>${a}~${b}번</b>에서 <b>${c}</b>문항</span>`;
+      return;
+    }
     const n=units.reduce((k,u)=>k+Math.min(SENT_PER,u.sentences.length),0);
     $("m-pool").innerHTML=units.length
       ? `<span>선택 범위 <b>${esc(rangeLabel(units))}</b></span><span>지문 <b>${units.length}</b>개 × 2문장 = <b>${n}</b>문항</span>`
@@ -511,8 +545,9 @@ function genSent(){
   if(!units.length){status("m-status","범위를 먼저 골라주세요.",false);return}
   let v=parseInt($("m-versions").value,10)||1; v=Math.max(1,Math.min(6,v)); $("m-versions").value=v;
   let copies=parseInt($("m-copies").value,10)||1; copies=Math.max(1,Math.min(60,copies)); $("m-copies").value=copies;
-  const letters="ABCDEF", tests=Array.from({length:v},(_,i)=>buildSentTest(units,letters[i]));
-  generated={type:"sent",multi:units.length>1,school:$("m-school").value, grade:$("m-grade").value, range:rangeLabel(units),
+  const free=isFree(units), fr=free?freeRange(units,true):null;
+  const letters="ABCDEF", tests=Array.from({length:v},(_,i)=>free?buildFreeTest(units,letters[i]):buildSentTest(units,letters[i]));
+  generated={type:"sent",multi:free||units.length>1,school:$("m-school").value, grade:$("m-grade").value, range:rangeLabel(units)+(free?` ${fr.a}~${fr.b}번`:""),
     n:tests[0].items.length, footer:($("m-footer").value.trim()||DEFAULT_FOOTER), date:new Date().toLocaleDateString("ko-KR"), copies, tests};
   const prev=$("m-preview"); prev.hidden=false;
   prev.innerHTML=sheetsHTML(generated).map(h=>`<div class="sheetwrap">${h}</div>`).join("");

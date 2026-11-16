@@ -176,7 +176,7 @@ table.t tr:last-child td{border-bottom:0}
       </li>
       <li><b>출제 방식</b>(영어 → 뜻 / 뜻 → 영어 / 섞어서)을 고릅니다.</li>
       <li><b>인쇄 매수</b>에 학생 수만큼 입력합니다. 시험지를 다르게 나눠야 할 때만 ‘서로 다른 시험지’를 2 이상으로 바꿉니다.</li>
-      <li><b>새 시험지 만들기</b> → <b>인쇄하기</b>를 누르면 인쇄 창이 뜹니다. 정답지는 맨 뒤에 있습니다.</li>
+      <li><b>새 시험지 만들기</b> → <b>전체 인쇄</b>를 누르면 시험지와 정답지(맨 뒤)가 함께 인쇄됩니다. 따로 뽑을 때는 <b>시험지만 인쇄</b> / <b>정답지만 인쇄</b>를 누릅니다. 같은 시험지를 만든 상태에서 누르면 시험지와 정답지가 서로 짝이 맞습니다.</li>
     </ol>
     <p class="guide-h">문장 해석 시험</p>
     <ol>
@@ -252,7 +252,9 @@ table.t tr:last-child td{border-bottom:0}
       </div>
       <div class="row">
         <button class="btn primary" id="m-gen">새 시험지 만들기</button>
-        <button class="btn" id="m-print" disabled>인쇄하기</button>
+        <button class="btn" id="m-print" disabled>전체 인쇄</button>
+        <button class="btn" id="m-print-q" disabled>시험지만 인쇄</button>
+        <button class="btn" id="m-print-a" disabled>정답지만 인쇄</button>
         <span id="m-status" class="status"></span>
       </div>
       <p class="hint">버튼을 누를 때마다 범위 안에서 문제를 새로 뽑습니다. ‘인쇄 매수’는 같은 시험지를 몇 부 넣을지 정하는 칸이라, 시험지를 만든 뒤에 바꿔도 새로 뽑지 않고 인쇄할 때 그대로 반영됩니다. 시험지마다 찍히는 코드(예: A-7KQ2)가 정답지와 짝을 이룹니다. ‘인쇄하기’를 누르면 인쇄 창이 뜨고, 프린터 대신 ‘PDF로 저장’을 고르면 파일로도 받을 수 있습니다.</p>
@@ -318,7 +320,7 @@ function setType(t){
   $("m-type").querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x.dataset.v===t));
   document.querySelectorAll(".word-only").forEach(el=>el.hidden=t!=="word");
   $("m-sentnote").hidden=t!=="sent"; $("m-freebox").hidden=true;
-  selected.clear(); lastIdx=null; generated=null; $("m-preview").hidden=true; $("m-print").disabled=true; status("m-status","",true);
+  selected.clear(); lastIdx=null; generated=null; $("m-preview").hidden=true; setPrintBtns(false); status("m-status","",true);
   banks=t==="word"?wordBanks:sentBanks; renderMakeOptions();
 }
 $("m-type").querySelectorAll("button").forEach(b=>b.onclick=()=>setType(b.dataset.v));
@@ -536,7 +538,7 @@ $("m-gen").onclick=()=>{
   };
   const prev=$("m-preview"); prev.hidden=false;
   prev.innerHTML=sheetsHTML(generated).map(h=>`<div class="sheetwrap">${h}</div>`).join("");
-  $("m-print").disabled=false;
+  setPrintBtns(true);
   status("m-status",`시험지 ${v}종류와 정답지를 만들었습니다. 인쇄하면 시험지가 종류마다 ${copies}부씩(총 ${v*copies}부), 정답지는 종류마다 1부씩 나옵니다.`,true);
 };
 
@@ -551,7 +553,7 @@ function genSent(){
     n:tests[0].items.length, footer:($("m-footer").value.trim()||DEFAULT_FOOTER), date:new Date().toLocaleDateString("ko-KR"), copies, tests};
   const prev=$("m-preview"); prev.hidden=false;
   prev.innerHTML=sheetsHTML(generated).map(h=>`<div class="sheetwrap">${h}</div>`).join("");
-  $("m-print").disabled=false;
+  setPrintBtns(true);
   status("m-status",`문장 해석 시험지 ${v}종류와 정답지를 만들었습니다. 인쇄하면 시험지가 종류마다 ${copies}부씩(총 ${v*copies}부), 정답지는 종류마다 1부씩 나옵니다.`,true);
 }
 const MODE_LABEL={e2k:"영어 → 우리말 뜻 쓰기",k2e:"우리말 → 영어 쓰기",mix:"영어↔우리말 혼합"};
@@ -699,14 +701,22 @@ function fileName(g,ext){
   const d=new Date(), p=x=>String(x).padStart(2,"0");
   return `${g.school}_${g.grade}_단어시험_${d.getFullYear()}${p(d.getMonth()+1)}${p(d.getDate())}_${p(d.getHours())}${p(d.getMinutes())}.${ext}`.replace(/[\\/:*?"<>|\s]+/g,"_");
 }
-function doPrint(){
+function setPrintBtns(on){["m-print","m-print-q","m-print-a"].forEach(id=>$(id).disabled=!on)}
+// part: "all"(시험지+정답지) / "q"(시험지만, 인쇄 매수만큼) / "a"(정답지만, 종류마다 1부)
+function doPrint(part="all"){
   if(!generated) return;
   let copies=parseInt($("m-copies").value,10)||1; copies=Math.max(1,Math.min(60,copies)); $("m-copies").value=copies;
   generated.copies=copies;
-  $("print-area").innerHTML=sheetsHTML(generated,copies).join("");
+  const isKey=h=>/class="ws [^"]*(ws-key|ss-key)/.test(h);
+  let pages=sheetsHTML(generated,part==="a"?1:copies);
+  if(part==="q") pages=pages.filter(h=>!isKey(h));
+  if(part==="a") pages=pages.filter(isKey);
+  $("print-area").innerHTML=pages.join("");
   window.print();
 }
-$("m-print").onclick=doPrint;
+$("m-print").onclick=()=>doPrint("all");
+$("m-print-q").onclick=()=>doPrint("q");
+$("m-print-a").onclick=()=>doPrint("a");
 
 function status(id,msg,ok){const el=$(id);el.textContent=msg;el.className="status "+(ok?"ok":"err")}
 

@@ -465,6 +465,7 @@
     <p class="home-guide">지문을 선택하면 <b>① 어법 → ② 동사형고치기</b> 순서로 연습할 수 있어요. 새 지문은 계속 추가됩니다.</p>
     <div id="rtCardBox"></div>
     <div class="plist" id="plist"></div>
+    <div class="plist" id="vidlist"></div>
     <p class="home-guide" id="vguide" style="margin-top:20px">📒 <b>단어 암기</b> — 플래시카드로 외우고, 객관식으로 점검하세요.</p>
     <div class="plist" id="vlist"></div>
     <footer>경운SKY입시학원 · 변서희 선생님 영어 자료</footer>
@@ -546,6 +547,7 @@
     <header>
       <button class="back" onclick="goHome()">← 지문 목록</button>
       <h1 id="pTitle"></h1>
+      <div id="pVideo"></div>
       <div class="level">
         <div class="fill" id="fill"></div>
         <div class="txt"><span>나의 학습 수위</span><span id="score">0 / 0</span></div>
@@ -5172,6 +5174,7 @@ const COMBINED=[
   {key:'txt4', term:'final', label:'🔥 교과서 4과 전체 한번에 풀기', match:/^교과서\s*4과/}
 ];
 function openCombined(key){
+  const pv=document.getElementById('pVideo'); if(pv) pv.innerHTML='';
   const c=COMBINED.find(x=>x.key===key);
   if(!c)return;
   cur=buildCombinedPassage(c.match, c.label.replace('🔥 ',''));
@@ -5180,6 +5183,7 @@ function openCombined(key){
   document.getElementById('pTitle').innerHTML=`<em>${cur.title}</em>`;
   switchTab('quiz');
   buildQuiz(); buildWrite(); buildFlow(); buildVF(); buildABC();
+  renderPassageVideo();
   window.scrollTo({top:0});
 }
 
@@ -5220,6 +5224,7 @@ function buildHome(){
       <div class="go">›</div></div>`:'';
   const vInTerm=VOCAB.map((v,i)=>({v,i})).filter(x=>x.v.term===CUR_TERM);
   document.getElementById('vguide').style.display=vInTerm.length?'':'none';
+  renderVideoList();
   document.getElementById('vlist').innerHTML=vInTerm.map(({v,i},k)=>{
     // "DAY 05-A" → "DAY 05", "교과서 1과 · ..." → "교과서" 로 그룹 구분
     const grpOf=t=>t.startsWith('DAY')?t.split('-')[0].trim():'교과서';
@@ -5234,6 +5239,34 @@ function buildHome(){
   }).join('');
 }
 
+
+/* ═══ 지문 해설 영상 ═══
+   영상 파일은 videos/ 폴더에 두고 여기에 한 줄씩 추가합니다.
+   match: 이 제목으로 시작하는 지문 화면 위에도 영상이 나옵니다(없어도 홈 목록에는 나옴). */
+const VIDEOS=[
+  {term:'final', no:'30', title:'10월 모의고사 30번 · 만화로 읽는 지문', src:'videos/mock10_30.mp4', match:'10월 모의고사 30번'},
+  {term:'final', no:'31', title:'10월 모의고사 31번 · 만화로 읽는 지문', src:'videos/mock10_31.mp4', match:'10월 모의고사 31번'},
+  {term:'final', no:'32', title:'10월 모의고사 32번 · 만화로 읽는 지문', src:'videos/mock10_32.mp4', match:'10월 모의고사 32번'},
+  {term:'final', no:'33', title:'10월 모의고사 33번 · 만화로 읽는 지문', src:'videos/mock10_33.mp4', match:'10월 모의고사 33번'},
+  {term:'final', no:'34', title:'10월 모의고사 34번 · 만화로 읽는 지문', src:'videos/mock10_34.mp4', match:'10월 모의고사 34번'},
+  {term:'final', no:'35', title:'10월 모의고사 35번 · 만화로 읽는 지문', src:'videos/mock10_35.mp4', match:'10월 모의고사 35번'}
+];
+const vidTag=src=>`<video src="${src}" controls playsinline preload="metadata" style="width:100%;border-radius:12px;background:#000;display:block"></video>`;
+function renderVideoList(){
+  const box=document.getElementById('vidlist'); if(!box) return;
+  const vs=VIDEOS.filter(v=>v.term===CUR_TERM);
+  box.innerHTML=vs.length?`<p class="home-guide" style="margin-top:20px">🎬 <b>지문 해설 영상</b> — 문제 풀기 전에 영상으로 지문 내용을 먼저 잡아 보세요.</p>`+
+    vs.map(v=>`<details class="pcard" style="display:block;cursor:pointer" ontoggle="if(!this.open){const x=this.querySelector('video');x&&x.pause()}">
+      <summary style="list-style:none;display:flex;align-items:center;gap:12px">
+        <div class="pnum" style="background:#c0392b">${v.no}</div>
+        <div class="pinfo"><div class="t">🎬 ${v.title}</div><div class="m">눌러서 영상 보기</div></div></summary>
+      <div style="margin-top:10px" onclick="event.stopPropagation()">${vidTag(v.src)}</div></details>`).join(''):'';
+}
+function renderPassageVideo(){
+  const box=document.getElementById('pVideo'); if(!box) return;
+  const v=VIDEOS.find(v=>v.match && cur && cur.title.startsWith(v.match));
+  box.innerHTML=v?`<details style="margin:6px 0 12px"><summary style="cursor:pointer;font-weight:800;color:var(--navy);padding:8px 0">🎬 이 지문 해설 영상 보기</summary>${vidTag(v.src)}</details>`:'';
+}
 function openPassage(i){
   cur=PASSAGES[i];
   document.getElementById('home').style.display='none';
@@ -5241,6 +5274,7 @@ function openPassage(i){
   document.getElementById('pTitle').innerHTML=`${String(i+1).padStart(2,'0')} <em>${cur.title}</em>`;
   switchTab('quiz');
   buildQuiz(); buildWrite(); buildFlow(); buildVF(); buildABC();
+  renderPassageVideo();
   window.scrollTo({top:0});
 }
 

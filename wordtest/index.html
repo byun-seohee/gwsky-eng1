@@ -192,6 +192,7 @@ table.t tr:last-child td{border-bottom:0}
         </ul>
       </li>
       <li><b>출제 방식</b>(영어 → 뜻 / 뜻 → 영어 / 섞어서)을 고릅니다.</li>
+      <li><b>출제 단어</b>: 기본은 <b>핵심 + 유의어</b>입니다. 유의어 없이 핵심·★고난도 어휘만 시험 칠 때는 <b>핵심어휘만</b>을 누릅니다. (반의어는 어느 쪽이든 출제하지 않음)</li>
       <li><b>인쇄 매수</b>에 학생 수만큼 입력합니다. 시험지를 다르게 나눠야 할 때만 ‘서로 다른 시험지’를 2 이상으로 바꿉니다.</li>
       <li><b>새 시험지 만들기</b> → <b>전체 인쇄</b>를 누르면 시험지와 정답지(맨 뒤)가 함께 인쇄됩니다. 따로 뽑을 때는 <b>시험지만 인쇄</b> / <b>정답지만 인쇄</b>를 누릅니다. 같은 시험지를 만든 상태에서 누르면 시험지와 정답지가 서로 짝이 맞습니다.</li>
     </ol>
@@ -258,6 +259,10 @@ table.t tr:last-child td{border-bottom:0}
             <button data-v="e2k" aria-pressed="true">영어 → 뜻</button>
             <button data-v="k2e" aria-pressed="false">뜻 → 영어</button>
             <button data-v="mix" aria-pressed="false">섞어서</button>
+          </div>
+          <div class="seg word-only" id="m-scope" title="출제할 단어 종류">
+            <button data-v="all" aria-pressed="true">핵심 + 유의어</button>
+            <button data-v="core" aria-pressed="false">핵심어휘만</button>
           </div>
           <label class="row word-only" style="gap:6px">문항 수 <input type="number" id="m-count" min="1" value="100"></label>
           <span class="hint word-only" id="m-countnote"></span>
@@ -448,7 +453,7 @@ function buildFreeTest(units,letter){
 }
 function currentPool(){
   const us=unitsFor($("m-school").value,$("m-grade").value).filter(u=>selected.has(u.id));
-  const withSyn=true, seen=new Set(), pool=[]; let extra=0;
+  const withSyn=scope!=="core", seen=new Set(), pool=[]; let extra=0;
   const add=(w,u)=>{const k=(w.en||"").trim().toLowerCase(); if(k&&!seen.has(k)){seen.add(k);pool.push({...w,src:u.unit});return true}return false};
   us.forEach(u=>u.words.filter(w=>isMain(w)&&isTestable(w)).forEach(w=>add(w,u)));
   const main=pool.length;
@@ -489,8 +494,9 @@ function updatePool(){
     return;
   }
   const {units,pool,main,syn,hasSyn}=currentPool();
+  $("m-scope").style.display=units.some(u=>u.words.some(w=>w.kind==="syn"))?"":"none";
   $("m-pool").innerHTML=units.length
-    ? `<span>선택 범위 <b>${esc(rangeLabel(units))}</b></span><span>출제 가능 단어 <b>${pool.length}</b>개${syn?` (핵심 ${main} · 유의어 ${syn})`:""}</span>`
+    ? `<span>선택 범위 <b>${esc(rangeLabel(units))}</b></span><span>출제 가능 단어 <b>${pool.length}</b>개${syn?` (핵심 ${main} · 유의어 ${syn})`:scope==="core"&&units.some(u=>u.words.some(w=>w.kind==="syn"))?" (핵심어휘만)":""}</span>`
     : `<span>범위를 하나 이상 골라주세요.</span>`;
   $("m-count").max=Math.max(1,pool.length);
   // 단어장에 문항 수가 정해져 있으면(예: 중3 다의어 20문항) 그 수만큼 무작위 출제
@@ -499,6 +505,11 @@ function updatePool(){
   $("m-count").value=fixed?Math.min(fixed,Math.max(1,pool.length)):all?Math.max(1,pool.length):100;
   $("m-countnote").textContent=units.length?(fixed?`범위에서 ${Math.min(fixed,pool.length)}문항 무작위 출제`:all?`출제 가능 단어가 ${ALL_UNDER}개 미만이라 전부 출제`:""):"";
 }
+// 출제 단어 종류: 핵심+유의어(기본) / 핵심어휘만(핵심·★ 고난도 어휘만, 유의어 제외)
+let scope="all";
+$("m-scope").querySelectorAll("button").forEach(b=>b.onclick=()=>{
+  scope=b.dataset.v; $("m-scope").querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===b)); updatePool();
+});
 $("m-mode").querySelectorAll("button").forEach(b=>b.onclick=()=>{
   mode=b.dataset.v; $("m-mode").querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===b));
 });
@@ -559,7 +570,7 @@ $("m-gen").onclick=()=>{
   generated={
     school:$("m-school").value, grade:$("m-grade").value, range:rangeLabel(units),
     hint:units.length&&units.every(u=>u.hint)?units[0].hint:"", multi:units.length>1,
-    mode, n, footer:($("m-footer").value.trim()||DEFAULT_FOOTER),
+    mode, n, coreOnly:scope==="core"&&units.some(u=>u.words.some(w=>w.kind==="syn")), footer:($("m-footer").value.trim()||DEFAULT_FOOTER),
     date:new Date().toLocaleDateString("ko-KR"),
     copies,
     tests:Array.from({length:v},(_,i)=>buildTest(pool,n,mode,letters[i]))
@@ -588,7 +599,7 @@ const MODE_LABEL={e2k:"영어 → 우리말 뜻 쓰기",k2e:"우리말 → 영�
 function head(g,t,key){
   return `<div class="ws-head"><div class="ws-brand">경운SKY입시학원</div>
   <div class="ws-target">${esc(g.school)} ${esc(g.grade)} ${testName(g)}${key?" · 정답지":""}<small>시험지 코드 ${esc(t.code)}</small></div></div>
-  <div class="ws-info"><span>범위: ${esc(g.range)} · ${g.n}문항 · ${g.type==="write"?"조건 영작":g.type==="sent"?"영어 문장 → 우리말 해석 쓰기":MODE_LABEL[g.mode]}${g.hint?` (${esc(g.hint)})`:""}</span>
+  <div class="ws-info"><span>범위: ${esc(g.range)} · ${g.n}문항 · ${g.type==="write"?"조건 영작":g.type==="sent"?"영어 문장 → 우리말 해석 쓰기":MODE_LABEL[g.mode]}${g.coreOnly?" · 핵심어휘만":""}${g.hint?` (${esc(g.hint)})`:""}</span>
   ${key?`<span>${esc(g.date)}</span>`:`<span class="nm">이름 <span></span> 점수 <span style="min-width:60px"></span>/ ${g.n}</span>`}</div>`;
 }
 // 밑줄 번호 정답지
